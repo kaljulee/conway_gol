@@ -4,13 +4,17 @@ using UnityEngine;
 
 public abstract class PlaceholderGameboyColored : MonoBehaviour
 {
-    protected void ColorPlaceholder (string fourColorShade)
+
+    private SpriteRenderer spriteRenderer;
+    protected void Awake(string color)
+    {
+        spriteRenderer = GetComponent<SpriteRenderer>();
+        ColorPlaceholder(color);
+    }
+    private void ColorPlaceholder (string fourColorShade)
         {
-        SpriteRenderer spriteRenderer = GetComponent<SpriteRenderer>();
-  
-        //Debug.Log(new Color(100, 10, 10));
-        //Debug.Log(Color.blue);
-        //spriteRenderer.color = new Color(100, 10, 10);
+        //SpriteRenderer spriteRenderer = GetComponent<SpriteRenderer>();
+
         spriteRenderer.color = new Color(
             FourColor.gameboyColorsRGB[fourColorShade][0],
             FourColor.gameboyColorsRGB[fourColorShade][1],
