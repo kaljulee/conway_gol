@@ -30,6 +30,7 @@ public class BoardManager : MonoBehaviour
     public int rows = 8;
     public GameObject[] floorTiles;
     public GameObject[] unitTiles;
+    public GameObject[] pressureZoneTiles;
     private Transform boardHolder;
     public float frequency = 0.5f;
     private List<Vector3> gridPositions = new List<Vector3>();
@@ -65,8 +66,11 @@ public class BoardManager : MonoBehaviour
                 GameObject toInstantiate = floorTiles[Random.Range(0, floorTiles.Length)];
                 if (x == 2 && (y == 3 || y == 2))
                 {
-                    Debug.Log("should draw unit");
                    toInstantiate = unitTiles[Random.Range(0, unitTiles.Length)];
+                }
+                if (x == 3 && y == 3)
+                {
+                    toInstantiate = pressureZoneTiles[Random.Range(0, pressureZoneTiles.Length)];
                 }
                 //// correct to outer wall tile if it is an edge tile
                 //if (x == -1 || x == columns || y == -1 || y == rows)

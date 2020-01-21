@@ -5,12 +5,15 @@ using UnityEngine;
 public abstract class PlaceholderGameboyColored : MonoBehaviour
 {
     // default color;
-    public string colorShade = FourColor.LIGHTEST;
+    public string colorShade;
     private SpriteRenderer spriteRenderer;
     protected void Awake()
     {
         spriteRenderer = GetComponent<SpriteRenderer>();
-        ColorPlaceholder(colorShade);
+        if (colorShade != null)
+        {
+            ColorPlaceholder(colorShade);
+        }
     }
     private void ColorPlaceholder (string fourColorShade)
         {

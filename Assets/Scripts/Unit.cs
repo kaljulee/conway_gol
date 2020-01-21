@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Unit : PlaceholderGameboyColored
+public class Unit : PressureZone
 {
     public float moveTime = 0.1f;
     public LayerMask blockingLayer;
@@ -38,29 +38,29 @@ public class Unit : PlaceholderGameboyColored
         above = CheckDirection(0, 1, out hit);
         if (above)
         {
-            Debug.Log("hit above");
+            //Debug.Log("hit above");
         }
         // right
         right = CheckDirection(1, 0, out hit);
         if (right)
         {
-            Debug.Log("hit to right");
+            //Debug.Log("hit to right");
         }
         // below
         below = CheckDirection(0, 1, out hit);
         if (below)
         {
-            Debug.Log("hit below");
+            //Debug.Log("hit below");
         }
         // left
         left = CheckDirection(1, 0, out hit);
         if (left)
         {
-            Debug.Log("hit to left");
+            //Debug.Log("hit to left");
         }
         if (!above && !left && !right && !below)
         {
-            Debug.Log("no hits");
+            //Debug.Log("no hits");
         }
         //Debug.Log("tag: ");
         //Debug.Log(hit.transform.GetComponent<Floor>().tag);
