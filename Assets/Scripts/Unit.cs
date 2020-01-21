@@ -67,9 +67,10 @@ public class Unit : PlaceholderGameboyColored
        
         return new bool[4]{ false, false, false, false};
     }
-    private void Awake()
+    new void Awake()
     {
-        base.Awake(FourColor.DARKEST);
+        colorShade = FourColor.DARKEST;
+        base.Awake();
     }
 
     // Start is called before the first frame update
