@@ -29,11 +29,19 @@ public class BoardManager : MonoBehaviour
     public int columns = 8;
     public int rows = 8;
     public GameObject[] floorTiles;
-    public GameObject[] unitTiles;
-    public GameObject[] pressureZoneTiles;
+    public Unit unitTile;
+    public LinkedList<Vector2> SpawnSites;
+    public PressureZone PressureZoneClass;
+
     private Transform boardHolder;
     public float frequency = 0.5f;
+    
     private List<Vector3> gridPositions = new List<Vector3>();
+    private List<PressureZone> pressureZones = new List<PressureZone>();
+
+    public List<PressureZone> GetPressureZones() => pressureZones;
+
+
 
     void InitializeList()
     {
@@ -47,6 +55,11 @@ public class BoardManager : MonoBehaviour
         }
     }
 
+    public int GridPositionsLength()
+    {
+        return gridPositions.Count;
+    }
+
     public void SetupScene(int level)
     {
         BoardSetup();
@@ -58,20 +71,39 @@ public class BoardManager : MonoBehaviour
     {
         Console.WriteLine("setting up board with gridPositions " + gridPositions.Count);
         boardHolder = new GameObject("Board").transform;
+        if (SpawnSites == null)
+        {
+            SpawnSites = new LinkedList<Vector2>();
+            SpawnSites.AddFirst(new Vector2(2, 3));
+            SpawnSites.AddFirst(new Vector2(3, 3));
+            SpawnSites.AddFirst(new Vector2(3, 4));
+        }
+
         for (int x = -1; x < columns + 1; x++)
         {
             for (int y = -1; y < rows + 1; y++)
             {
+
                 // start by assuming random floor tile
                 GameObject toInstantiate = floorTiles[Random.Range(0, floorTiles.Length)];
-                if (x == 2 && (y == 3 || y == 2))
+
+                LinkedListNode<Vector2> node = SpawnSites.First;
+                // should only check till the first good value;
+                while (node != null)
                 {
-                   toInstantiate = unitTiles[Random.Range(0, unitTiles.Length)];
+                    if (node.Value.x == x && node.Value.y == y)
+                    {
+                        Unit pzInstance = Instantiate(unitTile, new Vector3(x, y, 0f), Quaternion.identity) as Unit;
+                        pressureZones.Add(pzInstance);
+                        SpawnSites.Remove(node);
+                        node = null;
+                        
+                    } else
+                    {
+                        node = node.Next;
+                    }
                 }
-                if (x == 3 && y == 3)
-                {
-                    toInstantiate = pressureZoneTiles[Random.Range(0, pressureZoneTiles.Length)];
-                }
+
                 //// correct to outer wall tile if it is an edge tile
                 //if (x == -1 || x == columns || y == -1 || y == rows)
                 //{
@@ -84,7 +116,10 @@ public class BoardManager : MonoBehaviour
         }
     }
 
-
+    void Awake()
+    {
+           
+    }
 
     // Start is called before the first frame update
     void Start()

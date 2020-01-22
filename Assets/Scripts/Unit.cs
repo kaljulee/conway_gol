@@ -84,6 +84,5 @@ public class Unit : PressureZone
     // Update is called once per frame
     void Update()
     {
-        CheckNeighbors();
     }
 }

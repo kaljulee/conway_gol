@@ -46,6 +46,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   turnDelaty: 0.1
   boardScript: {fileID: 0}
+  turnDelay: 0.5
 --- !u!114 &1412336138789898878
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -62,8 +63,8 @@ MonoBehaviour:
   rows: 20
   floorTiles:
   - {fileID: 991046252526209770, guid: 458ba682a69783d468c37bbbded55ac8, type: 3}
-  unitTiles:
-  - {fileID: 8253295328657836045, guid: 890e417ae9a591a48aa2e3ff253fcc14, type: 3}
-  pressureZoneTiles:
-  - {fileID: 4519458563766980877, guid: 73b60857568b71e47a4aa2cb9d0b4c73, type: 3}
+  unitTile: {fileID: 6237008470823324725, guid: 890e417ae9a591a48aa2e3ff253fcc14,
+    type: 3}
+  PressureZoneClass: {fileID: 8615411734167688051, guid: 73b60857568b71e47a4aa2cb9d0b4c73,
+    type: 3}
   frequency: 0.5

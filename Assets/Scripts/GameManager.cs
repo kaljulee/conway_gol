@@ -8,14 +8,17 @@ public class GameManager : MonoBehaviour
     public static GameManager instance = null;
     public float turnDelaty = 0.1f;
     public BoardManager boardScript;
+    public float turnDelay = 0.5f;
 
     private bool doingSetup;
+    private bool processingTurn;
     private List<Unit> units;
 
 
     void InitGame()
     {
         doingSetup = true;
+        processingTurn = false;
         //units.Clear();
         boardScript.SetupScene(0);
     }
@@ -45,6 +48,28 @@ public class GameManager : MonoBehaviour
         InitGame();
     }
 
+    void ApplyPressures()
+    {
+
+    }
+
+    void UpdatePressureZones()
+    {
+
+    }
+
+    IEnumerator CalculateTurn()
+    {
+        for (int i = 0; i < boardScript.GetPressureZones().Count; i++)
+        {
+            yield return new WaitForSeconds(turnDelay);
+        }
+        processingTurn = false;
+
+        //ApplyPressures();
+        //UpdatePressureZones();
+    }
+
     // Start is called before the first frame update
     void Start()
     {
@@ -54,6 +79,11 @@ public class GameManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+        if (processingTurn)
+        {
+            return;
+        }
+        processingTurn = true;
+        StartCoroutine(CalculateTurn());
     }
 }
