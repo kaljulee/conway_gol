@@ -6,9 +6,8 @@ public class GameManager : MonoBehaviour
 {
 
     public static GameManager instance = null;
-    public float turnDelaty = 0.1f;
     public BoardManager boardScript;
-    public float turnDelay = 0.5f;
+    public float turnDelay = 3.5f;
 
     private bool doingSetup;
     private bool processingTurn;
@@ -60,10 +59,13 @@ public class GameManager : MonoBehaviour
 
     IEnumerator CalculateTurn()
     {
+        Debug.Log("calculating turn");
         for (int i = 0; i < boardScript.GetPressureZones().Count; i++)
         {
-            yield return new WaitForSeconds(turnDelay);
+            Debug.Log("id: " + boardScript.GetPressureZones()[i].GetId());
         }
+        Debug.Log("-------------done calculating-----------");
+        yield return new WaitForSeconds(turnDelay);
         processingTurn = false;
 
         //ApplyPressures();
