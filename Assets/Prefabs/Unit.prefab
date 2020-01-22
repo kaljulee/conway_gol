@@ -94,10 +94,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: aa34c33b0bb7eb94bb6b73cb62e29c9e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  moveTime: 0.1
+  colorShade: 
+  ExertedPressure: 1
+  MaxPressure: 3
+  MinPressure: 2
   blockingLayer:
     serializedVersion: 2
     m_Bits: 256
+  moveTime: 0.1
 --- !u!61 &61382719661899608
 BoxCollider2D:
   m_ObjectHideFlags: 0

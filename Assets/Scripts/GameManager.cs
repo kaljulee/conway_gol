@@ -11,43 +11,31 @@ public class GameManager : MonoBehaviour
 
     private bool doingSetup;
     private bool processingTurn;
-    private List<Unit> units;
 
 
     void InitGame()
     {
         doingSetup = true;
         processingTurn = false;
-        //units.Clear();
         boardScript.SetupScene(0);
     }
-
-    //IEnumerator MoveUnits()
-    //{
-    //    unitsMoving = true;
-    //    yield return new WaitForSeconds(turnDelay);
-    //    if (units.Count == 0)
-    //    {
-    //        yield return new WaitForSeconds(turnDelay);
-    //    }
-    //}
 
     void Awake()
     {
         if (instance == null)
         {
             instance = this;
-        } else if (instance != this)
+        }
+        else if (instance != this)
         {
             Destroy(gameObject);
         }
         DontDestroyOnLoad(gameObject);
-        //units = new List<Unit>();
         boardScript = GetComponent<BoardManager>();
         InitGame();
     }
 
-    void ApplyPressures()
+    void ResolvePressures()
     {
 
     }
@@ -59,23 +47,68 @@ public class GameManager : MonoBehaviour
 
     IEnumerator CalculateTurn()
     {
-        Debug.Log("calculating turn");
-        for (int i = 0; i < boardScript.GetPressureZones().Count; i++)
+        for (int n = 0; n < 200; n++)
         {
-            Debug.Log("id: " + boardScript.GetPressureZones()[i].GetId());
-        }
-        Debug.Log("-------------done calculating-----------");
-        yield return new WaitForSeconds(turnDelay);
-        processingTurn = false;
+            Debug.Log("calculating turn");
+            Debug.Log("pressurezone count: " + boardScript.GetPressureZones().Count);
 
-        //ApplyPressures();
+            List<PressureZone> spawnedPressureZones = new List<PressureZone>();
+            Dictionary<Vector2, int> newPressureZoneData = new Dictionary<Vector2, int>();
+
+            for (int i = 0; i < boardScript.GetPressureZones().Count; i++)
+            {
+                Debug.Log("i is " + i + " count is: " + boardScript.GetPressureZones().Count);
+                PressureZone currentZone = boardScript.GetPressureZones()[i];
+                Debug.Log("id: " + currentZone.GetId());
+
+                // check pressure if it this zone exerts pressure
+                if (currentZone.ExertedPressure != 0)
+                {
+                    Vector2 currentZonePosition = currentZone.transform.position;
+
+                    // must check neighbors
+                    Dictionary<string, PressureZone> neighbors = currentZone.CheckNeighbors();
+                    foreach (KeyValuePair<string, PressureZone> zone in neighbors)
+                    {
+                        // if there is an existing pressure zone, add pressure to it
+                        if (zone.Value != null)
+                        {
+                            zone.Value.IncrementPressure(currentZone.ExertedPressure);
+                        }
+                        // else add to pressure values to put into pressure creator
+                        else
+                        {
+                            //// neighbor's position
+                            Vector2 adjustedVector = Directions.directionFromCenter[zone.Key](currentZonePosition);
+
+                            // create new pressure zone creation entry
+                            if (newPressureZoneData.Keys.Count < 1 || !newPressureZoneData.ContainsKey(adjustedVector))
+                            {
+                                newPressureZoneData.Add(adjustedVector, currentZone.ExertedPressure);
+                            }
+                            // add to existing pressure zone creation entry
+                            else
+                            {
+                                newPressureZoneData[adjustedVector] += currentZone.ExertedPressure;
+                            }
+                        }
+                    }
+                }
+                else { }
+
+            }
+            yield return new WaitForSeconds(turnDelay);
+        }
+        //processingTurn = false;
+
+        //ResolvePressures();
         //UpdatePressureZones();
     }
 
     // Start is called before the first frame update
     void Start()
     {
-        
+
     }
 
     // Update is called once per frame
