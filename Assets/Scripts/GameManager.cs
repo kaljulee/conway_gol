@@ -97,6 +97,14 @@ public class GameManager : MonoBehaviour
                 else { }
 
             }
+            Debug.Log("//////////// start of pressure data");
+            foreach (KeyValuePair<Vector2, int> pair in newPressureZoneData)
+            {
+                Vector2 key = pair.Key;
+                int value = pair.Value;
+                Debug.Log("xy: " + key.x + " " + key.y + " weight: " + value);
+            }
+            Debug.Log("end of pressure data \\\\\\\\\\\\\\\\\\");
             yield return new WaitForSeconds(turnDelay);
         }
         //processingTurn = false;
