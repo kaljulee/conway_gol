@@ -29,17 +29,17 @@ public class BoardManager : MonoBehaviour
     public int columns = 8;
     public int rows = 8;
     public GameObject[] floorTiles;
-    public Unit unitTile;
+    public GameObject unitTile;
     public LinkedList<Vector2> SpawnSites;
-    public PressureZone PressureZoneClass;
+    public GameObject pressureZoneTile;
 
     private Transform boardHolder;
     public float frequency = 0.5f;
 
     private List<Vector3> gridPositions = new List<Vector3>();
-    private List<PressureZone> pressureZones = new List<PressureZone>();
+    private List<GameObject> pressureZones = new List<GameObject>();
 
-    public List<PressureZone> GetPressureZones() => pressureZones;
+    public List<GameObject> GetPressureZones() => pressureZones;
 
 
 
@@ -55,14 +55,15 @@ public class BoardManager : MonoBehaviour
         }
     }
 
-    public void RemovePressureZone(PressureZone zone) {
+    public void RemovePressureZone(GameObject zone) {
     pressureZones.Remove(zone);
         Destroy(zone);
         
 }
-    public void AddPressureZone(PressureZone zone)
+    public void AddPressureZone(GameObject zone)
     {
         zone.transform.SetParent(boardHolder);
+        if (zone.GetType() == typeof(Unit)) { Debug.Log("adding unit at x" + zone.transform.position.x + "y" + zone.transform.position.y); }
         pressureZones.Add(zone);
     }
 
@@ -80,14 +81,29 @@ public class BoardManager : MonoBehaviour
 
     void BoardSetup()
     {
-        Console.WriteLine("setting up board with gridPositions " + gridPositions.Count);
+        Debug.Log("setting up board with gridPositions " + gridPositions.Count);
         boardHolder = new GameObject("Board").transform;
         if (SpawnSites == null)
         {
             SpawnSites = new LinkedList<Vector2>();
-            SpawnSites.AddFirst(new Vector2(2, 3));
+            // toad
+            //SpawnSites.AddFirst(new Vector2(2, 3));
             //SpawnSites.AddFirst(new Vector2(3, 3));
+            //SpawnSites.AddFirst(new Vector2(4, 3));
+
+            //SpawnSites.AddFirst(new Vector2(3, 4));
+            //SpawnSites.AddFirst(new Vector2(4, 4));
+            //SpawnSites.AddFirst(new Vector2(5, 4));
+
+            // glider
             SpawnSites.AddFirst(new Vector2(3, 4));
+            SpawnSites.AddFirst(new Vector2(4, 4));
+            SpawnSites.AddFirst(new Vector2(3, 3));
+            SpawnSites.AddFirst(new Vector2(4, 5));
+            SpawnSites.AddFirst(new Vector2(2, 5));
+
+            //SpawnSites.AddFirst(new Vector2(4, 4));
+            //SpawnSites.AddFirst(new Vector2(3, 5));
         }
 
         for (int x = -1; x < columns + 1; x++)
@@ -104,7 +120,7 @@ public class BoardManager : MonoBehaviour
                 {
                     if (node.Value.x == x && node.Value.y == y)
                     {
-                        Unit pzInstance = Instantiate(unitTile, new Vector3(x, y, 0f), Quaternion.identity) as Unit;
+                        GameObject pzInstance = Instantiate(unitTile, new Vector3(x, y, 0f), Quaternion.identity) as GameObject;
                         pzInstance.transform.SetParent(boardHolder);
                         pressureZones.Add(pzInstance);
                         SpawnSites.Remove(node);

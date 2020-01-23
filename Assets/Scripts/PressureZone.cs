@@ -7,7 +7,7 @@ public class PressureZone : PlaceholderGameboyColored
 {
     public static int StaticID = 1;
     public int Pressure { get; protected set; }
-    public Unit unitTile;
+    public GameObject unitTile;
     public int ExertedPressure = 0;
     public static int MaxPressure = 2;
     public static int MinPressure = 1;
@@ -31,12 +31,20 @@ public class PressureZone : PlaceholderGameboyColored
     // default pressure zones do nothing when they 'pop'
     // behavior can be applied later, but it doesn't seem
     // right to define these to go to Unit here
-    public virtual PressureZone SpawnOnOverPressure()
+    public virtual GameObject SpawnOnOverPressure()
     {
-        return unitTile;
+        Debug.Log("OVERPRESSURE SPAWN  " + Pressure + " " + Unit.MaxPressure);
+        //Debug.Break();
+        if (Pressure <= Unit.MaxPressure)
+        {
+            Debug.Log("OVERPRESSURE SPAWNING UNIT");
+            return unitTile;
+        }
+        Debug.Log("OVERPRESSURE SPAWNING NULL");
+        return null;
     }
 
-    public virtual PressureZone SpawnOnUnderPressure()
+    public virtual GameObject SpawnOnUnderPressure()
     {
         return null;
     }
@@ -58,7 +66,7 @@ public class PressureZone : PlaceholderGameboyColored
         return Pressure;
     }
 
-    protected PressureZone CheckDirection(int xDir, int yDir, out RaycastHit2D hit)
+    protected GameObject CheckDirection(int xDir, int yDir, out RaycastHit2D hit)
     {
         Vector2 start = transform.position;
         Vector2 end = start + new Vector2(xDir, yDir);
@@ -66,50 +74,75 @@ public class PressureZone : PlaceholderGameboyColored
         boxCollider.enabled = false;
         hit = Physics2D.Linecast(start, end, blockingLayer);
         boxCollider.enabled = true;
-
         if (hit.transform == null)
         {
+            //Debug.Log("NO HIT");
             return null;
         }
-
-        return hit.transform.GetComponent<PressureZone>();
+        //Debug.Log("YES HIT");
+        return hit.transform.gameObject;//GetComponent<GameObject>();
     }
-    public Dictionary<string, PressureZone> CheckNeighbors()
+    public Dictionary<string, GameObject> CheckNeighbors()
     {
-
-        PressureZone up, down, left, right, upRight, upLeft, downRight, downLeft;
+        Debug.Log("--------- In Check Neighbors -------------");
+        GameObject up, down, left, right, upRight, upLeft, downRight, downLeft;
 
         RaycastHit2D hit;
+
         // above
         up = CheckDirection(0, 1, out hit);
-        if (up)
+        if (up != null)
         {
-            //Debug.Log("hit above");
+            Debug.Log("hit above");
+            Debug.Log(hit.transform.gameObject);
         }
         // right
         right = CheckDirection(1, 0, out hit);
-        if (right)
+        if (right != null)
         {
-            //Debug.Log("hit to right");
+            Debug.Log("hit to right");
+            Debug.Log(hit.transform.gameObject);
         }
         // below
         down = CheckDirection(0, -1, out hit);
-        if (down)
+        if (down != null)
         {
-            //Debug.Log("hit below");
+            Debug.Log("hit below");
+            Debug.Log(hit.transform.gameObject);
         }
         // left
         left = CheckDirection(-1, 0, out hit);
-        if (left)
+        if (left != null)
         {
-            //Debug.Log("hit to left");
+            Debug.Log("hit to left");
+            Debug.Log(hit.transform.gameObject);
         }
         upRight = CheckDirection(1, 1, out hit);
+        if (upRight != null)
+        {
+            Debug.Log("upRight hit");
+            Debug.Log(hit.transform.gameObject);
+        }
         upLeft = CheckDirection(-1, 1, out hit);
+        if (upLeft != null)
+        {
+            Debug.Log("upLeft hit");
+            Debug.Log(hit.transform.gameObject);
+        }
         downRight = CheckDirection(1, -1, out hit);
+        if (downRight != null)
+        {
+            Debug.Log("downRight hit");
+            Debug.Log(hit.transform.gameObject);
+        }
         downLeft = CheckDirection(-1, -1, out hit);
+        if (downLeft != null)
+        {
+            Debug.Log("downLeft hit");
+            Debug.Log(hit.transform.gameObject);
+        }
 
-        return new Dictionary<string, PressureZone>(){
+        return new Dictionary<string, GameObject>(){
             { "up", up },
             {"down", down },
             {"left", left },

@@ -6,23 +6,23 @@ public class Unit : PressureZone
 {
     public float moveTime = 0.1f;
     
-    public static int maxPressure = 3;
-    public static int minPressure = 2;
+    new public static int MaxPressure = 3;
+    new public static int MinPressure = 2;
     private float inverseMoveTime;
 
     public override int CheckPressure()
     {
-        if (Pressure > maxPressure)
+        if (Pressure > MaxPressure)
         {
             return 1;
         }
-        if (Pressure < minPressure)
+        if (Pressure < MinPressure)
         {
             return -1;
         }
         return 0;
     }
-    public override PressureZone SpawnOnOverPressure()
+    public override GameObject SpawnOnOverPressure()
     {
         return null;
     }
