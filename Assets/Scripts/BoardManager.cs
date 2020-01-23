@@ -55,15 +55,31 @@ public class BoardManager : MonoBehaviour
         }
     }
 
-    public void RemovePressureZone(GameObject zone) {
-    pressureZones.Remove(zone);
+    public void RemovePressureZone(GameObject zone)
+    {
+        pressureZones.Remove(zone);
         Destroy(zone);
-        
-}
+
+    }
+
+    public bool ZoneIsOnBoard(GameObject zone)
+    {
+        Vector2 position = zone.transform.position;
+        return rows >= position.x - 1 && position.x >= -1 && columns >= position.y && position.y >= -1;
+    }
+
     public void AddPressureZone(GameObject zone)
     {
+        // if zone is not on the board
+        if (!ZoneIsOnBoard(zone))
+        {
+
+            Debug.Log("ZONE DEEMED BAD x" + zone.transform.position.x + "y" + zone.transform.position.y);
+            Destroy(zone);
+            return;
+        }
+        // finish adding zone
         zone.transform.SetParent(boardHolder);
-        if (zone.GetType() == typeof(Unit)) { Debug.Log("adding unit at x" + zone.transform.position.x + "y" + zone.transform.position.y); }
         pressureZones.Add(zone);
     }
 
@@ -96,11 +112,19 @@ public class BoardManager : MonoBehaviour
             //SpawnSites.AddFirst(new Vector2(5, 4));
 
             // glider
+            //SpawnSites.AddFirst(new Vector2(3, 4));
+            //SpawnSites.AddFirst(new Vector2(4, 4));
+            //SpawnSites.AddFirst(new Vector2(3, 3));
+            //SpawnSites.AddFirst(new Vector2(4, 5));
+            //SpawnSites.AddFirst(new Vector2(2, 5));
+
+            // reverse glider
             SpawnSites.AddFirst(new Vector2(3, 4));
             SpawnSites.AddFirst(new Vector2(4, 4));
-            SpawnSites.AddFirst(new Vector2(3, 3));
-            SpawnSites.AddFirst(new Vector2(4, 5));
-            SpawnSites.AddFirst(new Vector2(2, 5));
+            SpawnSites.AddFirst(new Vector2(4, 3));
+            SpawnSites.AddFirst(new Vector2(3, 5));
+            SpawnSites.AddFirst(new Vector2(5, 5));
+
 
             //SpawnSites.AddFirst(new Vector2(4, 4));
             //SpawnSites.AddFirst(new Vector2(3, 5));
@@ -125,18 +149,13 @@ public class BoardManager : MonoBehaviour
                         pressureZones.Add(pzInstance);
                         SpawnSites.Remove(node);
                         node = null;
-                        
-                    } else
+
+                    }
+                    else
                     {
                         node = node.Next;
                     }
                 }
-
-                //// correct to outer wall tile if it is an edge tile
-                //if (x == -1 || x == columns || y == -1 || y == rows)
-                //{
-                //    toInstantiate = outerWallTiles[Random.Range(0, outerWallTiles.Length)];
-                //}
 
                 GameObject instance = Instantiate(toInstantiate, new Vector3(x, y, 0f), Quaternion.identity) as GameObject;
                 instance.transform.SetParent(boardHolder);
@@ -146,18 +165,18 @@ public class BoardManager : MonoBehaviour
 
     void Awake()
     {
-           
+
     }
 
     // Start is called before the first frame update
     void Start()
     {
-        
+
     }
 
     // Update is called once per frame
     void Update()
     {
-        
+
     }
 }

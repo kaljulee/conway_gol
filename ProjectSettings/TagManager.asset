@@ -7,6 +7,7 @@ TagManager:
   - Unit
   - Live
   - Floor
+  - PressureZone
   layers:
   - Default
   - TransparentFX
