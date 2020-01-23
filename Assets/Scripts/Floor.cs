@@ -7,11 +7,11 @@ using UnityEngine;
 public class Floor : PlaceholderGameboyColored
 {
     // Start is called before the first frame update
-    private SpriteRenderer spriteRenderer;
 
-    void Awake()
+    new void Awake()
     {
-        base.Awake(FourColor.LIGHTEST);
+        colorShade = FourColor.LIGHTEST;
+        base.Awake();
     }
 
     // Update is called once per frame
