@@ -15,7 +15,7 @@ GameObject:
   - component: {fileID: 61279722994599652}
   m_Layer: 8
   m_Name: PressureZone
-  m_TagString: Untagged
+  m_TagString: PressureZone
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
