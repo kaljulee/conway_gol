@@ -6,10 +6,11 @@ using UnityEngine;
 public class PressureZone : PlaceholderGameboyColored
 {
     public static int StaticID = 1;
-    protected int Pressure { get; set; }
+    public int Pressure { get; protected set; }
+    public Unit unitTile;
     public int ExertedPressure = 0;
-    public int MaxPressure = 2;
-    public int MinPressure = 1;
+    public static int MaxPressure = 2;
+    public static int MinPressure = 1;
     private int id;
 
     public LayerMask blockingLayer;
@@ -19,6 +20,7 @@ public class PressureZone : PlaceholderGameboyColored
 
     public int GetId() => id;
 
+    public void ZeroPressure() { Pressure = 0; }
     public virtual int CheckPressure()
     {
         if (Pressure < MinPressure) return -1;
@@ -26,18 +28,31 @@ public class PressureZone : PlaceholderGameboyColored
         return 0;
     }
 
+    // default pressure zones do nothing when they 'pop'
+    // behavior can be applied later, but it doesn't seem
+    // right to define these to go to Unit here
+    public virtual PressureZone SpawnOnOverPressure()
+    {
+        return unitTile;
+    }
+
+    public virtual PressureZone SpawnOnUnderPressure()
+    {
+        return null;
+    }
+
     public virtual int ExertPressure()
     {
         return ExertedPressure;
     }
 
-    public virtual int IncrementPressure(int value=1)
+    public virtual int IncrementPressure(int value = 1)
     {
         Pressure += value;
         return Pressure;
     }
 
-    public virtual int DecrementPressure(int value=1)
+    public virtual int DecrementPressure(int value = 1)
     {
         Pressure -= value;
         return Pressure;
@@ -121,12 +136,12 @@ public class PressureZone : PlaceholderGameboyColored
     // Start is called before the first frame update
     void Start()
     {
-        
+
     }
 
     // Update is called once per frame
     void Update()
     {
-        
+
     }
 }

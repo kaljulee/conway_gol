@@ -35,7 +35,7 @@ public class BoardManager : MonoBehaviour
 
     private Transform boardHolder;
     public float frequency = 0.5f;
-    
+
     private List<Vector3> gridPositions = new List<Vector3>();
     private List<PressureZone> pressureZones = new List<PressureZone>();
 
@@ -53,6 +53,17 @@ public class BoardManager : MonoBehaviour
                 gridPositions.Add(new Vector3(x, y, 0f));
             }
         }
+    }
+
+    public void RemovePressureZone(PressureZone zone) {
+    pressureZones.Remove(zone);
+        Destroy(zone);
+        
+}
+    public void AddPressureZone(PressureZone zone)
+    {
+        zone.transform.SetParent(boardHolder);
+        pressureZones.Add(zone);
     }
 
     public int GridPositionsLength()
@@ -75,7 +86,7 @@ public class BoardManager : MonoBehaviour
         {
             SpawnSites = new LinkedList<Vector2>();
             SpawnSites.AddFirst(new Vector2(2, 3));
-            SpawnSites.AddFirst(new Vector2(3, 3));
+            //SpawnSites.AddFirst(new Vector2(3, 3));
             SpawnSites.AddFirst(new Vector2(3, 4));
         }
 
@@ -94,6 +105,7 @@ public class BoardManager : MonoBehaviour
                     if (node.Value.x == x && node.Value.y == y)
                     {
                         Unit pzInstance = Instantiate(unitTile, new Vector3(x, y, 0f), Quaternion.identity) as Unit;
+                        pzInstance.transform.SetParent(boardHolder);
                         pressureZones.Add(pzInstance);
                         SpawnSites.Remove(node);
                         node = null;

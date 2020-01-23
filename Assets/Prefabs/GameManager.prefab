@@ -45,6 +45,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   boardScript: {fileID: 0}
+  pressureZoneTile: {fileID: 8615411734167688051, guid: 73b60857568b71e47a4aa2cb9d0b4c73,
+    type: 3}
+  unitTile: {fileID: 6237008470823324725, guid: 890e417ae9a591a48aa2e3ff253fcc14,
+    type: 3}
   turnDelay: 3
 --- !u!114 &1412336138789898878
 MonoBehaviour:
