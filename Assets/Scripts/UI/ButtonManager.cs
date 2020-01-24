@@ -30,7 +30,12 @@ public class ButtonManager : MonoBehaviour
     {
         GameManager.TogglePaused();
         mainMenu.GetComponent<MainMenu>().ToggleActive();
-        Debug.Log("button pressed!");
+        Debug.Log("gear button pressed!");
+    }
+
+    public void OnExitButtonPress()
+    {
+        Debug.Log("exit button pressed!");
     }
 
 }
