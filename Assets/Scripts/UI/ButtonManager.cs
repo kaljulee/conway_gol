@@ -5,6 +5,7 @@ using UnityEngine;
 public class ButtonManager : MonoBehaviour
 {
 
+    public static GameObject mainMenu;
     public static ButtonManager instance = null;
 
     private void Awake()
@@ -19,9 +20,16 @@ public class ButtonManager : MonoBehaviour
         }
         DontDestroyOnLoad(gameObject);
     }
+
+    private void Start()
+    {
+        mainMenu = GameObject.Find("MainMenu");
+        mainMenu.SetActive(false);
+    }
     public void OnGearButtonPress()
     {
         GameManager.TogglePaused();
+        mainMenu.GetComponent<MainMenu>().ToggleActive();
         Debug.Log("button pressed!");
     }
 

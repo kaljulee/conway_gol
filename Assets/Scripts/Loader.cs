@@ -14,9 +14,9 @@ public class Loader : MonoBehaviour
             Instantiate(gameManager);
         }
 
-        if (ButtonManager.instance == null)
-        {
-            Instantiate(buttonManager);
-        }
+        //if (ButtonManager.instance == null)
+        //{
+        //    Instantiate(buttonManager);
+        //}
     }
 }
