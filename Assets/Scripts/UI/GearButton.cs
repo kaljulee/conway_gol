@@ -6,6 +6,7 @@ using UnityEngine.UI;
 public class GearButton : MonoBehaviour
 {
     private Image image;
+
     private void Awake()
     {
         image = GetComponent<Image>();
@@ -15,16 +16,5 @@ public class GearButton : MonoBehaviour
             FourColor.gameboyColorsRGB[fourColorShade][1],
             FourColor.gameboyColorsRGB[fourColorShade][2]
         );
-    }
-    // Start is called before the first frame update
-    void Start()
-    {
-
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-
     }
 }
