@@ -10,6 +10,7 @@ public class GameManager : MonoBehaviour
     public GameObject pressureZoneTile;
     public GameObject unitTile;
     public float turnDelay = 1.5f;
+    public static bool Paused { get; set; } = false;
 
     private bool doingSetup;
     private bool processingTurn;
@@ -24,6 +25,10 @@ public class GameManager : MonoBehaviour
         boardScript.SetupScene(0);
     }
     
+    public static void TogglePaused()
+    {
+        Paused = !Paused;
+    }
     protected void ResolveZonesToDelete ()
     {
         foreach (GameObject zone in zonesToDelete)
@@ -248,9 +253,10 @@ public class GameManager : MonoBehaviour
     }
     IEnumerator CalculateTurn()
     {
-        for (int n = 0; n < 30; n++)
+        for (int n = 0; n > -1; n++)
         {
-            if (n != 0)
+
+            if (n != 0 && !Paused)
             {
 
                 List<PressureZone> spawnedPressureZones = new List<PressureZone>();

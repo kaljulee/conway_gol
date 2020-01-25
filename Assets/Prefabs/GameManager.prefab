@@ -49,7 +49,7 @@ MonoBehaviour:
     type: 3}
   unitTile: {fileID: 8253295328657836045, guid: 890e417ae9a591a48aa2e3ff253fcc14,
     type: 3}
-  turnDelay: 0.3
+  turnDelay: 0.1
 --- !u!114 &1412336138789898878
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -62,8 +62,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d0a530d1df4e66e4bb603234c2201cda, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  columns: 10
-  rows: 20
+  columns: 17
+  rows: 29
   floorTiles:
   - {fileID: 991046252526209770, guid: 458ba682a69783d468c37bbbded55ac8, type: 3}
   unitTile: {fileID: 8253295328657836045, guid: 890e417ae9a591a48aa2e3ff253fcc14,

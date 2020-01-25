@@ -73,8 +73,6 @@ public class BoardManager : MonoBehaviour
         // if zone is not on the board
         if (!ZoneIsOnBoard(zone))
         {
-
-            Debug.Log("ZONE DEEMED BAD x" + zone.transform.position.x + "y" + zone.transform.position.y);
             Destroy(zone);
             return;
         }
@@ -97,7 +95,6 @@ public class BoardManager : MonoBehaviour
 
     void BoardSetup()
     {
-        Debug.Log("setting up board with gridPositions " + gridPositions.Count);
         boardHolder = new GameObject("Board").transform;
         if (SpawnSites == null)
         {

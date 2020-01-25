@@ -8,6 +8,7 @@ TagManager:
   - Live
   - Floor
   - PressureZone
+  - ButtonTitleText
   layers:
   - Default
   - TransparentFX

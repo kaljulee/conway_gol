@@ -5,6 +5,7 @@ using UnityEngine;
 public class Loader : MonoBehaviour
 {
     public GameObject gameManager;
+    public GameObject buttonManager;
 
     void Awake()
     {
@@ -12,5 +13,10 @@ public class Loader : MonoBehaviour
         {
             Instantiate(gameManager);
         }
+
+        //if (ButtonManager.instance == null)
+        //{
+        //    Instantiate(buttonManager);
+        //}
     }
 }
