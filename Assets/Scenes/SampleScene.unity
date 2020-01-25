@@ -566,6 +566,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: MainMenuButton (1)
       objectReference: {fileID: 0}
+    - target: {fileID: 6568610705443603060, guid: 5033a51709f3c3f48b2389fca60a5c2c,
+        type: 3}
+      propertyPath: m_Text
+      value: Templates
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 5033a51709f3c3f48b2389fca60a5c2c, type: 3}
 --- !u!1001 &1099637918
@@ -633,17 +638,17 @@ PrefabInstance:
     - target: {fileID: 6568610704328680084, guid: 5033a51709f3c3f48b2389fca60a5c2c,
         type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: -15.8
+      value: 24
       objectReference: {fileID: 0}
     - target: {fileID: 6568610704328680084, guid: 5033a51709f3c3f48b2389fca60a5c2c,
         type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: -5.3
+      value: -0.00000047683716
       objectReference: {fileID: 0}
     - target: {fileID: 6568610704328680084, guid: 5033a51709f3c3f48b2389fca60a5c2c,
         type: 3}
       propertyPath: m_SizeDelta.x
-      value: 160
+      value: 90
       objectReference: {fileID: 0}
     - target: {fileID: 6568610704328680084, guid: 5033a51709f3c3f48b2389fca60a5c2c,
         type: 3}
@@ -653,7 +658,7 @@ PrefabInstance:
     - target: {fileID: 6568610704328680084, guid: 5033a51709f3c3f48b2389fca60a5c2c,
         type: 3}
       propertyPath: m_AnchorMin.x
-      value: 0.5
+      value: 0.1
       objectReference: {fileID: 0}
     - target: {fileID: 6568610704328680084, guid: 5033a51709f3c3f48b2389fca60a5c2c,
         type: 3}
@@ -663,7 +668,7 @@ PrefabInstance:
     - target: {fileID: 6568610704328680084, guid: 5033a51709f3c3f48b2389fca60a5c2c,
         type: 3}
       propertyPath: m_AnchorMax.x
-      value: 0.5
+      value: 0.1
       objectReference: {fileID: 0}
     - target: {fileID: 6568610704328680084, guid: 5033a51709f3c3f48b2389fca60a5c2c,
         type: 3}
@@ -684,6 +689,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: MainMenuButton (2)
+      objectReference: {fileID: 0}
+    - target: {fileID: 6568610705443603060, guid: 5033a51709f3c3f48b2389fca60a5c2c,
+        type: 3}
+      propertyPath: m_Text
+      value: Reset
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 5033a51709f3c3f48b2389fca60a5c2c, type: 3}
@@ -1003,6 +1013,11 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 1293773557}
     m_Modifications:
+    - target: {fileID: 1067966370914472122, guid: 5a391cffe1897a647aa0789eb917862b,
+        type: 3}
+      propertyPath: m_Text
+      value: Create Random
+      objectReference: {fileID: 0}
     - target: {fileID: 1067966372637799966, guid: 5a391cffe1897a647aa0789eb917862b,
         type: 3}
       propertyPath: m_LocalPosition.x
