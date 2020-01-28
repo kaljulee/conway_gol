@@ -15,13 +15,9 @@ public class MainMenu : MonoBehaviour
     private void Awake()
     {
         image = GetComponent<Image>();
-        string fourColorShade = FourColor.LIGHT;
+        string fourColorShade = TwoBitColor.LIGHT;
 
-        image.color = new Color(
-    FourColor.gameboyColorsRGB[fourColorShade][0],
-    FourColor.gameboyColorsRGB[fourColorShade][1],
-    FourColor.gameboyColorsRGB[fourColorShade][2]
-    );
+        image.color = TwoBitColor.GenerateTwoBitColor(fourColorShade);
     }
 
     // Start is called before the first frame update

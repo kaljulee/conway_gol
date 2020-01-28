@@ -7,7 +7,7 @@ public class ExitButton : RoundIconButton
 
     new private void Awake()
     {
-        fourColorShade = FourColor.LIGHTEST;
+        fourColorShade = TwoBitColor.LIGHTEST;
         base.Awake();
 
     }

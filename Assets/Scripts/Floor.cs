@@ -10,7 +10,7 @@ public class Floor : PlaceholderGameboyColored
 
     new void Awake()
     {
-        colorShade = FourColor.LIGHTEST;
+        colorShade = TwoBitColor.LIGHTEST;
         base.Awake();
     }
 

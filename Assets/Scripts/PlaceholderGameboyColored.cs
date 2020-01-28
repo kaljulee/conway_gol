@@ -15,14 +15,10 @@ public abstract class PlaceholderGameboyColored : MonoBehaviour
             ColorPlaceholder(colorShade);
         }
     }
-    private void ColorPlaceholder (string fourColorShade)
-        {
+    private void ColorPlaceholder(string fourColorShade)
+    {
         //SpriteRenderer spriteRenderer = GetComponent<SpriteRenderer>();
 
-        spriteRenderer.color = new Color(
-            FourColor.gameboyColorsRGB[fourColorShade][0],
-            FourColor.gameboyColorsRGB[fourColorShade][1],
-            FourColor.gameboyColorsRGB[fourColorShade][2]
-            );
-}
+        spriteRenderer.color = TwoBitColor.GenerateTwoBitColor(fourColorShade);
+    }
 }

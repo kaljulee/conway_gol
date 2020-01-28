@@ -159,7 +159,7 @@ public class PressureZone : PlaceholderGameboyColored
         this.id = Interlocked.Increment(ref StaticID);
         if (colorShade == null)
         {
-            colorShade = FourColor.LIGHT;
+            colorShade = TwoBitColor.LIGHT;
         }
         boxCollider = GetComponent<BoxCollider2D>();
         rb2D = GetComponent<Rigidbody2D>();
