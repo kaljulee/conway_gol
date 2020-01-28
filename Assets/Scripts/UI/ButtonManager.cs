@@ -48,4 +48,9 @@ public class ButtonManager : MonoBehaviour
         Debug.Log("exit button pressed!");
     }
 
+    public void OnRandomGamePress(float frequency = 0.2f)
+    {
+        gameManager.GetComponent<GameManager>().ApplyRandomSpawnSites(frequency);
+    }
+
 }

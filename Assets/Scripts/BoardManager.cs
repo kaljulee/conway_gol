@@ -55,6 +55,11 @@ public class BoardManager : MonoBehaviour
             Destroy(zone);
         }
     }
+
+    public List<Vector3> GetGridPositions()
+    {
+        return gridPositions;
+    }
     void InitializeList()
     {
         gridPositions.Clear();
