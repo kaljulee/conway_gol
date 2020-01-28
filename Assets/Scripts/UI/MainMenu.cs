@@ -16,8 +16,9 @@ public class MainMenu : MonoBehaviour
     {
         image = GetComponent<Image>();
         string fourColorShade = TwoBitColor.LIGHT;
-
-        image.color = TwoBitColor.GenerateTwoBitColor(fourColorShade);
+        Color color = TwoBitColor.GenerateTwoBitColor(fourColorShade);
+        color.a = 0.2f;
+        image.color = color;
     }
 
     // Start is called before the first frame update

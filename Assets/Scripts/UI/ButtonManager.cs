@@ -8,6 +8,7 @@ public class ButtonManager : MonoBehaviour
     public static GameObject mainMenu;
     public static ButtonManager instance = null;
     public static GameObject gameManager;
+    public static GameObject mainMenuSlider;
 
     private void Awake()
     {
@@ -28,6 +29,7 @@ public class ButtonManager : MonoBehaviour
         Debug.Log("gamemanager is null? " + (gameManager == null));
         gameManager = GameObject.FindGameObjectWithTag("GameManager");
         Debug.Log("gamemanager is null? " + (gameManager == null));
+        mainMenuSlider = GameObject.FindGameObjectWithTag("MainMenuSlider");
         
         mainMenu.SetActive(false);
     }
@@ -48,8 +50,10 @@ public class ButtonManager : MonoBehaviour
         Debug.Log("exit button pressed!");
     }
 
-    public void OnRandomGamePress(float frequency = 0.2f)
+    public void OnRandomGamePress()
     {
+        float frequency = mainMenuSlider.GetComponent<MainMenuSlider>().GetValue();
+        Debug.Log("random pressed, should pass " + frequency);
         gameManager.GetComponent<GameManager>().ApplyRandomSpawnSites(frequency);
     }
 
