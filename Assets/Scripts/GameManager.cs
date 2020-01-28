@@ -6,11 +6,14 @@ public class GameManager : MonoBehaviour
 {
 
     public static GameManager instance = null;
+    public GameObject mainCamera;
     public BoardManager boardScript;
     public GameObject pressureZoneTile;
     public GameObject unitTile;
     public float turnDelay = 1.5f;
     public static bool Paused { get; set; } = false;
+
+    private LinkedList<Vector2> SpawnSites = new LinkedList<Vector2>();
 
     private bool doingSetup;
     private bool processingTurn;
@@ -20,11 +23,47 @@ public class GameManager : MonoBehaviour
 
     void InitGame()
     {
+        SpawnSites.Clear();
+        // toad
+        //SpawnSites.AddFirst(new Vector2(2, 3));
+        //SpawnSites.AddFirst(new Vector2(3, 3));
+        //SpawnSites.AddFirst(new Vector2(4, 3));
+
+        //SpawnSites.AddFirst(new Vector2(3, 4));
+        //SpawnSites.AddFirst(new Vector2(4, 4));
+        //SpawnSites.AddFirst(new Vector2(5, 4));
+
+        // glider
+        //SpawnSites.AddFirst(new Vector2(3, 4));
+        //SpawnSites.AddFirst(new Vector2(4, 4));
+        //SpawnSites.AddFirst(new Vector2(3, 3));
+        //SpawnSites.AddFirst(new Vector2(4, 5));
+        //SpawnSites.AddFirst(new Vector2(2, 5));
+
+        // reverse glider
+        SpawnSites.AddFirst(new Vector2(3, 4));
+        SpawnSites.AddFirst(new Vector2(4, 4));
+        SpawnSites.AddFirst(new Vector2(4, 3));
+        SpawnSites.AddFirst(new Vector2(3, 5));
+        SpawnSites.AddFirst(new Vector2(5, 5));
+
+
+        //SpawnSites.AddFirst(new Vector2(4, 4));
+        //SpawnSites.AddFirst(new Vector2(3, 5));
+
+
+
         doingSetup = true;
         processingTurn = false;
+        boardScript.SetSpawnSites(SpawnSites);
         boardScript.SetupScene(0);
     }
     
+    public void ResetState()
+    {
+        InitGame();
+    }
+
     public static void TogglePaused()
     {
         Paused = !Paused;
@@ -288,7 +327,8 @@ public class GameManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-
+        mainCamera = GameObject.FindGameObjectWithTag("MainCamera");
+        mainCamera.GetComponent<Camera>().backgroundColor = TwoBitColor.GenerateTwoBitColor(TwoBitColor.LIGHTEST);
     }
 
     // Update is called once per frame
