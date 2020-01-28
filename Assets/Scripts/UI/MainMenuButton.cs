@@ -14,21 +14,13 @@ public class MainMenuButton : MonoBehaviour
         image = transform.GetChild(0).GetComponent<Image>();
         text = GetComponentInChildren<Text>();
         
-        string fourColorShade = FourColor.LIGHTEST;
-        string textFourColorShade = FourColor.DARKEST;
+        string fourColorShade = TwoBitColor.LIGHTEST;
+        string textFourColorShade = TwoBitColor.DARKEST;
 
 
-        image.color = new Color(
-    FourColor.gameboyColorsRGB[fourColorShade][0],
-    FourColor.gameboyColorsRGB[fourColorShade][1],
-    FourColor.gameboyColorsRGB[fourColorShade][2]
-    );
+        image.color = TwoBitColor.GenerateTwoBitColor(fourColorShade);
 
-        text.color = new Color(
-    FourColor.gameboyColorsRGB[textFourColorShade][0],
-    FourColor.gameboyColorsRGB[textFourColorShade][1],
-    FourColor.gameboyColorsRGB[textFourColorShade][2]
-            );
+        text.color = TwoBitColor.GenerateTwoBitColor(textFourColorShade);
 
     }
 

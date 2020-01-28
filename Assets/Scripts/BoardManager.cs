@@ -41,8 +41,20 @@ public class BoardManager : MonoBehaviour
 
     public List<GameObject> GetPressureZones() => pressureZones;
 
-
-
+    public void ResetBoardState()
+    {
+        ClearPressureZones();
+        InstantiateSpawnSites(SpawnSites);
+    }
+    private void ClearPressureZones()
+    {
+        while (pressureZones.Count > 0)
+        {
+            GameObject zone = pressureZones[0];
+            pressureZones.RemoveAt(0);
+            Destroy(zone);
+        }
+    }
     void InitializeList()
     {
         gridPositions.Clear();
@@ -55,11 +67,15 @@ public class BoardManager : MonoBehaviour
         }
     }
 
+    public void SetSpawnSites(LinkedList<Vector2> sites)
+    {
+        SpawnSites = sites;
+    }
+
     public void RemovePressureZone(GameObject zone)
     {
         pressureZones.Remove(zone);
         Destroy(zone);
-
     }
 
     public bool ZoneIsOnBoard(GameObject zone)
@@ -93,71 +109,23 @@ public class BoardManager : MonoBehaviour
 
     }
 
+    private void InstantiateSpawnSites(LinkedList<Vector2> sites)
+    {
+
+        LinkedListNode<Vector2> node = sites.First;
+
+        while (node != null)
+        {
+            GameObject pzInstance = Instantiate(unitTile, new Vector3(node.Value.x, node.Value.y, 0f), Quaternion.identity) as GameObject;
+            pzInstance.transform.SetParent(boardHolder);
+            pressureZones.Add(pzInstance);
+            node = node.Next;
+        }
+    }
     void BoardSetup()
     {
         boardHolder = new GameObject("Board").transform;
-        if (SpawnSites == null)
-        {
-            SpawnSites = new LinkedList<Vector2>();
-            // toad
-            //SpawnSites.AddFirst(new Vector2(2, 3));
-            //SpawnSites.AddFirst(new Vector2(3, 3));
-            //SpawnSites.AddFirst(new Vector2(4, 3));
-
-            //SpawnSites.AddFirst(new Vector2(3, 4));
-            //SpawnSites.AddFirst(new Vector2(4, 4));
-            //SpawnSites.AddFirst(new Vector2(5, 4));
-
-            // glider
-            //SpawnSites.AddFirst(new Vector2(3, 4));
-            //SpawnSites.AddFirst(new Vector2(4, 4));
-            //SpawnSites.AddFirst(new Vector2(3, 3));
-            //SpawnSites.AddFirst(new Vector2(4, 5));
-            //SpawnSites.AddFirst(new Vector2(2, 5));
-
-            // reverse glider
-            SpawnSites.AddFirst(new Vector2(3, 4));
-            SpawnSites.AddFirst(new Vector2(4, 4));
-            SpawnSites.AddFirst(new Vector2(4, 3));
-            SpawnSites.AddFirst(new Vector2(3, 5));
-            SpawnSites.AddFirst(new Vector2(5, 5));
-
-
-            //SpawnSites.AddFirst(new Vector2(4, 4));
-            //SpawnSites.AddFirst(new Vector2(3, 5));
-        }
-
-        for (int x = -1; x < columns + 1; x++)
-        {
-            for (int y = -1; y < rows + 1; y++)
-            {
-
-                // start by assuming random floor tile
-                GameObject toInstantiate = floorTiles[Random.Range(0, floorTiles.Length)];
-
-                LinkedListNode<Vector2> node = SpawnSites.First;
-                // should only check till the first good value;
-                while (node != null)
-                {
-                    if (node.Value.x == x && node.Value.y == y)
-                    {
-                        GameObject pzInstance = Instantiate(unitTile, new Vector3(x, y, 0f), Quaternion.identity) as GameObject;
-                        pzInstance.transform.SetParent(boardHolder);
-                        pressureZones.Add(pzInstance);
-                        SpawnSites.Remove(node);
-                        node = null;
-
-                    }
-                    else
-                    {
-                        node = node.Next;
-                    }
-                }
-
-                GameObject instance = Instantiate(toInstantiate, new Vector3(x, y, 0f), Quaternion.identity) as GameObject;
-                instance.transform.SetParent(boardHolder);
-            }
-        }
+        InstantiateSpawnSites(SpawnSites);
     }
 
     void Awake()

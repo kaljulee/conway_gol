@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public static class FourColor
+public static class TwoBitColor
 {
     public const string LIGHTEST = "LIGHTEST";
     public const string LIGHT = "LIGHT";
@@ -18,6 +18,14 @@ public static class FourColor
         return dictionary;
     }
 
+    public static Color GenerateTwoBitColor(string shade)
+    {
+        return new Color(
+            gameboyColorsRGB[shade][0],
+            gameboyColorsRGB[shade][1],
+            gameboyColorsRGB[shade][2]
+            );
+    }
     public static Dictionary<string, string> CreateFourColorDictionaryHex (params string[] colors)
     {
         return CreateFourColorDictionary(colors);

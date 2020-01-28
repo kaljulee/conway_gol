@@ -28,7 +28,7 @@ public class Unit : PressureZone
     }
     new void Awake()
     {
-        colorShade = FourColor.DARKEST;
+        colorShade = TwoBitColor.DARKEST;
         Pressure = 0;
         base.Awake();
     }

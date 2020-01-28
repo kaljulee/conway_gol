@@ -8,7 +8,7 @@ public class GearButton : RoundIconButton
 
     new private void Awake()
     {
-        fourColorShade = FourColor.LIGHTEST;
+        fourColorShade = TwoBitColor.LIGHTEST;
         base.Awake();
 
     }
