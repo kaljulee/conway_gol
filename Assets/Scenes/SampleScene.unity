@@ -678,6 +678,36 @@ PrefabInstance:
       propertyPath: m_Name
       value: MainMenuButton (2)
       objectReference: {fileID: 0}
+    - target: {fileID: 6568610704328680086, guid: 5033a51709f3c3f48b2389fca60a5c2c,
+        type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6568610704328680086, guid: 5033a51709f3c3f48b2389fca60a5c2c,
+        type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Mode
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6568610704328680086, guid: 5033a51709f3c3f48b2389fca60a5c2c,
+        type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_CallState
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 6568610704328680086, guid: 5033a51709f3c3f48b2389fca60a5c2c,
+        type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 1737325436}
+    - target: {fileID: 6568610704328680086, guid: 5033a51709f3c3f48b2389fca60a5c2c,
+        type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: OnResetButtonPress
+      objectReference: {fileID: 0}
+    - target: {fileID: 6568610704328680086, guid: 5033a51709f3c3f48b2389fca60a5c2c,
+        type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
+      value: UnityEngine.Object, UnityEngine
+      objectReference: {fileID: 0}
     - target: {fileID: 6568610705443603060, guid: 5033a51709f3c3f48b2389fca60a5c2c,
         type: 3}
       propertyPath: m_Text
@@ -857,6 +887,18 @@ RectTransform:
     type: 3}
   m_PrefabInstance: {fileID: 334568083}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &1737325436 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 114799116772350742, guid: 1c094f0a1b9f9c249a6ec40e7f9668fa,
+    type: 3}
+  m_PrefabInstance: {fileID: 930032945}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 129b220bb93637540adf42f6d50cadf6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &1067966371972567807
 PrefabInstance:
   m_ObjectHideFlags: 0

@@ -14,13 +14,9 @@ public class RoundIconButton : MonoBehaviour
         image = GetComponent<Image>();
         if (fourColorShade == null)
         {
-            fourColorShade = FourColor.LIGHTEST;
+            fourColorShade = TwoBitColor.LIGHTEST;
         }
-        image.color = new Color(
-            FourColor.gameboyColorsRGB[fourColorShade][0],
-            FourColor.gameboyColorsRGB[fourColorShade][1],
-            FourColor.gameboyColorsRGB[fourColorShade][2]
-        );
+        image.color = TwoBitColor.GenerateTwoBitColor(fourColorShade);
     }
     // Start is called before the first frame update
     void Start()

@@ -7,6 +7,7 @@ public class ButtonManager : MonoBehaviour
 
     public static GameObject mainMenu;
     public static ButtonManager instance = null;
+    public static GameObject gameManager;
 
     private void Awake()
     {
@@ -24,7 +25,16 @@ public class ButtonManager : MonoBehaviour
     private void Start()
     {
         mainMenu = GameObject.Find("MainMenu");
+        Debug.Log("gamemanager is null? " + (gameManager == null));
+        gameManager = GameObject.FindGameObjectWithTag("GameManager");
+        Debug.Log("gamemanager is null? " + (gameManager == null));
+        
         mainMenu.SetActive(false);
+    }
+
+    public void OnResetButtonPress()
+    {
+        gameManager.GetComponent<GameManager>().ResetGameState();
     }
     public void OnGearButtonPress()
     {

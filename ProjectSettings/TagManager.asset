@@ -9,6 +9,7 @@ TagManager:
   - Floor
   - PressureZone
   - ButtonTitleText
+  - GameManager
   layers:
   - Default
   - TransparentFX

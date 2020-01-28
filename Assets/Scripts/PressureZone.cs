@@ -33,14 +33,11 @@ public class PressureZone : PlaceholderGameboyColored
     // right to define these to go to Unit here
     public virtual GameObject SpawnOnOverPressure()
     {
-        Debug.Log("OVERPRESSURE SPAWN  " + Pressure + " " + Unit.MaxPressure);
         //Debug.Break();
         if (Pressure <= Unit.MaxPressure)
         {
-            Debug.Log("OVERPRESSURE SPAWNING UNIT");
             return unitTile;
         }
-        Debug.Log("OVERPRESSURE SPAWNING NULL");
         return null;
     }
 
@@ -84,7 +81,6 @@ public class PressureZone : PlaceholderGameboyColored
     }
     public Dictionary<string, GameObject> CheckNeighbors()
     {
-        Debug.Log("--------- In Check Neighbors -------------");
         GameObject up, down, left, right, upRight, upLeft, downRight, downLeft;
 
         RaycastHit2D hit;
@@ -93,53 +89,53 @@ public class PressureZone : PlaceholderGameboyColored
         up = CheckDirection(0, 1, out hit);
         if (up != null)
         {
-            Debug.Log("hit above");
-            Debug.Log(hit.transform.gameObject);
+            //Debug.Log("hit above");
+            //Debug.Log(hit.transform.gameObject);
         }
         // right
         right = CheckDirection(1, 0, out hit);
         if (right != null)
         {
-            Debug.Log("hit to right");
-            Debug.Log(hit.transform.gameObject);
+            //Debug.Log("hit to right");
+            //Debug.Log(hit.transform.gameObject);
         }
         // below
         down = CheckDirection(0, -1, out hit);
         if (down != null)
         {
-            Debug.Log("hit below");
-            Debug.Log(hit.transform.gameObject);
+            //Debug.Log("hit below");
+            //Debug.Log(hit.transform.gameObject);
         }
         // left
         left = CheckDirection(-1, 0, out hit);
         if (left != null)
         {
-            Debug.Log("hit to left");
-            Debug.Log(hit.transform.gameObject);
+            //Debug.Log("hit to left");
+            //Debug.Log(hit.transform.gameObject);
         }
         upRight = CheckDirection(1, 1, out hit);
         if (upRight != null)
         {
-            Debug.Log("upRight hit");
-            Debug.Log(hit.transform.gameObject);
+            //Debug.Log("upRight hit");
+            //Debug.Log(hit.transform.gameObject);
         }
         upLeft = CheckDirection(-1, 1, out hit);
         if (upLeft != null)
         {
-            Debug.Log("upLeft hit");
-            Debug.Log(hit.transform.gameObject);
+            //Debug.Log("upLeft hit");
+            //Debug.Log(hit.transform.gameObject);
         }
         downRight = CheckDirection(1, -1, out hit);
         if (downRight != null)
         {
-            Debug.Log("downRight hit");
-            Debug.Log(hit.transform.gameObject);
+            //Debug.Log("downRight hit");
+            //Debug.Log(hit.transform.gameObject);
         }
         downLeft = CheckDirection(-1, -1, out hit);
         if (downLeft != null)
         {
-            Debug.Log("downLeft hit");
-            Debug.Log(hit.transform.gameObject);
+            //Debug.Log("downLeft hit");
+            //Debug.Log(hit.transform.gameObject);
         }
 
         return new Dictionary<string, GameObject>(){
@@ -159,7 +155,7 @@ public class PressureZone : PlaceholderGameboyColored
         this.id = Interlocked.Increment(ref StaticID);
         if (colorShade == null)
         {
-            colorShade = FourColor.LIGHT;
+            colorShade = TwoBitColor.LIGHT;
         }
         boxCollider = GetComponent<BoxCollider2D>();
         rb2D = GetComponent<Rigidbody2D>();
