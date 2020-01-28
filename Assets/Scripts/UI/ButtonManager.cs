@@ -34,7 +34,7 @@ public class ButtonManager : MonoBehaviour
 
     public void OnResetButtonPress()
     {
-        gameManager.GetComponent<GameManager>().ResetState();
+        gameManager.GetComponent<GameManager>().ResetGameState();
     }
     public void OnGearButtonPress()
     {

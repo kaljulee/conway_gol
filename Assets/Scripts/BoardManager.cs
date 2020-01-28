@@ -41,8 +41,20 @@ public class BoardManager : MonoBehaviour
 
     public List<GameObject> GetPressureZones() => pressureZones;
 
-
-
+    public void ResetBoardState()
+    {
+        ClearPressureZones();
+        InstantiateSpawnSites(SpawnSites);
+    }
+    private void ClearPressureZones()
+    {
+        while (pressureZones.Count > 0)
+        {
+            GameObject zone = pressureZones[0];
+            pressureZones.RemoveAt(0);
+            Destroy(zone);
+        }
+    }
     void InitializeList()
     {
         gridPositions.Clear();
@@ -59,11 +71,11 @@ public class BoardManager : MonoBehaviour
     {
         SpawnSites = sites;
     }
+
     public void RemovePressureZone(GameObject zone)
     {
         pressureZones.Remove(zone);
         Destroy(zone);
-
     }
 
     public bool ZoneIsOnBoard(GameObject zone)

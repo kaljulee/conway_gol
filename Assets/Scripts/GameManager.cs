@@ -21,6 +21,12 @@ public class GameManager : MonoBehaviour
     List<GameObject> zonesToDelete = new List<GameObject>();
     List<GameObject> zonesToAdd = new List<GameObject>();
 
+    public void ResetGameState()
+    {
+        //Paused = true;
+        boardScript.ResetBoardState();
+        //Paused = false;
+    }
     void InitGame()
     {
         SpawnSites.Clear();
@@ -58,16 +64,12 @@ public class GameManager : MonoBehaviour
         boardScript.SetSpawnSites(SpawnSites);
         boardScript.SetupScene(0);
     }
-    
-    public void ResetState()
-    {
-        InitGame();
-    }
 
     public static void TogglePaused()
     {
         Paused = !Paused;
     }
+    
     protected void ResolveZonesToDelete ()
     {
         foreach (GameObject zone in zonesToDelete)

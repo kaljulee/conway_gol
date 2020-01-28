@@ -33,14 +33,11 @@ public class PressureZone : PlaceholderGameboyColored
     // right to define these to go to Unit here
     public virtual GameObject SpawnOnOverPressure()
     {
-        Debug.Log("OVERPRESSURE SPAWN  " + Pressure + " " + Unit.MaxPressure);
         //Debug.Break();
         if (Pressure <= Unit.MaxPressure)
         {
-            Debug.Log("OVERPRESSURE SPAWNING UNIT");
             return unitTile;
         }
-        Debug.Log("OVERPRESSURE SPAWNING NULL");
         return null;
     }
 
