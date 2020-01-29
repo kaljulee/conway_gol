@@ -136,16 +136,20 @@ public class GameManager : MonoBehaviour, IsBoardDirector
 
     ///////////////////////
     /// individual methods
+    /// check for reversible action calls
+
     protected void RemovePressureZone(GameObject zone)
     {
         PressureZone pressureScript = zone.GetComponent<PressureZone>();
         boardScript.RemovePressureZone(zone);
+        IssueDirectBoardDirection(Action.ActionTypes.REMOVE, -1, zone);
         Destroy(zone);
     }
 
     protected void AddPressureZone(GameObject zone)
     {
         boardScript.AddPressureZone(zone);
+        IssueDirectBoardDirection(Action.ActionTypes.CREATE, Action.ZoneTypes.GetZoneType(zone.GetType()), zone);
     }
 
     protected void InstantiatePressureZone(KeyValuePair<Vector2, int> data)
@@ -216,6 +220,7 @@ public class GameManager : MonoBehaviour, IsBoardDirector
         {
             PressureZone neighborScript = neighborPair.Value.GetComponent<PressureZone>();
             neighborScript.IncrementPressure(pressureScript.ExertedPressure);
+            IssueDirectBoardDirection(Action.ActionTypes.PRESSURE_CHANGE, pressureScript.ExertedPressure, neighborPair.Value);
 
         }
         // else add to pressure values to put into pressure creator
@@ -287,6 +292,7 @@ public class GameManager : MonoBehaviour, IsBoardDirector
         foreach (KeyValuePair<string, GameObject> neighborPair in neighbors)
         {
             PressureNeighbor(neighborPair, currentZone);
+            // create action here
         }
 
     }
@@ -327,7 +333,7 @@ public class GameManager : MonoBehaviour, IsBoardDirector
         for (int n = 0; n > -1; n++)
         {
 
-            if (n != 0 && (!Paused || TakeManualStep()))
+            if ((n < 3 && n != 0 && !Paused) || (TakeManualStep()))
             {
 
                 List<PressureZone> spawnedPressureZones = new List<PressureZone>();
@@ -344,14 +350,18 @@ public class GameManager : MonoBehaviour, IsBoardDirector
 
     ////////////////////////////////////
     /// action creators
-    public Action IssueAddressBoardDirection(string actionType, float payload, Vector2 address)
+    public Action IssueAddressBoardDirection(int actionType, float payload, Vector2 address)
     {
-        throw new System.NotImplementedException();
+        Action addressAction = Action.Factory.CreateAddressAction(actionType, payload, address);
+        ActionExecutor.instance.ExecuteAction(addressAction);
+        return addressAction;
     }
 
-    public Action IssueDirectBoardDirection(string actionType, float payload, GameObject target)
+    public Action IssueDirectBoardDirection(int actionType, float payload, GameObject target)
     {
-        throw new System.NotImplementedException();
+        Action directAction = Action.Factory.CreateDirectAction(actionType, payload, target);
+        ActionExecutor.instance.ExecuteAction(directAction);
+        return directAction;
     }
 
     //////////////////////////////////
