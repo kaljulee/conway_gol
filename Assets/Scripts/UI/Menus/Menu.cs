@@ -14,6 +14,11 @@ public abstract class Menu : MonoBehaviour
         gameObject.SetActive(newActiveState);
         return newActiveState;
     }
+
+    public bool IsOpen()
+    {
+        return gameObject.activeSelf;
+    }
     protected void Awake()
     {
         image = GetComponent<Image>();

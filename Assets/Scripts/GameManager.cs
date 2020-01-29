@@ -93,6 +93,15 @@ public class GameManager : MonoBehaviour, IsBoardDirector
         Paused = !Paused;
     }
     
+    public static void SetPaused()
+    {
+        Paused = true;
+    }
+
+    public static void SetUnPaused()
+    {
+        Paused = false;
+    }
     protected void ResolveZonesToDelete ()
     {
         foreach (GameObject zone in zonesToDelete)
