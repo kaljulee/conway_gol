@@ -34,10 +34,9 @@ public class ButtonManager : MonoBehaviour
         mainMenu.SetActive(false);
     }
 
-    public void OnResetButtonPress()
-    {
-        gameManager.GetComponent<GameManager>().ResetGameState();
-    }
+    ////////////////////////////
+    /// major utility buttons
+    /// 
     public void OnGearButtonPress()
     {
         GameManager.TogglePaused();
@@ -50,11 +49,44 @@ public class ButtonManager : MonoBehaviour
         Debug.Log("exit button pressed!");
     }
 
+
+    ////////////////////////////
+    /// main menu buttons
+    /// 
+
+    public void OnResetButtonPress()
+    {
+        gameManager.GetComponent<GameManager>().ResetGameState();
+    }
+
+
     public void OnRandomGamePress()
     {
         float frequency = mainMenuSlider.GetComponent<MainMenuSlider>().GetValue();
-        Debug.Log("random pressed, should pass " + frequency);
         gameManager.GetComponent<GameManager>().ApplyRandomSpawnSites(frequency);
+    }
+
+    public void OnTemplatesPress()
+    {
+
+    }
+
+    ////////////////////////////
+    /// player buttons
+    /// 
+    public void OnPlayPress()
+    {
+
+    }
+
+    public void OnStopPress()
+    {
+
+    }
+
+    public void OnStepForwardPress()
+    {
+
     }
 
 }
