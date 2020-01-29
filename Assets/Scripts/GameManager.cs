@@ -1,6 +1,8 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Random = UnityEngine.Random;
+
 
 public class GameManager : MonoBehaviour
 {
@@ -26,6 +28,25 @@ public class GameManager : MonoBehaviour
         //Paused = true;
         boardScript.ResetBoardState();
         //Paused = false;
+    }
+
+    public void ApplyRandomSpawnSites(float frequency)
+    {
+        CreateRandomSpawnSites(frequency);
+        boardScript.SetSpawnSites(SpawnSites);
+        boardScript.ResetBoardState();
+    }
+
+    private void CreateRandomSpawnSites(float frequency)
+    {
+        SpawnSites.Clear();
+        foreach (Vector3 position in boardScript.GetGridPositions())
+        {
+            if (Random.Range(0f, 1f) < frequency)
+            {
+                SpawnSites.AddFirst(position);
+            }
+        }
     }
     void InitGame()
     {
