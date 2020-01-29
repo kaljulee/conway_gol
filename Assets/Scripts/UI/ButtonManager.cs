@@ -96,4 +96,9 @@ public class ButtonManager : MonoBehaviour
         GameManager.instance.RequestManualSteps(1);
     }
 
+    public void OnStepBackwardPress()
+    {
+        GameManager.instance.RequestManualSteps(-1);
+    }
+
 }
