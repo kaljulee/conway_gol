@@ -33,7 +33,8 @@ public class GameManager : MonoBehaviour, IsBoardDirector
         {
             manualSteps -= 1;
             return true;
-        } if (manualSteps < 0)
+        }
+        if (manualSteps < 0)
         {
             manualSteps += 1;
             return true;
@@ -47,13 +48,9 @@ public class GameManager : MonoBehaviour, IsBoardDirector
     List<GameObject> zonesToDelete = new List<GameObject>();
     List<GameObject> zonesToAdd = new List<GameObject>();
 
-    public void ResetGameState()
-    {
-        //Paused = true;
-        boardScript.ResetBoardState();
-        //Paused = false;
-    }
 
+    //////////////////////////
+    /// handle spawnsites
     public void ApplyRandomSpawnSites(float frequency)
     {
         CreateRandomSpawnSites(frequency);
@@ -72,6 +69,10 @@ public class GameManager : MonoBehaviour, IsBoardDirector
             }
         }
     }
+
+
+    //////////////////////////////
+    /// util stuff
     void InitGame()
     {
         SpawnSites.Clear();
@@ -110,11 +111,19 @@ public class GameManager : MonoBehaviour, IsBoardDirector
         boardScript.SetupScene(0);
     }
 
+    public void ResetGameState()
+    {
+        //Paused = true;
+        boardScript.ResetBoardState();
+        ActionExecutor.instance.ClearHistory();
+        //Paused = false;
+    }
+
     public static void TogglePaused()
     {
         Paused = !Paused;
     }
-    
+
     public static void SetPaused()
     {
         Paused = true;
@@ -124,41 +133,26 @@ public class GameManager : MonoBehaviour, IsBoardDirector
     {
         Paused = false;
     }
-    protected void ResolveZonesToDelete ()
-    {
-        foreach (GameObject zone in zonesToDelete)
-        {
-            RemovePressureZone(zone);
-        }
-        zonesToDelete.Clear();
-    }
-    
-    protected void ResolveZonesToAdd()
-    {
-        foreach (GameObject zone in zonesToAdd)
-        {
-            AddPressureZone(zone);
-        }
-        zonesToAdd.Clear();
-    }
-    
+
+    ///////////////////////
+    /// individual methods
     protected void RemovePressureZone(GameObject zone)
     {
         PressureZone pressureScript = zone.GetComponent<PressureZone>();
         boardScript.RemovePressureZone(zone);
         Destroy(zone);
     }
-    
+
     protected void AddPressureZone(GameObject zone)
     {
         boardScript.AddPressureZone(zone);
     }
-    
+
     protected void InstantiatePressureZone(KeyValuePair<Vector2, int> data)
     {
         ////this is probably not necessary, as gameObject does not exist yet
         ////PressureZone pressureScript = data.Value.GetComponent<PressureZone>();
-        
+
         GameObject instance;
         if (data.Value > PressureZone.MaxPressure)
         {
@@ -176,68 +170,42 @@ public class GameManager : MonoBehaviour, IsBoardDirector
         instance.transform.position = data.Key;
         AddPressureZone(instance);
     }
-    
-    public void InstantiateNewPressureZones()
-    {
-        foreach (KeyValuePair<Vector2, int> data in newPressureZoneData)
-        {
-            InstantiatePressureZone(data);
-        }
-        newPressureZoneData.Clear();
-    }
-    
+
     public void ResolvePressureZone(GameObject zone)
     {
-        
-            PressureZone pressureScript = zone.GetComponent<PressureZone>();
-  
-            int pressureResult = pressureScript.CheckPressure();
-            GameObject replacement = null;
-            switch (pressureResult)
+
+        PressureZone pressureScript = zone.GetComponent<PressureZone>();
+
+        int pressureResult = pressureScript.CheckPressure();
+        GameObject replacement = null;
+        switch (pressureResult)
+        {
+            case 1:
+                replacement = pressureScript.SpawnOnOverPressure();
+                break;
+            case -1:
+                replacement = pressureScript.SpawnOnUnderPressure();
+                break;
+            default:
+                break;
+        }
+        if (pressureResult != 0)
+        {
+            Vector2 position = zone.transform.position;
+            zonesToDelete.Add(zone);
+            if (replacement != null)
             {
-                case 1:
-                    replacement = pressureScript.SpawnOnOverPressure();
-                    break;
-                case -1:
-                    replacement = pressureScript.SpawnOnUnderPressure();
-                    break;
-                default:
-                    break;
-            }
-            if (pressureResult != 0)
-            {
-                Vector2 position = zone.transform.position;
-                zonesToDelete.Add(zone);
-                if (replacement != null)
-                {
                 GameObject instance = Instantiate(replacement, position, Quaternion.identity) as GameObject;
                 zonesToAdd.Add(instance);
 
             }
         }
-            else
-            {
-                pressureScript.ZeroPressure();
-            }
-    }
-    
-    void ResolvePressureZones()
-    {
-
-        foreach (GameObject zone in boardScript.GetPressureZones())
+        else
         {
-            ResolvePressureZone(zone);                      
+            pressureScript.ZeroPressure();
         }
-
-        // will clear out zones here
-        ResolveZonesToDelete();
-
-        // will add zones
-        ResolveZonesToAdd();
-
-        InstantiateNewPressureZones();
     }
-    
+
     private void PressureNeighbor(KeyValuePair<string, GameObject> neighborPair, GameObject currentZone)
     {
         PressureZone pressureScript = currentZone.GetComponent<PressureZone>();
@@ -248,7 +216,7 @@ public class GameManager : MonoBehaviour, IsBoardDirector
         {
             PressureZone neighborScript = neighborPair.Value.GetComponent<PressureZone>();
             neighborScript.IncrementPressure(pressureScript.ExertedPressure);
-        
+
         }
         // else add to pressure values to put into pressure creator
         else
@@ -268,43 +236,28 @@ public class GameManager : MonoBehaviour, IsBoardDirector
             }
         }
     }
-    
-    private void PressureNeighbors(Dictionary<string, GameObject> neighbors, GameObject currentZone)
+
+
+    ////////////////////////////////
+    /// foreachers
+    protected void ResolveZonesToDelete()
     {
-
-        foreach (KeyValuePair<string, GameObject> neighborPair in neighbors)
+        foreach (GameObject zone in zonesToDelete)
         {
-            PressureNeighbor(neighborPair, currentZone);
+            RemovePressureZone(zone);
         }
-
+        zonesToDelete.Clear();
     }
-    
-    private void PrintNeighborDebug(PressureZone pressureScript)
+
+    protected void ResolveZonesToAdd()
     {
-        Dictionary<string, GameObject> neighbors = pressureScript.CheckNeighbors();
-
-        //Debug.Log("neighbors dictionary for current zone " + pressureScript.GetId());
-        foreach (KeyValuePair<string, GameObject> neighbor in neighbors)
+        foreach (GameObject zone in zonesToAdd)
         {
-            //Debug.Log("neighbor " + neighbor.Key + " is real? " + (neighbor.Value != null));
-
-            //if (neighbor.Value != null)
-            //{
-            //    //Debug.Log("trying to print position, type is Unit? ");
-            //    //Debug.Log((neighbor.Value.GetType() == typeof(Unit)));
-            //    //Debug.Log((neighbor.Value.GetType() == typeof(PressureZone)));
-            //    //Debug.Log(neighbor.Value);
-            //    //Debug.Log("id: " + neighbor.Value.GetId() + " position: x" + neighbor.Value.transform.position.x + "y" + neighbor.Value.transform.position.y);
-            //}
-            //else
-            //{
-            //    //Debug.Log("judged to be null:");
-            //    //Debug.Log(neighbor.Value);
-            //}
-
+            AddPressureZone(zone);
         }
+        zonesToAdd.Clear();
     }
-    
+
     void UpdatePressureZones()
     {
         List<GameObject> ExistingPressureZones = boardScript.GetPressureZones();
@@ -328,24 +281,47 @@ public class GameManager : MonoBehaviour, IsBoardDirector
         }
     }
 
-    private void PrintPressureDebug()
+    private void PressureNeighbors(Dictionary<string, GameObject> neighbors, GameObject currentZone)
     {
-        Debug.Log("//////////// start of pressure data");
-        foreach (KeyValuePair<Vector2, int> pair in newPressureZoneData)
-        {
-            Vector2 key = pair.Key;
-            int value = pair.Value;
-            Debug.Log("xy: " + key.x + " " + key.y + " weight: " + value);
-        }
-        Debug.Log("end of pressure data \\\\\\\\\\\\\\\\\\");
 
-        Debug.Log("----- start of existing zone data");
+        foreach (KeyValuePair<string, GameObject> neighborPair in neighbors)
+        {
+            PressureNeighbor(neighborPair, currentZone);
+        }
+
+    }
+
+    void ResolvePressureZones()
+    {
+
         foreach (GameObject zone in boardScript.GetPressureZones())
         {
-            Debug.Log("existing xy: " + zone.transform.position.x + " " + zone.transform.position.y + " weight: " + zone.GetComponent<PressureZone>().Pressure);
+            ResolvePressureZone(zone);
         }
-        Debug.Log("end of existing zone data +++++++++++++");
+
+        // will clear out zones here
+        ResolveZonesToDelete();
+
+        // will add zones
+        ResolveZonesToAdd();
+
+        InstantiateNewPressureZones();
     }
+
+    public void InstantiateNewPressureZones()
+    {
+        foreach (KeyValuePair<Vector2, int> data in newPressureZoneData)
+        {
+            InstantiatePressureZone(data);
+        }
+        newPressureZoneData.Clear();
+    }
+
+
+
+
+    /////////////////////////
+    // run turn
     IEnumerator CalculateTurn()
     {
         for (int n = 0; n > -1; n++)
@@ -365,6 +341,21 @@ public class GameManager : MonoBehaviour, IsBoardDirector
         //processingTurn = false;
     }
 
+
+    ////////////////////////////////////
+    /// action creators
+    public Action IssueAddressBoardDirection(string actionType, float payload, Vector2 address)
+    {
+        throw new System.NotImplementedException();
+    }
+
+    public Action IssueDirectBoardDirection(string actionType, float payload, GameObject target)
+    {
+        throw new System.NotImplementedException();
+    }
+
+    //////////////////////////////////
+    /// MonoBehavior methods
     void Awake()
     {
         if (instance == null)
@@ -403,13 +394,54 @@ public class GameManager : MonoBehaviour, IsBoardDirector
         StartCoroutine(CalculateTurn());
     }
 
-    public Action IssueAddressBoardDirection(string actionType, float payload, Vector2 address)
+
+    ///////////////////////////
+    /// debug
+
+    private void PrintPressureDebug()
     {
-        throw new System.NotImplementedException();
+        Debug.Log("//////////// start of pressure data");
+        foreach (KeyValuePair<Vector2, int> pair in newPressureZoneData)
+        {
+            Vector2 key = pair.Key;
+            int value = pair.Value;
+            Debug.Log("xy: " + key.x + " " + key.y + " weight: " + value);
+        }
+        Debug.Log("end of pressure data \\\\\\\\\\\\\\\\\\");
+
+        Debug.Log("----- start of existing zone data");
+        foreach (GameObject zone in boardScript.GetPressureZones())
+        {
+            Debug.Log("existing xy: " + zone.transform.position.x + " " + zone.transform.position.y + " weight: " + zone.GetComponent<PressureZone>().Pressure);
+        }
+        Debug.Log("end of existing zone data +++++++++++++");
     }
 
-    public Action IssueDirectBoardDirection(string actionType, float payload, GameObject target)
+    private void PrintNeighborDebug(PressureZone pressureScript)
     {
-        throw new System.NotImplementedException();
+        Dictionary<string, GameObject> neighbors = pressureScript.CheckNeighbors();
+
+        //Debug.Log("neighbors dictionary for current zone " + pressureScript.GetId());
+        foreach (KeyValuePair<string, GameObject> neighbor in neighbors)
+        {
+            //Debug.Log("neighbor " + neighbor.Key + " is real? " + (neighbor.Value != null));
+
+            //if (neighbor.Value != null)
+            //{
+            //    //Debug.Log("trying to print position, type is Unit? ");
+            //    //Debug.Log((neighbor.Value.GetType() == typeof(Unit)));
+            //    //Debug.Log((neighbor.Value.GetType() == typeof(PressureZone)));
+            //    //Debug.Log(neighbor.Value);
+            //    //Debug.Log("id: " + neighbor.Value.GetId() + " position: x" + neighbor.Value.transform.position.x + "y" + neighbor.Value.transform.position.y);
+            //}
+            //else
+            //{
+            //    //Debug.Log("judged to be null:");
+            //    //Debug.Log(neighbor.Value);
+            //}
+
+        }
     }
+
+
 }
