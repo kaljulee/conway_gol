@@ -93,7 +93,7 @@ public class ButtonManager : MonoBehaviour
 
     public void OnStepForwardPress()
     {
-        Debug.Log("forward step pressed");
+        GameManager.instance.RequestManualSteps(1);
     }
 
 }

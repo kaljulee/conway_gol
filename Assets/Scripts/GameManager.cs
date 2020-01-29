@@ -13,11 +13,33 @@ public class GameManager : MonoBehaviour, IsBoardDirector
     public GameObject pressureZoneTile;
     public GameObject unitTile;
     public float turnDelay = 1.5f;
+
+    private int manualSteps = 0;
+    private LinkedList<int> RequestedManualSteps = new LinkedList<int>();
     public static bool Paused { get; set; } = false;
 
     private LinkedList<Vector2> SpawnSites = new LinkedList<Vector2>();
 
-    private LinkedList<Action> actions = new LinkedList<Action>();
+    public void RequestManualSteps(int value)
+    {
+        RequestedManualSteps.AddLast(value);
+    }
+
+
+    //returns whether or not there are more steps
+    private bool TakeManualStep()
+    {
+        if (manualSteps > 0)
+        {
+            manualSteps -= 1;
+            return true;
+        } if (manualSteps < 0)
+        {
+            manualSteps += 1;
+            return true;
+        }
+        return false;
+    }
 
     private bool doingSetup;
     private bool processingTurn;
@@ -329,7 +351,7 @@ public class GameManager : MonoBehaviour, IsBoardDirector
         for (int n = 0; n > -1; n++)
         {
 
-            if (n != 0 && !Paused)
+            if (n != 0 && (!Paused || TakeManualStep()))
             {
 
                 List<PressureZone> spawnedPressureZones = new List<PressureZone>();
@@ -368,6 +390,11 @@ public class GameManager : MonoBehaviour, IsBoardDirector
     // Update is called once per frame
     void Update()
     {
+        if (manualSteps == 0 && RequestedManualSteps.Count > 0)
+        {
+            manualSteps = RequestedManualSteps.First.Value;
+            RequestedManualSteps.RemoveFirst();
+        }
         if (processingTurn)
         {
             return;
