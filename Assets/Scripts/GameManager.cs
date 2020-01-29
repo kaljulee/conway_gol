@@ -4,7 +4,7 @@ using UnityEngine;
 using Random = UnityEngine.Random;
 
 
-public class GameManager : MonoBehaviour
+public class GameManager : MonoBehaviour//, IsBoardDirector
 {
 
     public static GameManager instance = null;
@@ -16,6 +16,8 @@ public class GameManager : MonoBehaviour
     public static bool Paused { get; set; } = false;
 
     private LinkedList<Vector2> SpawnSites = new LinkedList<Vector2>();
+
+    private LinkedList<Action> actions = new LinkedList<Action>();
 
     private bool doingSetup;
     private bool processingTurn;
@@ -29,6 +31,7 @@ public class GameManager : MonoBehaviour
         boardScript.ResetBoardState();
         //Paused = false;
     }
+
 
     public void ApplyRandomSpawnSites(float frequency)
     {
@@ -364,4 +367,5 @@ public class GameManager : MonoBehaviour
         processingTurn = true;
         StartCoroutine(CalculateTurn());
     }
+
 }

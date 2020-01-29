@@ -5,6 +5,6 @@ using UnityEngine;
 public interface IsBoardActor
 {
 
-   T ExecuteBoardAction<T>(Action<T> action);
+   void ExecuteBoardAction(Action action);
 
 }
