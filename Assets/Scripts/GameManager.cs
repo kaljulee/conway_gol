@@ -4,7 +4,7 @@ using UnityEngine;
 using Random = UnityEngine.Random;
 
 
-public class GameManager : MonoBehaviour//, IsBoardDirector
+public class GameManager : MonoBehaviour, IsBoardDirector
 {
 
     public static GameManager instance = null;
@@ -31,7 +31,6 @@ public class GameManager : MonoBehaviour//, IsBoardDirector
         boardScript.ResetBoardState();
         //Paused = false;
     }
-
 
     public void ApplyRandomSpawnSites(float frequency)
     {
@@ -368,4 +367,13 @@ public class GameManager : MonoBehaviour//, IsBoardDirector
         StartCoroutine(CalculateTurn());
     }
 
+    public Action IssueAddressBoardDirection(string actionType, float payload, Vector2 address)
+    {
+        throw new System.NotImplementedException();
+    }
+
+    public Action IssueDirectBoardDirection(string actionType, float payload, GameObject target)
+    {
+        throw new System.NotImplementedException();
+    }
 }

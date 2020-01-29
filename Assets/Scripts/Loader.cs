@@ -19,12 +19,5 @@ public class Loader : MonoBehaviour
         {
             Instantiate(actionExecutor);
         }
-
-
-
-        //if (ButtonManager.instance == null)
-        //{
-        //    Instantiate(buttonManager);
-        //}
     }
 }
