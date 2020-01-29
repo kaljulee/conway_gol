@@ -3,16 +3,23 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class MainMenu : MonoBehaviour
+public abstract class Menu : MonoBehaviour
 {
+
     private Image image;
-    public bool ToggleActive()
+
+    virtual public bool ToggleActive()
     {
         bool newActiveState = !gameObject.activeSelf;
         gameObject.SetActive(newActiveState);
         return newActiveState;
     }
-    private void Awake()
+
+    public bool IsOpen()
+    {
+        return gameObject.activeSelf;
+    }
+    protected void Awake()
     {
         image = GetComponent<Image>();
         string fourColorShade = TwoBitColor.LIGHT;

@@ -8,7 +8,9 @@ public class ButtonManager : MonoBehaviour
     public static GameObject mainMenu;
     public static ButtonManager instance = null;
     public static GameObject gameManager;
+    public static GameManager gameManagerScript;
     public static GameObject mainMenuSlider;
+    public static MainMenu mainMenuScript;
 
     private void Awake()
     {
@@ -26,23 +28,27 @@ public class ButtonManager : MonoBehaviour
     private void Start()
     {
         mainMenu = GameObject.Find("MainMenu");
-        Debug.Log("gamemanager is null? " + (gameManager == null));
         gameManager = GameObject.FindGameObjectWithTag("GameManager");
-        Debug.Log("gamemanager is null? " + (gameManager == null));
         mainMenuSlider = GameObject.FindGameObjectWithTag("MainMenuSlider");
-        
+
+        mainMenuScript = mainMenu.GetComponent<MainMenu>();
         mainMenu.SetActive(false);
     }
 
-    public void OnResetButtonPress()
-    {
-        gameManager.GetComponent<GameManager>().ResetGameState();
-    }
+    ////////////////////////////
+    /// major utility buttons
+    /// 
     public void OnGearButtonPress()
     {
-        GameManager.TogglePaused();
-        mainMenu.GetComponent<MainMenu>().ToggleActive();
-        Debug.Log("gear button pressed!");
+        mainMenuScript.ToggleActive();
+        if (mainMenuScript.IsOpen())
+        {
+            GameManager.SetPaused();
+        } else
+        {
+            GameManager.SetUnPaused();
+        }
+
     }
 
     public void OnExitButtonPress()
@@ -50,11 +56,49 @@ public class ButtonManager : MonoBehaviour
         Debug.Log("exit button pressed!");
     }
 
+
+    ////////////////////////////
+    /// main menu buttons
+    /// 
+
+    public void OnResetButtonPress()
+    {
+        gameManagerScript.ResetGameState();
+    }
+
+
     public void OnRandomGamePress()
     {
         float frequency = mainMenuSlider.GetComponent<MainMenuSlider>().GetValue();
-        Debug.Log("random pressed, should pass " + frequency);
-        gameManager.GetComponent<GameManager>().ApplyRandomSpawnSites(frequency);
+        GameManager.instance.ApplyRandomSpawnSites(frequency);
+    }
+
+    public void OnTemplatesPress()
+    {
+
+    }
+
+    ////////////////////////////
+    /// player buttons
+    /// 
+    public void OnPlayPress()
+    {
+        GameManager.SetUnPaused();
+    }
+
+    public void OnStopPress()
+    {
+        GameManager.SetPaused();
+    }
+
+    public void OnStepForwardPress()
+    {
+        GameManager.instance.RequestManualSteps(1);
+    }
+
+    public void OnStepBackwardPress()
+    {
+        GameManager.instance.RequestManualSteps(-1);
     }
 
 }

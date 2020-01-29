@@ -8,6 +8,10 @@ public class ActionExecutor : MonoBehaviour
     public static ActionExecutor instance = null;
     public static LinkedList<Action> history = new LinkedList<Action>();
 
+    public void ClearHistory()
+    {
+        history.Clear();
+    }
     private void Awake()
     {
         if (instance == null)
