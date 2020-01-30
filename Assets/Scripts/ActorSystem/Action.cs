@@ -97,6 +97,8 @@ public class Action
             {
                 return PRESSURE_ZONE;
             }
+            Debug.LogError("www looking for type www");
+            Debug.Log(type);
             return -1;
         }
     }

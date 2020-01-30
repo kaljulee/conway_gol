@@ -27,17 +27,18 @@ public class ActionExecutor : MonoBehaviour
     public void PushToHistory(Action action)
     {
         history.AddFirst(action.ConvertToAddress());
-        Debug.Log("--history after push--");
-        foreach (Action a in history)
-        {
-            Debug.Log("   " + a.ToString());
-        }
+        //Debug.Log("--history after push--");
+        //foreach (Action a in history)
+        //{
+        //    Debug.Log("   " + a.ToString());
+        //}
     }
    
-    public GameObject ExecuteAction(Action action)
+    public void ExecuteAction(Action action)
     {
         PushToHistory(action);
-        return null;
+        GameManager.instance.ExecuteBoardAction(action);
+        //return null;
     }
 
 }

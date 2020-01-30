@@ -4,7 +4,7 @@ using UnityEngine;
 using Random = UnityEngine.Random;
 
 
-public class GameManager : MonoBehaviour, IsBoardDirector
+public class GameManager : MonoBehaviour, IsBoardDirector, IsBoardActor
 {
 
     public static GameManager instance = null;
@@ -142,26 +142,26 @@ public class GameManager : MonoBehaviour, IsBoardDirector
     {
         PressureZone pressureScript = zone.GetComponent<PressureZone>();
         boardScript.RemovePressureZone(zone);
-        IssueDirectBoardDirection(Action.ActionTypes.REMOVE, -1, zone);
+        //IssueDirectBoardDirection(Action.ActionTypes.REMOVE, -1, zone);
         Destroy(zone);
     }
 
     protected void AddPressureZone(GameObject zone)
     {
         boardScript.AddPressureZone(zone);
-        IssueDirectBoardDirection(Action.ActionTypes.CREATE, Action.ZoneTypes.GetZoneType(zone.GetType()), zone);
+        //IssueDirectBoardDirection(Action.ActionTypes.CREATE, Action.ZoneTypes.GetZoneType(zone.GetType()), zone);
     }
 
-    protected void InstantiatePressureZone(KeyValuePair<Vector2, int> data)
+    protected void InstantiatePressureZone(Vector2 address, float payload)//KeyValuePair<Vector2, int> data)
     {
         ////this is probably not necessary, as gameObject does not exist yet
         ////PressureZone pressureScript = data.Value.GetComponent<PressureZone>();
 
         GameObject instance;
-        if (data.Value > PressureZone.MaxPressure)
+        if (payload > PressureZone.MaxPressure)
         {
             // spawn nothing if overpressured for unit as well
-            if (data.Value > Unit.MaxPressure)
+            if (payload > Unit.MaxPressure)
             {
                 return;
             }
@@ -171,8 +171,10 @@ public class GameManager : MonoBehaviour, IsBoardDirector
         {
             instance = Instantiate(pressureZoneTile, new Vector2(), Quaternion.identity) as GameObject;
         }
-        instance.transform.position = data.Key;
+        instance.transform.position = address;
         AddPressureZone(instance);
+        //IssueDirectBoardDirection(Action.ActionTypes.CREATE, Action.ZoneTypes.GetZoneType(instance.GetType()), instance);
+
     }
 
     public void ResolvePressureZone(GameObject zone)
@@ -249,7 +251,8 @@ public class GameManager : MonoBehaviour, IsBoardDirector
     {
         foreach (GameObject zone in zonesToDelete)
         {
-            RemovePressureZone(zone);
+            //RemovePressureZone(zone);
+            IssueDirectBoardDirection(Action.ActionTypes.REMOVE, -1, zone);
         }
         zonesToDelete.Clear();
     }
@@ -258,7 +261,8 @@ public class GameManager : MonoBehaviour, IsBoardDirector
     {
         foreach (GameObject zone in zonesToAdd)
         {
-            AddPressureZone(zone);
+            //AddPressureZone(zone);
+            IssueDirectBoardDirection(Action.ActionTypes.CREATE, Action.ZoneTypes.GetZoneType(zone.GetType()), zone);
         }
         zonesToAdd.Clear();
     }
@@ -277,7 +281,7 @@ public class GameManager : MonoBehaviour, IsBoardDirector
                 // must check neighbors
                 Dictionary<string, GameObject> neighbors = pressureScript.CheckNeighbors();
 
-                PrintNeighborDebug(pressureScript);
+                //PrintNeighborDebug(pressureScript);
 
                 PressureNeighbors(neighbors, currentZone);
             }
@@ -318,7 +322,8 @@ public class GameManager : MonoBehaviour, IsBoardDirector
     {
         foreach (KeyValuePair<Vector2, int> data in newPressureZoneData)
         {
-            InstantiatePressureZone(data);
+            IssueAddressBoardDirection(Action.ActionTypes.CREATE, data.Value, data.Key);
+            //InstantiatePressureZone(data);
         }
         newPressureZoneData.Clear();
     }
@@ -333,7 +338,7 @@ public class GameManager : MonoBehaviour, IsBoardDirector
         for (int n = 0; n > -1; n++)
         {
 
-            if ((n < 3 && n != 0 && !Paused) || (TakeManualStep()))
+            if ((n != 0 && !Paused) || (TakeManualStep()))
             {
 
                 List<PressureZone> spawnedPressureZones = new List<PressureZone>();
@@ -362,6 +367,37 @@ public class GameManager : MonoBehaviour, IsBoardDirector
         Action directAction = Action.Factory.CreateDirectAction(actionType, payload, target);
         ActionExecutor.instance.ExecuteAction(directAction);
         return directAction;
+    }
+
+    public void ExecuteBoardAction(Action action)
+    {
+        switch (action.ActionType)
+        {
+            case Action.ActionTypes.CREATE:
+                if (action.Target)
+                {
+                    AddPressureZone(action.Target);
+                } else
+                {
+                    InstantiatePressureZone((Vector2)action.Address, action.Payload);
+                    Debug.LogError("no target");
+                }
+                break;
+            case Action.ActionTypes.PRESSURE_CHANGE:
+
+                break;
+            case Action.ActionTypes.REMOVE:
+                if (action.Target)
+                {
+                    RemovePressureZone(action.Target);
+                } else
+                {
+                    RemovePressureZone(zonesToDelete.Find(zone => zone.transform.position == action.Address));
+                }
+                break;
+            default:
+                break;
+        }
     }
 
     //////////////////////////////////
@@ -452,6 +488,4 @@ public class GameManager : MonoBehaviour, IsBoardDirector
 
         }
     }
-
-
 }
