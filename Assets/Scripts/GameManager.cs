@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using Random = UnityEngine.Random;
-
+using System;
 
 public class GameManager : MonoBehaviour, IsBoardDirector, IsBoardActor
 {
@@ -152,7 +152,7 @@ public class GameManager : MonoBehaviour, IsBoardDirector, IsBoardActor
         //IssueDirectBoardDirection(Action.ActionTypes.CREATE, Action.ZoneTypes.GetZoneType(zone.GetType()), zone);
     }
 
-    protected void InstantiatePressureZone(Vector2 address, float payload)//KeyValuePair<Vector2, int> data)
+    protected void InstantiatePressureZone(Vector2 address, float payload)
     {
         ////this is probably not necessary, as gameObject does not exist yet
         ////PressureZone pressureScript = data.Value.GetComponent<PressureZone>();
@@ -212,6 +212,22 @@ public class GameManager : MonoBehaviour, IsBoardDirector, IsBoardActor
         }
     }
 
+    private void PressureExistingNeighbor(GameObject neighbor, int exertedPressure) {
+        PressureZone neighborScript = neighbor.GetComponent<PressureZone>();
+        neighborScript.IncrementPressure(exertedPressure);
+    }
+
+    private void PressureNewNeighbor(Vector2 address, int exertedPressure) {
+
+        // create new pressure zone creation entry
+        if (newPressureZoneData.Keys.Count < 1 || !newPressureZoneData.ContainsKey(address)) {
+            newPressureZoneData.Add(address, exertedPressure);
+        }
+        // add to existing pressure zone creation entry
+        else {
+            newPressureZoneData[address] += exertedPressure;
+        }
+    }
     private void PressureNeighbor(KeyValuePair<string, GameObject> neighborPair, GameObject currentZone)
     {
         PressureZone pressureScript = currentZone.GetComponent<PressureZone>();
@@ -220,27 +236,14 @@ public class GameManager : MonoBehaviour, IsBoardDirector, IsBoardActor
         // if there is an existing pressure zone, add pressure to it
         if (neighborPair.Value != null)
         {
-            PressureZone neighborScript = neighborPair.Value.GetComponent<PressureZone>();
-            neighborScript.IncrementPressure(pressureScript.ExertedPressure);
             IssueDirectBoardDirection(Action.ActionTypes.PRESSURE_CHANGE, pressureScript.ExertedPressure, neighborPair.Value);
-
         }
         // else add to pressure values to put into pressure creator
         else
         {
             // neighbor's position
             Vector2 adjustedVector = Directions.directionFromCenter[neighborPair.Key](currentZonePosition);
-
-            // create new pressure zone creation entry
-            if (newPressureZoneData.Keys.Count < 1 || !newPressureZoneData.ContainsKey(adjustedVector))
-            {
-                newPressureZoneData.Add(adjustedVector, pressureScript.ExertedPressure);
-            }
-            // add to existing pressure zone creation entry
-            else
-            {
-                newPressureZoneData[adjustedVector] += pressureScript.ExertedPressure;
-            }
+            IssueAddressBoardDirection(Action.ActionTypes.PRESSURE_CHANGE, pressureScript.ExertedPressure, adjustedVector);
         }
     }
 
@@ -384,7 +387,12 @@ public class GameManager : MonoBehaviour, IsBoardDirector, IsBoardActor
                 }
                 break;
             case Action.ActionTypes.PRESSURE_CHANGE:
-
+                if (action.Target) {
+                    PressureExistingNeighbor(action.Target, (int)Mathf.Round(action.Payload));
+                }
+                else {
+                    PressureNewNeighbor((Vector2)action.Address, (int)Mathf.Round(action.Payload));
+                }
                 break;
             case Action.ActionTypes.REMOVE:
                 if (action.Target)
