@@ -91,12 +91,7 @@ public class BoardManager : MonoBehaviour
 
     public void AddPressureZone(GameObject zone)
     {
-        // if zone is not on the board
-        if (!ZoneIsOnBoard(zone))
-        {
-            Destroy(zone);
-            return;
-        }
+
         // finish adding zone
         zone.transform.SetParent(boardHolder);
         pressureZones.Add(zone);

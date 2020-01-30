@@ -23,6 +23,13 @@ public class Action
         Target = incomingTarget;
     }
 
+    public static Action PileOn(Action action, float value) {
+        if (action.Target) {
+            return Action.Factory.CreateDirectAction(action.ActionType, action.Payload + value, action.Target);
+        }
+        return Factory.CreateAddressAction(action.ActionType, action.Payload + value, (Vector2)action.Address);
+    }
+
     public override string ToString()
     {
         string returnValue = "action\ntype: " + ActionTypes.ACTION_TYPE_STRINGS[ActionType] + 
@@ -88,6 +95,14 @@ public class Action
                     return Factory.CreateAddressAction(ActionTypes.CREATE, action.Payload, action.Target.transform.position);
                 }
                 return null;
+            case ActionTypes.PRESSURE_ZERO:
+                if (action.Target != null) {
+                    return Factory.CreateDirectAction(ActionTypes.PRESSURE_CHANGE, action.Payload, action.Target);
+                }
+                if (action.Address != null) {
+                    return Factory.CreateAddressAction(ActionTypes.PRESSURE_CHANGE, action.Payload, (Vector2)action.Address);
+                }
+                return null;
             default:
                 return null;
         }
@@ -117,26 +132,24 @@ public class Action
         public const int PRESSURE_CHANGE = 0;
         public const int REMOVE = 1;
         public const int CREATE = 2;
-        public static readonly string[] ACTION_TYPE_STRINGS = { "PRESSURE_CHANGE", "REMOVE", "CREATE" };
+        public const int PRESSURE_ZERO = 3;
+        public static readonly string[] ACTION_TYPE_STRINGS = { "PRESSURE_CHANGE", "REMOVE", "CREATE","PRESSURE_ZERO" };
     }
 
-    //public static class ZoneTypes
-    //{
+    //public static class ZoneTypes {
     //    public static readonly int UNIT = 0;
     //    public static readonly int PRESSURE_ZONE = 1;
 
-    //    public static int GetZoneType(Type type)
-    //    {
-    //        if (type == typeof(Unit))
-    //        {
+    //    public static int GetZoneType(Type type) {
+    //        if (type == typeof(Unit)) {
     //            return UNIT;
     //        }
-    //        else if (type == typeof(PressureZone))
-    //        {
+    //        else if (type == typeof(PressureZone)) {
     //            return PRESSURE_ZONE;
     //        }
     //        Debug.LogError("www looking for type www");
     //        Debug.Log(type);
+    //        Debug.Log("//////////////");
     //        return -1;
     //    }
     //}
