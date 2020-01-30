@@ -27,19 +27,17 @@ public class GameManager : MonoBehaviour, IsBoardDirector, IsBoardActor
 
 
     //returns whether or not there are more steps
-    private bool TakeManualStep()
+    private int TakeManualStep()
     {
         if (manualSteps > 0)
         {
-            manualSteps -= 1;
-            return true;
+            return manualSteps--;
         }
         if (manualSteps < 0)
         {
-            manualSteps += 1;
-            return true;
+            return manualSteps++;
         }
-        return false;
+        return 0;
     }
 
     private bool doingSetup;
@@ -81,9 +79,10 @@ public class GameManager : MonoBehaviour, IsBoardDirector, IsBoardActor
         //SpawnSites.AddFirst(new Vector2(3, 3));
         //SpawnSites.AddFirst(new Vector2(4, 3));
 
-        //SpawnSites.AddFirst(new Vector2(3, 4));
-        //SpawnSites.AddFirst(new Vector2(4, 4));
-        //SpawnSites.AddFirst(new Vector2(5, 4));
+        // blinker
+        SpawnSites.AddFirst(new Vector2(3, 4));
+        SpawnSites.AddFirst(new Vector2(4, 4));
+        SpawnSites.AddFirst(new Vector2(5, 4));
 
         // glider
         //SpawnSites.AddFirst(new Vector2(3, 4));
@@ -93,11 +92,11 @@ public class GameManager : MonoBehaviour, IsBoardDirector, IsBoardActor
         //SpawnSites.AddFirst(new Vector2(2, 5));
 
         // reverse glider
-        SpawnSites.AddFirst(new Vector2(3, 4));
-        SpawnSites.AddFirst(new Vector2(4, 4));
-        SpawnSites.AddFirst(new Vector2(4, 3));
-        SpawnSites.AddFirst(new Vector2(3, 5));
-        SpawnSites.AddFirst(new Vector2(5, 5));
+        //SpawnSites.AddFirst(new Vector2(3, 4));
+        //SpawnSites.AddFirst(new Vector2(4, 4));
+        //SpawnSites.AddFirst(new Vector2(4, 3));
+        //SpawnSites.AddFirst(new Vector2(3, 5));
+        //SpawnSites.AddFirst(new Vector2(5, 5));
 
 
         //SpawnSites.AddFirst(new Vector2(4, 4));
@@ -115,7 +114,7 @@ public class GameManager : MonoBehaviour, IsBoardDirector, IsBoardActor
     {
         //Paused = true;
         boardScript.ResetBoardState();
-        ActionExecutor.instance.ClearHistory();
+        ActionController.instance.ClearHistory();
         //Paused = false;
     }
 
@@ -140,7 +139,8 @@ public class GameManager : MonoBehaviour, IsBoardDirector, IsBoardActor
 
     protected void RemovePressureZone(GameObject zone)
     {
-        PressureZone pressureScript = zone.GetComponent<PressureZone>();
+        Debug.Log("in removepressurezone, zone is null? " + (zone == null));
+        //PressureZone pressureScript = zone.GetComponent<PressureZone>();
         boardScript.RemovePressureZone(zone);
         Destroy(zone);
     }
@@ -263,7 +263,7 @@ public class GameManager : MonoBehaviour, IsBoardDirector, IsBoardActor
         foreach (GameObject zone in zonesToAdd)
         {
             //AddPressureZone(zone);
-            IssueDirectBoardDirection(Action.ActionTypes.CREATE, Action.ZoneTypes.GetZoneType(zone.GetType()), zone);
+            IssueDirectBoardDirection(Action.ActionTypes.CREATE, zone.GetComponent<PressureZone>().Pressure, zone);
         }
         zonesToAdd.Clear();
     }
@@ -338,14 +338,16 @@ public class GameManager : MonoBehaviour, IsBoardDirector, IsBoardActor
     {
         for (int n = 0; n > -1; n++)
         {
-
-            if ((n != 0 && !Paused) || (TakeManualStep()))
+            int step = TakeManualStep();
+            if ((n < 2 && n != 0 && !Paused) || (step > 0))
             {
-
-                List<PressureZone> spawnedPressureZones = new List<PressureZone>();
+                ActionController.instance.BeginNewRound();
                 UpdatePressureZones();
                 ResolvePressureZones();
                 //PrintPressureDebug();
+            } else if (step < 0) {
+                Debug.Log("calling rewind");
+                ActionController.instance.Rewind();
             }
 
             yield return new WaitForSeconds(turnDelay);
@@ -359,14 +361,14 @@ public class GameManager : MonoBehaviour, IsBoardDirector, IsBoardActor
     public Action IssueAddressBoardDirection(int actionType, float payload, Vector2 address)
     {
         Action addressAction = Action.Factory.CreateAddressAction(actionType, payload, address);
-        ActionExecutor.instance.ExecuteAction(addressAction);
+        ActionController.instance.ExecuteAction(addressAction);
         return addressAction;
     }
 
     public Action IssueDirectBoardDirection(int actionType, float payload, GameObject target)
     {
         Action directAction = Action.Factory.CreateDirectAction(actionType, payload, target);
-        ActionExecutor.instance.ExecuteAction(directAction);
+        ActionController.instance.ExecuteAction(directAction);
         return directAction;
     }
 
@@ -395,10 +397,12 @@ public class GameManager : MonoBehaviour, IsBoardDirector, IsBoardActor
             case Action.ActionTypes.REMOVE:
                 if (action.Target)
                 {
+                    Debug.Log("removing zone by target");
                     RemovePressureZone(action.Target);
                 } else
                 {
-                    RemovePressureZone(zonesToDelete.Find(zone => zone.transform.position == action.Address));
+                    Debug.Log("removing zone by address");
+                    RemovePressureZone(boardScript.GetPressureZones().Find(zone => zone.transform.position == action.Address));
                 }
                 break;
             default:

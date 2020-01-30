@@ -6,7 +6,7 @@ public class Loader : MonoBehaviour
 {
     public GameObject gameManager;
     public GameObject buttonManager;
-    public GameObject actionExecutor;
+    public GameObject actionController;
 
     void Awake()
     {
@@ -15,9 +15,9 @@ public class Loader : MonoBehaviour
             Instantiate(gameManager);
         }
 
-        if (ActionExecutor.instance == null)
+        if (ActionController.instance == null)
         {
-            Instantiate(actionExecutor);
+            Instantiate(actionController);
         }
     }
 }
