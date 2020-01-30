@@ -142,7 +142,6 @@ public class GameManager : MonoBehaviour, IsBoardDirector, IsBoardActor
     {
         PressureZone pressureScript = zone.GetComponent<PressureZone>();
         boardScript.RemovePressureZone(zone);
-        //IssueDirectBoardDirection(Action.ActionTypes.REMOVE, -1, zone);
         Destroy(zone);
     }
 
@@ -254,8 +253,7 @@ public class GameManager : MonoBehaviour, IsBoardDirector, IsBoardActor
     {
         foreach (GameObject zone in zonesToDelete)
         {
-            //RemovePressureZone(zone);
-            IssueDirectBoardDirection(Action.ActionTypes.REMOVE, -1, zone);
+            IssueDirectBoardDirection(Action.ActionTypes.REMOVE, zone.GetComponent<PressureZone>().Pressure, zone);
         }
         zonesToDelete.Clear();
     }

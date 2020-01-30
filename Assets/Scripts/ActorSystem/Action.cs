@@ -56,6 +56,39 @@ public class Action
         }
         return Factory.CreateAddressAction(ActionType, Payload, Target.transform.position);
     }
+
+    public Action Invert(Action action) {
+        switch (action.ActionType) {
+            case ActionTypes.CREATE:
+                if (action.Address != null) {
+                    return Factory.CreateAddressAction(ActionTypes.REMOVE, 0, (Vector2)action.Address);
+                }
+                if (action.Target != null) {
+                    return Factory.CreateAddressAction(ActionTypes.REMOVE, 0, action.Target.transform.position);
+                }
+                return null;
+            case ActionTypes.PRESSURE_CHANGE:
+                int invertedPressure = (int)Mathf.Round(action.Payload) * -1;
+                if (action.Address != null) {
+                    return Factory.CreateAddressAction(ActionTypes.PRESSURE_CHANGE, invertedPressure, (Vector2)action.Address);
+                }
+                if (action.Target != null) {
+                    return Factory.CreateDirectAction(ActionTypes.PRESSURE_CHANGE, invertedPressure, action.Target);
+                }
+                return null;
+            case ActionTypes.REMOVE:
+                if (action.Address != null) {
+                    return Factory.CreateAddressAction(ActionTypes.CREATE, action.Payload, (Vector2)action.Address);
+                }
+                if (action.Target != null) {
+                    return Factory.CreateAddressAction(ActionTypes.CREATE, action.Payload, action.Target.transform.position);
+                }
+                return null;
+            default:
+                return null;
+        }
+    }
+
     public class Factory
     {
 
