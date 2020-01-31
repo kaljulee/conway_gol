@@ -44,12 +44,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6c66987b9dfacf24393b8a94a3aa4f8e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  mainCamera: {fileID: 0}
   boardScript: {fileID: 0}
   pressureZoneTile: {fileID: 4519458563766980877, guid: 73b60857568b71e47a4aa2cb9d0b4c73,
     type: 3}
   unitTile: {fileID: 8253295328657836045, guid: 890e417ae9a591a48aa2e3ff253fcc14,
     type: 3}
-  turnDelay: 0.1
+  turnDelay: 0.2
 --- !u!114 &1412336138789898878
 MonoBehaviour:
   m_ObjectHideFlags: 0

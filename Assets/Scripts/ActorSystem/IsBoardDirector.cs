@@ -4,6 +4,7 @@ using UnityEngine;
 
 public interface IsBoardDirector
 {
-    Action IssueAddressBoardDirection(string actionType, float payload, Vector2 address);
-    Action IssueDirectBoardDirection(string actionType, float payload, GameObject target);
+    Action IssueAction(Action action);
+    Action IssueAddressBoardDirection(int actionType, float payload, Vector2 address);
+    Action IssueDirectBoardDirection(int actionType, float payload, GameObject target);
 }

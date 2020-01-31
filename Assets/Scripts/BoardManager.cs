@@ -83,20 +83,14 @@ public class BoardManager : MonoBehaviour
         Destroy(zone);
     }
 
-    public bool ZoneIsOnBoard(GameObject zone)
+    public bool PositionIsOnBoard(Vector2 position)
     {
-        Vector2 position = zone.transform.position;
         return rows >= position.x - 1 && position.x >= -1 && columns >= position.y && position.y >= -1;
     }
 
     public void AddPressureZone(GameObject zone)
     {
-        // if zone is not on the board
-        if (!ZoneIsOnBoard(zone))
-        {
-            Destroy(zone);
-            return;
-        }
+
         // finish adding zone
         zone.transform.SetParent(boardHolder);
         pressureZones.Add(zone);
