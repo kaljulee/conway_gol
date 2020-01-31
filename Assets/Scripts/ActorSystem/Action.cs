@@ -32,9 +32,9 @@ public class Action
 
     public override string ToString()
     {
-        string returnValue = "action\ntype: " + ActionTypes.ACTION_TYPE_STRINGS[ActionType] + 
-            "\npayload: " + Payload +
-            "\naddress: ";
+        string returnValue = "action type: " + ActionTypes.ACTION_TYPE_STRINGS[ActionType] + 
+            " payload: " + Payload +
+            " address: ";
         if (Address != null)
         {
             Vector2 realAddress = (Vector2)Address;
@@ -44,7 +44,7 @@ public class Action
         {
             returnValue += ("no address");
         }
-        returnValue += "\ntarget: ";
+        returnValue += " target: ";
         if (Target != null)
         {
             returnValue += ("target is real and at x" + Target.transform.position.x + " y" + Target.transform.position.y);
@@ -52,7 +52,7 @@ public class Action
         {
             returnValue += "no target";
         }
-        returnValue += "\n////end of action///";
+        returnValue += "////end of action///";
         return returnValue;
     }
 
@@ -84,15 +84,20 @@ public class Action
                     return Factory.CreateDirectAction(ActionTypes.PRESSURE_CHANGE, invertedPressure, action.Target);
                 }
                 return null;
+                // pressure in created is enough to maintain the zone type
             case ActionTypes.REMOVE:
-                Debug.Log("returning inverted with create");
-                Debug.Log(action.Payload);
-              
+                Debug.Log("returning inverted with create with unit type " + ZoneTypes.ZONE_TYPE_STRINGS[(int)action.Payload]);
+                int pressure = 1;
+                if (action.Payload == ZoneTypes.UNIT) {
+                    pressure = 3;
+                }
                 if (action.Address != null) {
-                    return Factory.CreateAddressAction(ActionTypes.CREATE, action.Payload, (Vector2)action.Address);
+                    Debug.Log("at address x" + ((Vector2)action.Address).x + "y" + ((Vector2)action.Address).y);
+                    return Factory.CreateAddressAction(ActionTypes.CREATE, pressure, (Vector2)action.Address);
                 }
                 if (action.Target != null) {
-                    return Factory.CreateAddressAction(ActionTypes.CREATE, action.Payload, action.Target.transform.position);
+                    Debug.Log("with Target at x" + action.Target.transform.position.x + "y" + action.Target.transform.position.y);
+                    return Factory.CreateDirectAction(ActionTypes.CREATE, action.Payload, action.Target);
                 }
                 return null;
             case ActionTypes.PRESSURE_ZERO:
@@ -133,24 +138,28 @@ public class Action
         public const int REMOVE = 1;
         public const int CREATE = 2;
         public const int PRESSURE_ZERO = 3;
-        public static readonly string[] ACTION_TYPE_STRINGS = { "PRESSURE_CHANGE", "REMOVE", "CREATE","PRESSURE_ZERO" };
+        public const int ALL_PRESSURE_ZERO = 4;
+        public static readonly string[] ACTION_TYPE_STRINGS = { "PRESSURE_CHANGE", "REMOVE", "CREATE","PRESSURE_ZERO", "ALL_PRESSURE_ZERO" };
     }
 
-    //public static class ZoneTypes {
-    //    public static readonly int UNIT = 0;
-    //    public static readonly int PRESSURE_ZONE = 1;
+    public static class ZoneTypes {
+        public static readonly int UNIT = 0;
+        public static readonly int PRESSURE_ZONE = 1;
+        public static readonly string[] ZONE_TYPE_STRINGS = { "UNIT", "PRESSURE_ZONE" };
 
-    //    public static int GetZoneType(Type type) {
-    //        if (type == typeof(Unit)) {
-    //            return UNIT;
-    //        }
-    //        else if (type == typeof(PressureZone)) {
-    //            return PRESSURE_ZONE;
-    //        }
-    //        Debug.LogError("www looking for type www");
-    //        Debug.Log(type);
-    //        Debug.Log("//////////////");
-    //        return -1;
-    //    }
-    //}
+        public static int GetZoneType(PressureZone zone) {
+            if (zone is Unit) {
+                return UNIT;
+            }
+
+            return PRESSURE_ZONE;
+            //else if (zone is PressureZone) {
+            //    return PRESSURE_ZONE;
+            //}
+            //Debug.LogError("www looking for type www");
+            //Debug.Log();
+            //Debug.Log("//////////////");
+            //return -1;
+        }
+    }
 }
