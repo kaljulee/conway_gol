@@ -10,10 +10,12 @@ TagManager:
   - PressureZone
   - ButtonTitleText
   - GameManager
-  - MainMenuSlider
   - PlayButton
   - StopButton
   - PauseButton
+  - MainMenu
+  - CreateRandomMenu
+  - Slider
   layers:
   - Default
   - TransparentFX

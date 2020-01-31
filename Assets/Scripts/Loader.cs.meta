@@ -3,7 +3,13 @@ guid: 91f452dc097c6b2429d862d5eed40014
 MonoImporter:
   externalObjects: {}
   serializedVersion: 2
-  defaultReferences: []
+  defaultReferences:
+  - gameManager: {fileID: 7155871476369273604, guid: ea1accc6dee61d74a912384350a20450,
+      type: 3}
+  - buttonManager: {fileID: 8010327776638501314, guid: 1c094f0a1b9f9c249a6ec40e7f9668fa,
+      type: 3}
+  - actionController: {fileID: 4762121249834071253, guid: 479603fd85e4e6c42b1236d48f56468d,
+      type: 3}
   executionOrder: 0
   icon: {instanceID: 0}
   userData: 

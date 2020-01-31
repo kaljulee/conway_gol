@@ -4,13 +4,20 @@ using UnityEngine;
 
 public class ButtonManager : MonoBehaviour
 {
+    public static ButtonManager instance = null;
 
     public static GameObject mainMenu;
-    public static ButtonManager instance = null;
+    public static MainMenu mainMenuScript;
+
+    public static GameObject createRandomMenu;
+    public static MainMenu createRandomScript;
+
     public static GameObject gameManager;
     public static GameManager gameManagerScript;
-    public static GameObject mainMenuSlider;
-    public static MainMenu mainMenuScript;
+
+    public static GameObject slider;
+    public static MainMenuSlider sliderScript;
+    public static LinkedList<Menu> menus = new LinkedList<Menu>();
 
     private void Awake()
     {
@@ -27,12 +34,36 @@ public class ButtonManager : MonoBehaviour
 
     private void Start()
     {
-        mainMenu = GameObject.Find("MainMenu");
         gameManager = GameObject.FindGameObjectWithTag("GameManager");
-        mainMenuSlider = GameObject.FindGameObjectWithTag("MainMenuSlider");
 
+        mainMenu = GameObject.FindGameObjectWithTag("MainMenu");
         mainMenuScript = mainMenu.GetComponent<MainMenu>();
-        mainMenu.SetActive(false);
+
+        createRandomMenu = GameObject.FindGameObjectWithTag("CreateRandomMenu");
+        createRandomScript = createRandomMenu.GetComponent<MainMenu>();
+
+
+        slider = GameObject.FindGameObjectWithTag("Slider");
+        sliderScript = slider.GetComponent<MainMenuSlider>();
+
+        menus.AddLast(mainMenuScript);
+        menus.AddLast(createRandomScript);
+        CloseAllMenus();
+    }
+
+    public bool SomeMenuIsOpen() {
+        foreach(Menu menu in menus) {
+            if (menu.IsOpen()) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public void CloseAllMenus() {
+        foreach(MainMenu menu in menus) {
+            menu.Close();
+        }
     }
 
     ////////////////////////////
@@ -40,7 +71,13 @@ public class ButtonManager : MonoBehaviour
     /// 
     public void OnGearButtonPress()
     {
-        mainMenuScript.ToggleActive();
+
+        if (SomeMenuIsOpen()) {
+            CloseAllMenus();
+        } else {
+            mainMenuScript.Open();
+        }
+
         if (mainMenuScript.IsOpen())
         {
             GameManager.SetPaused();
@@ -67,12 +104,21 @@ public class ButtonManager : MonoBehaviour
     }
 
 
-    public void OnRandomGamePress()
+    public void OnCreateRandomPress()
     {
-        float frequency = mainMenuSlider.GetComponent<MainMenuSlider>().GetValue();
-        GameManager.instance.ApplyRandomSpawnSites(frequency);
+        mainMenu.SetActive(false);
+        createRandomMenu.SetActive(true);
+        GameManager.instance.ApplyRandomSpawnSites(sliderScript.GetValue());
     }
 
+    public void OnReRollRandomPress() {
+        GameManager.instance.ApplyRandomSpawnSites(sliderScript.GetValue());
+    }
+
+    public void OnRunRandomPress() {
+        CloseAllMenus();
+        GameManager.SetUnPaused();
+    }
     public void OnTemplatesPress()
     {
 

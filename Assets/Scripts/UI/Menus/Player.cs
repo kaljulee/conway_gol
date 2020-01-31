@@ -7,6 +7,12 @@ public class Player : Menu
     private GameObject playButton;
     private GameObject pauseButton;
     // Start is called before the first frame update
+
+    new void Awake() {
+        base.Awake();
+        gameObject.SetActive(true);
+    }
+
     void Start()
     {
         playButton = transform.GetChild(0).gameObject;
