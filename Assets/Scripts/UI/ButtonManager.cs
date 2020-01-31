@@ -100,16 +100,21 @@ public class ButtonManager : MonoBehaviour
         GameManager.SetPaused();
     }
 
-    public void OnStepForwardPress()
-    {
+    public void OnStepForwardHold() {
         SafetyPause();
-        GameManager.instance.RequestManualSteps(1);
+        GameManager.instance.StartStepping(1);
     }
 
-    public void OnStepBackwardPress()
-    {
-        SafetyPause();
-        GameManager.instance.RequestManualSteps(-1);
+    public void OnStepForwardRelease() {
+        GameManager.instance.StopStepping();
     }
 
+    public void OnStepBackwardHold() {
+        SafetyPause();
+        GameManager.instance.StartStepping(-1);
+    }
+
+    public void onStepBackwardRelease() {
+        GameManager.instance.StopStepping();
+    }
 }
