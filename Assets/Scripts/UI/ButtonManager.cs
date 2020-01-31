@@ -86,6 +86,15 @@ public class ButtonManager : MonoBehaviour
         GameManager.SetUnPaused();
     }
 
+    public void OnPausePress() {
+        GameManager.SetPaused();
+    }
+
+    private void SafetyPause() {
+        if (!GameManager.Paused) {
+            GameManager.SetPaused();
+        }
+    }
     public void OnStopPress()
     {
         GameManager.SetPaused();
@@ -93,11 +102,13 @@ public class ButtonManager : MonoBehaviour
 
     public void OnStepForwardPress()
     {
+        SafetyPause();
         GameManager.instance.RequestManualSteps(1);
     }
 
     public void OnStepBackwardPress()
     {
+        SafetyPause();
         GameManager.instance.RequestManualSteps(-1);
     }
 

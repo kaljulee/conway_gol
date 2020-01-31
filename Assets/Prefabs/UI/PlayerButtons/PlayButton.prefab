@@ -12,10 +12,10 @@ GameObject:
   - component: {fileID: 8222780578397084544}
   - component: {fileID: 8222780578397084575}
   - component: {fileID: 8222780578397084574}
-  - component: {fileID: 8222780578397084545}
+  - component: {fileID: 8982083028029423904}
   m_Layer: 5
   m_Name: PlayButton
-  m_TagString: Untagged
+  m_TagString: PlayButton
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -118,7 +118,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls: []
---- !u!114 &8222780578397084545
+--- !u!114 &8982083028029423904
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -127,6 +127,6 @@ MonoBehaviour:
   m_GameObject: {fileID: 8222780578397084572}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3d5ad657caeae9647865167852031117, type: 3}
+  m_Script: {fileID: 11500000, guid: 961324735b26f06429d2b34b18305d74, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 

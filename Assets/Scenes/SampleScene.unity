@@ -163,7 +163,7 @@ MonoBehaviour:
     type: 3}
   buttonManager: {fileID: 8010327776638501314, guid: 1c094f0a1b9f9c249a6ec40e7f9668fa,
     type: 3}
-  actionExecutor: {fileID: 0}
+  actionController: {fileID: 0}
 --- !u!20 &519420031
 Camera:
   m_ObjectHideFlags: 0
@@ -1095,6 +1095,16 @@ PrefabInstance:
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
       objectReference: {fileID: 1737325436}
+    - target: {fileID: 1308450772078262730, guid: 7019b429b9f24fc49b649dd774397a3d,
+        type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 150
+      objectReference: {fileID: 0}
+    - target: {fileID: 1308450772078262730, guid: 7019b429b9f24fc49b649dd774397a3d,
+        type: 3}
+      propertyPath: m_SizeDelta.y
+      value: 35
+      objectReference: {fileID: 0}
     - target: {fileID: 6932625690656206075, guid: 7019b429b9f24fc49b649dd774397a3d,
         type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target

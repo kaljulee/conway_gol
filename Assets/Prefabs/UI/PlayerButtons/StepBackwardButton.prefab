@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 5484837576996798727}
   - component: {fileID: 5484837576996798744}
   - component: {fileID: 5484837576996798745}
-  - component: {fileID: 5484837576996798726}
+  - component: {fileID: 3215378097394678313}
   m_Layer: 5
   m_Name: StepBackwardButton
   m_TagString: Untagged
@@ -129,7 +129,7 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
---- !u!114 &5484837576996798726
+--- !u!114 &3215378097394678313
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -138,6 +138,6 @@ MonoBehaviour:
   m_GameObject: {fileID: 5484837576996798747}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3d5ad657caeae9647865167852031117, type: 3}
+  m_Script: {fileID: 11500000, guid: 50434f7b24b9a4545a345edf04a578b6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 

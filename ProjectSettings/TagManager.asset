@@ -11,6 +11,9 @@ TagManager:
   - ButtonTitleText
   - GameManager
   - MainMenuSlider
+  - PlayButton
+  - StopButton
+  - PauseButton
   layers:
   - Default
   - TransparentFX
