@@ -13,6 +13,7 @@ public class GameManager : MonoBehaviour, IsBoardDirector, IsBoardActor {
     public GameObject pressureZoneTile;
     public GameObject unitTile;
     public float turnDelay = 1.5f;
+    private bool stepping = false;
 
     private int manualSteps = 0;
     private LinkedList<int> RequestedManualSteps = new LinkedList<int>();
@@ -24,6 +25,26 @@ public class GameManager : MonoBehaviour, IsBoardDirector, IsBoardActor {
         RequestedManualSteps.AddLast(value);
     }
 
+    IEnumerator ContinuousManualSteps(int steps, float initialWait=1.1f) {
+        float wait = initialWait;
+        while (stepping) {
+            if (wait > 0.15) {
+                wait *= 0.8f;
+            }
+            RequestManualSteps(steps);
+            yield return new WaitForSeconds(wait);
+
+        }
+    }
+
+    public void StartStepping(int steps) {
+        stepping = true;
+            StartCoroutine(ContinuousManualSteps(steps));
+    }
+
+    public void StopStepping() {
+        stepping = false;
+    }
 
     //returns whether or not there are more steps
     private int TakeManualStep() {
