@@ -83,9 +83,8 @@ public class BoardManager : MonoBehaviour
         Destroy(zone);
     }
 
-    public bool ZoneIsOnBoard(GameObject zone)
+    public bool PositionIsOnBoard(Vector2 position)
     {
-        Vector2 position = zone.transform.position;
         return rows >= position.x - 1 && position.x >= -1 && columns >= position.y && position.y >= -1;
     }
 

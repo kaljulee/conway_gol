@@ -139,27 +139,22 @@ public class GameManager : MonoBehaviour, IsBoardDirector, IsBoardActor {
     protected void AddPressureZone(GameObject zone) {
         boardScript.AddPressureZone(zone);
         PressureZone pressureScript = zone.GetComponent<PressureZone>();
-        Debug.Log("addpressurezone called on: x" + zone.transform.position.x + "y" + zone.transform.position.y + " starting pressure: " + pressureScript.Pressure + " is unit? " + (pressureScript is Unit));
         // if zone is not on the board
-        if (!boardScript.ZoneIsOnBoard(zone)) {
+        if (!boardScript.PositionIsOnBoard(zone.transform.position)) {
             IssueAction(CreateDirectAction(ActionTypes.REMOVE, ZoneTypes.GetZoneType(pressureScript), zone));
         }
     }
 
     protected void InstantiatePressureZone(Vector2 address, float payload) {
-        Debug.Log("instancing pressure zone with payload " + payload + " vs pzone max: " + PressureZone.MaxPressure);
         GameObject instance;
         if (payload > PressureZone.MaxPressure) {
             // spawn nothing if overpressured for unit as well
             if (payload > Unit.MaxPressure) {
-                Debug.Log("  overpressured, no return");
                 return;
             }
-            Debug.Log("should return Unit");
             instance = Instantiate(unitTile, new Vector2(), Quaternion.identity) as GameObject;
         }
         else {
-            Debug.Log("should return pzone");
             instance = Instantiate(pressureZoneTile, new Vector2(), Quaternion.identity) as GameObject;
         }
         instance.transform.position = address;
@@ -168,31 +163,6 @@ public class GameManager : MonoBehaviour, IsBoardDirector, IsBoardActor {
 
     }
 
-    //protected void CleanUpZone(GameObject zone) {
-    //    PressureZone pressureScript = zone.GetComponent<PressureZone>();
-    //    int pressureResult = pressureScript.CheckPressure();
-    //    GameObject replacement = null;
-    //    // check for overpressure
-    //    if (pressureResult > 0) {
-    //        replacement = pressureScript.SpawnOnOverPressure();
-    //    }
-    //    // if no overpressure or no overpressure spawn
-    //    if (replacement == null) {
-    //        return;
-    //    }
-    //    IssueAction(CreateDirectAction(ActionTypes.REMOVE, ZoneTypes.GetZoneType(pressureScript.GetType()), zone));
-
-    //    ///////////////////////
-    //    ///instantiate, but shouldn't go to history
-
-    //    IssueAction(CreateDirectAction(ActionTypes.CREATE, Z);
-    //}
-
-    //protected void CleanUpRewind() {
-    //    foreach (GameObject zone in boardScript.GetPressureZones()) {
-    //        CleanUpZone(zone);
-    //    }
-    //}
     public void ResolvePressureZone(GameObject zone) {
 
         PressureZone pressureScript = zone.GetComponent<PressureZone>();
@@ -219,9 +189,7 @@ public class GameManager : MonoBehaviour, IsBoardDirector, IsBoardActor {
 
             }
         }
-        //else {
-            zeroActionsQueue.AddLast(CreateDirectAction(ActionTypes.PRESSURE_ZERO, pressureScript.Pressure, zone));
-        //}
+        zeroActionsQueue.AddLast(CreateDirectAction(ActionTypes.PRESSURE_ZERO, pressureScript.Pressure, zone));
     }
 
     private void PressureExistingNeighbor(GameObject neighbor, int exertedPressure) {
@@ -243,13 +211,15 @@ public class GameManager : MonoBehaviour, IsBoardDirector, IsBoardActor {
         else {
             // neighbor's position
             Vector2 adjustedVector = Directions.directionFromCenter[neighborPair.Key](currentZonePosition);
+            if (boardScript.PositionIsOnBoard(adjustedVector)) {
+                if (!newPressureZoneAddresses.Contains(adjustedVector)) {
+                    createActionsQueue.AddLast(CreateAddressAction(ActionTypes.CREATE, 0, adjustedVector));
+                    newPressureZoneAddresses.Add(adjustedVector);
+                }
 
-            if (!newPressureZoneAddresses.Contains(adjustedVector)) {
-                createActionsQueue.AddLast(CreateAddressAction(ActionTypes.CREATE, 0, adjustedVector));
-                newPressureZoneAddresses.Add(adjustedVector);
+                changeActionsQueue.AddLast(CreateAddressAction(ActionTypes.PRESSURE_CHANGE, pressureScript.ExertedPressure, adjustedVector));
             }
 
-            changeActionsQueue.AddLast(CreateAddressAction(ActionTypes.PRESSURE_CHANGE, pressureScript.ExertedPressure, adjustedVector));
         }
     }
 
@@ -298,7 +268,7 @@ public class GameManager : MonoBehaviour, IsBoardDirector, IsBoardActor {
                 //PrintNeighborDebug(pressureScript);
                 SchedulePressureNeighbors(neighbors, currentZone);
             }
-            else { 
+            else {
             }
 
         }
@@ -337,15 +307,14 @@ public class GameManager : MonoBehaviour, IsBoardDirector, IsBoardActor {
                 IssueCreateActions();
                 IssueZeroActions();
 
+                ActionController.instance.EndRound();
+
             }
             else if (step < 0) {
-                ActionController.instance.Rewind(); 
-                Debug.Log("@@@@@@@@@@ zones on board after rewind complete");
+                ActionController.instance.Rewind();
                 foreach (GameObject obj in boardScript.GetPressureZones()) {
                     PressureZone zone = obj.GetComponent<PressureZone>();
-                    Debug.Log("x" + obj.transform.position.x + "y" + obj.transform.position.y + " pressure: " + zone.Pressure);
                 }
-                Debug.Log("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
             }
 
             yield return new WaitForSeconds(turnDelay);
@@ -380,7 +349,6 @@ public class GameManager : MonoBehaviour, IsBoardDirector, IsBoardActor {
                     AddPressureZone(action.Target);
                 }
                 else {
-                    Debug.Log("instantiating new on create at x" + ((Vector2)(action.Address)).x +  "y" + ((Vector2)(action.Address)).y);
                     InstantiatePressureZone((Vector2)action.Address, action.Payload);
                 }
                 break;

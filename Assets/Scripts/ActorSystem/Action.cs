@@ -3,10 +3,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Action
-{
+public class Action {
     // should be an object, dict or something
-    
+
     public static readonly GameObject replacementOptions;
 
     public int ActionType { get; private set; }
@@ -15,8 +14,7 @@ public class Action
 
     public GameObject Target { get; private set; }
 
-    private Action(int incomingType, float incomingPayload, Vector2? incomingAddress, GameObject incomingTarget)
-    {
+    private Action(int incomingType, float incomingPayload, Vector2? incomingAddress, GameObject incomingTarget) {
         ActionType = incomingType;
         Payload = incomingPayload;
         Address = incomingAddress;
@@ -30,36 +28,30 @@ public class Action
         return Factory.CreateAddressAction(action.ActionType, action.Payload + value, (Vector2)action.Address);
     }
 
-    public override string ToString()
-    {
-        string returnValue = "action type: " + ActionTypes.ACTION_TYPE_STRINGS[ActionType] + 
+    public override string ToString() {
+        string returnValue = "action type: " + ActionTypes.ACTION_TYPE_STRINGS[ActionType] +
             " payload: " + Payload +
             " address: ";
-        if (Address != null)
-        {
+        if (Address != null) {
             Vector2 realAddress = (Vector2)Address;
             returnValue += ("x: " + realAddress.x + " y: " + realAddress.y);
         }
-        else
-        {
+        else {
             returnValue += ("no address");
         }
         returnValue += " target: ";
-        if (Target != null)
-        {
+        if (Target != null) {
             returnValue += ("target is real and at x" + Target.transform.position.x + " y" + Target.transform.position.y);
-        } else
-        {
+        }
+        else {
             returnValue += "no target";
         }
         returnValue += "////end of action///";
         return returnValue;
     }
 
-    public Action ConvertToAddress()
-    {
-        if (Target == null)
-        {
+    public Action ConvertToAddress() {
+        if (Target == null) {
             return this;
         }
         return Factory.CreateAddressAction(ActionType, Payload, Target.transform.position);
@@ -84,19 +76,16 @@ public class Action
                     return Factory.CreateDirectAction(ActionTypes.PRESSURE_CHANGE, invertedPressure, action.Target);
                 }
                 return null;
-                // pressure in created is enough to maintain the zone type
+            // pressure in created is enough to maintain the zone type
             case ActionTypes.REMOVE:
-                Debug.Log("returning inverted with create with unit type " + ZoneTypes.ZONE_TYPE_STRINGS[(int)action.Payload]);
                 int pressure = 1;
                 if (action.Payload == ZoneTypes.UNIT) {
                     pressure = 3;
                 }
                 if (action.Address != null) {
-                    Debug.Log("at address x" + ((Vector2)action.Address).x + "y" + ((Vector2)action.Address).y);
                     return Factory.CreateAddressAction(ActionTypes.CREATE, pressure, (Vector2)action.Address);
                 }
                 if (action.Target != null) {
-                    Debug.Log("with Target at x" + action.Target.transform.position.x + "y" + action.Target.transform.position.y);
                     return Factory.CreateDirectAction(ActionTypes.CREATE, action.Payload, action.Target);
                 }
                 return null;
@@ -113,33 +102,28 @@ public class Action
         }
     }
 
-    public class Factory
-    {
+    public class Factory {
 
-        private static Action CreateAction(int incomingType, float incomingPayload, Vector2? incomingAddress, GameObject incomingTarget)
-        {
+        private static Action CreateAction(int incomingType, float incomingPayload, Vector2? incomingAddress, GameObject incomingTarget) {
             return new Action(incomingType, incomingPayload, incomingAddress, incomingTarget);
         }
 
-        public static Action CreateAddressAction(int incomingType, float incomingPayload, Vector2 incomingAddress)
-        {
+        public static Action CreateAddressAction(int incomingType, float incomingPayload, Vector2 incomingAddress) {
             return CreateAction(incomingType, incomingPayload, incomingAddress, null);
         }
 
-        public static Action CreateDirectAction(int incomingType, float incomingPayload, GameObject incomingTarget)
-        {
+        public static Action CreateDirectAction(int incomingType, float incomingPayload, GameObject incomingTarget) {
             return CreateAction(incomingType: incomingType, incomingPayload: incomingPayload, null, incomingTarget: incomingTarget);
         }
     }
 
-    public static class ActionTypes
-    {
+    public static class ActionTypes {
         public const int PRESSURE_CHANGE = 0;
         public const int REMOVE = 1;
         public const int CREATE = 2;
         public const int PRESSURE_ZERO = 3;
         public const int ALL_PRESSURE_ZERO = 4;
-        public static readonly string[] ACTION_TYPE_STRINGS = { "PRESSURE_CHANGE", "REMOVE", "CREATE","PRESSURE_ZERO", "ALL_PRESSURE_ZERO" };
+        public static readonly string[] ACTION_TYPE_STRINGS = { "PRESSURE_CHANGE", "REMOVE", "CREATE", "PRESSURE_ZERO", "ALL_PRESSURE_ZERO" };
     }
 
     public static class ZoneTypes {
@@ -153,13 +137,6 @@ public class Action
             }
 
             return PRESSURE_ZONE;
-            //else if (zone is PressureZone) {
-            //    return PRESSURE_ZONE;
-            //}
-            //Debug.LogError("www looking for type www");
-            //Debug.Log();
-            //Debug.Log("//////////////");
-            //return -1;
         }
     }
 }
