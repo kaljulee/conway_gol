@@ -15,6 +15,7 @@ public class GameManager : MonoBehaviour, IsBoardDirector, IsBoardActor {
     public float turnDelay = 1.5f;
     private bool stepping = false;
     public Vector2 spawnCenter = Vector2.zero;
+    public bool drawMode = false;
 
     private int manualSteps = 0;
     private LinkedList<int> RequestedManualSteps = new LinkedList<int>();
@@ -101,46 +102,17 @@ public class GameManager : MonoBehaviour, IsBoardDirector, IsBoardActor {
     /// util stuff
     /// 
 
+    public void ToggleDrawMode() {
+        Debug.Log("game manager told to toggle");
+        drawMode = !drawMode;
+    }
+
     private GameObject GetZoneByAddress(Vector2 address) {
         return boardScript.GetPressureZones().Find(zone => (Vector2)zone.transform.position == address);
     }
 
     void InitGame() {
         SpawnSites.Clear();
-        //// toad
-        ////SpawnSites.AddFirst(new Vector2(2, 3));
-        ////SpawnSites.AddFirst(new Vector2(3, 3));
-        ////SpawnSites.AddFirst(new Vector2(4, 3));
-
-        //// blinker
-        ////SpawnSites.AddFirst(new Vector2(3, 4));
-        ////SpawnSites.AddFirst(new Vector2(4, 4));
-        ////SpawnSites.AddFirst(new Vector2(5, 4));
-
-        //// glider
-        ////SpawnSites.AddFirst(new Vector2(3, 4));
-        ////SpawnSites.AddFirst(new Vector2(4, 4));
-        ////SpawnSites.AddFirst(new Vector2(3, 3));
-        ////SpawnSites.AddFirst(new Vector2(4, 5));
-        ////SpawnSites.AddFirst(new Vector2(2, 5));
-
-        //// reverse glider
-        //SpawnSites.AddFirst(new Vector2(3, 4));
-        //SpawnSites.AddFirst(new Vector2(4, 4));
-        //SpawnSites.AddFirst(new Vector2(4, 3));
-        //SpawnSites.AddFirst(new Vector2(3, 5));
-        //SpawnSites.AddFirst(new Vector2(5, 5));
-
-
-        //SpawnSites.AddFirst(new Vector2(0, 1));
-        //SpawnSites.AddFirst(new Vector2(1, 1));
-        //SpawnSites.AddFirst(new Vector2(1, 0));
-        //SpawnSites.AddFirst(new Vector2(0, 2));
-        //SpawnSites.AddFirst(new Vector2(2, 2));
-        
-        //SpawnSites.AddFirst(new Vector2(4, 4));
-        //SpawnSites.AddFirst(new Vector2(3, 5));
-
 
 
         doingSetup = true;

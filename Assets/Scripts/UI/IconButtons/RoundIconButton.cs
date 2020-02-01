@@ -6,7 +6,7 @@ using UnityEngine.UI;
 public class RoundIconButton : MonoBehaviour
 {
 
-    private Image image;
+    protected Image image;
     protected string fourColorShade;
     protected RectTransform rectTransform;
     protected float width = 30f;
