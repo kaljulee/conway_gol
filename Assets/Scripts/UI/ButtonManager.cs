@@ -194,4 +194,9 @@ public class ButtonManager : MonoBehaviour
     public void onStepBackwardRelease() {
         GameManager.instance.StopStepping();
     }
+
+    public void OnDrawButtonPress() {
+        Debug.Log("buttonmanager knows button pressed");
+        GameManager.instance.ToggleDrawMode();
+    }
 }

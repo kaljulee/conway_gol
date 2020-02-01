@@ -28,6 +28,7 @@ public class BoardManager : MonoBehaviour
 
     public int columns = 8;
     public int rows = 8;
+    public bool drawMode = false;
     public GameObject[] floorTiles;
     public GameObject unitTile;
     public LinkedList<Vector2> SpawnSites;
