@@ -7,9 +7,11 @@ public class Loader : MonoBehaviour
     public GameObject gameManager;
     public GameObject buttonManager;
     public GameObject actionController;
+    public Camera mainCamera;
 
     void Awake()
     {
+        mainCamera = GetComponent<Camera>();
         if (GameManager.instance == null)
         {
             Instantiate(gameManager);
