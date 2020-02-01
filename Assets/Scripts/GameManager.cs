@@ -93,31 +93,35 @@ public class GameManager : MonoBehaviour, IsBoardDirector, IsBoardActor {
 
     void InitGame() {
         SpawnSites.Clear();
-        // toad
-        //SpawnSites.AddFirst(new Vector2(2, 3));
-        //SpawnSites.AddFirst(new Vector2(3, 3));
+        //// toad
+        ////SpawnSites.AddFirst(new Vector2(2, 3));
+        ////SpawnSites.AddFirst(new Vector2(3, 3));
+        ////SpawnSites.AddFirst(new Vector2(4, 3));
+
+        //// blinker
+        ////SpawnSites.AddFirst(new Vector2(3, 4));
+        ////SpawnSites.AddFirst(new Vector2(4, 4));
+        ////SpawnSites.AddFirst(new Vector2(5, 4));
+
+        //// glider
+        ////SpawnSites.AddFirst(new Vector2(3, 4));
+        ////SpawnSites.AddFirst(new Vector2(4, 4));
+        ////SpawnSites.AddFirst(new Vector2(3, 3));
+        ////SpawnSites.AddFirst(new Vector2(4, 5));
+        ////SpawnSites.AddFirst(new Vector2(2, 5));
+
+        //// reverse glider
+        //SpawnSites.AddFirst(new Vector2(3, 4));
+        //SpawnSites.AddFirst(new Vector2(4, 4));
         //SpawnSites.AddFirst(new Vector2(4, 3));
+        //SpawnSites.AddFirst(new Vector2(3, 5));
+        //SpawnSites.AddFirst(new Vector2(5, 5));
 
-        // blinker
-        //SpawnSites.AddFirst(new Vector2(3, 4));
-        //SpawnSites.AddFirst(new Vector2(4, 4));
-        //SpawnSites.AddFirst(new Vector2(5, 4));
-
-        // glider
-        //SpawnSites.AddFirst(new Vector2(3, 4));
-        //SpawnSites.AddFirst(new Vector2(4, 4));
-        //SpawnSites.AddFirst(new Vector2(3, 3));
-        //SpawnSites.AddFirst(new Vector2(4, 5));
-        //SpawnSites.AddFirst(new Vector2(2, 5));
-
-        // reverse glider
-        SpawnSites.AddFirst(new Vector2(3, 4));
-        SpawnSites.AddFirst(new Vector2(4, 4));
-        SpawnSites.AddFirst(new Vector2(4, 3));
-        SpawnSites.AddFirst(new Vector2(3, 5));
-        SpawnSites.AddFirst(new Vector2(5, 5));
-
-
+        SpawnSites.AddFirst(new Vector2(0, 1));
+        SpawnSites.AddFirst(new Vector2(1, 1));
+        SpawnSites.AddFirst(new Vector2(1, 0));
+        SpawnSites.AddFirst(new Vector2(0, 2));
+        SpawnSites.AddFirst(new Vector2(2, 2));
         //SpawnSites.AddFirst(new Vector2(4, 4));
         //SpawnSites.AddFirst(new Vector2(3, 5));
 
