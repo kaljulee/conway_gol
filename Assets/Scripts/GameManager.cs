@@ -73,6 +73,20 @@ public class GameManager : MonoBehaviour, IsBoardDirector, IsBoardActor {
         boardScript.ResetBoardState();
     }
 
+
+    public void ApplySpawnSiteTemplate(LinkedList<Vector2> template, Vector2? origin=null) {
+        // probably remove this;
+        SpawnSites.Clear();
+        Debug.Log("in applyspawnsites");
+        Vector2 originSite = origin == null ? new Vector2(5, 5) : (Vector2)origin;
+        foreach(Vector2 site in template) {
+            SpawnSites.AddFirst(site + originSite);
+        }
+        boardScript.SetSpawnSites(SpawnSites);
+        boardScript.ResetBoardState();
+
+    }
+
     private void CreateRandomSpawnSites(float frequency) {
         SpawnSites.Clear();
         foreach (Vector3 position in boardScript.GetGridPositions()) {
@@ -403,6 +417,10 @@ public class GameManager : MonoBehaviour, IsBoardDirector, IsBoardActor {
                 break;
             case ActionTypes.ALL_PRESSURE_ZERO:
                 boardScript.GetPressureZones().ForEach(z => z.GetComponent<PressureZone>().ZeroPressure());
+                break;
+            case ActionTypes.SET_TEMPLATE:
+                Debug.Log("set template manager switch");
+                ApplySpawnSiteTemplate(Templates.GetTemplate((int)action.Payload));
                 break;
             default:
                 break;

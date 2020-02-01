@@ -10,10 +10,35 @@ public static class Templates
     //SpawnSites.AddFirst(new Vector2(3, 3));
     //SpawnSites.AddFirst(new Vector2(4, 3));
 
-    // blinker
-    //SpawnSites.AddFirst(new Vector2(3, 4));
-    //SpawnSites.AddFirst(new Vector2(4, 4));
-    //SpawnSites.AddFirst(new Vector2(5, 4));
+ 
+    public static LinkedList<Vector2> GetTemplate(int templateType) {
+        switch(templateType) {
+            case TEMPLATE_TYPES.BLINKER:
+                return Blinker();
+            case TEMPLATE_TYPES.GLIDER:
+                return Glider();
+            case TEMPLATE_TYPES.SQUARE:
+                return Square();
+            default:
+                return Square();
+        }
+    }
+
+    public static class TEMPLATE_TYPES {
+        public const int BLINKER = 0;
+            public const int GLIDER = 1;
+        public const int SQUARE = 2;
+    }
+
+
+    public static LinkedList<Vector2> Square() {
+        LinkedList<Vector2> sites = new LinkedList<Vector2>();
+        sites.AddFirst(new Vector2(0, 0));
+        sites.AddFirst(new Vector2(1, 0));
+        sites.AddFirst(new Vector2(0, 1));
+        sites.AddFirst(new Vector2(1, 1));
+        return sites;
+    }
 
     public static LinkedList<Vector2> Blinker() {
         LinkedList<Vector2> sites = new LinkedList<Vector2>();

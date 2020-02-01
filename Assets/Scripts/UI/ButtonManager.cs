@@ -134,6 +134,11 @@ public class ButtonManager : MonoBehaviour
         templateMenu.SetActive(true);
     }
 
+    public void OnTemplateSelectorPress(int template) {
+        Action templateAction = Action.Factory.CreateAddressAction(Action.ActionTypes.SET_TEMPLATE, template, Vector2.zero);
+        ActionController.instance.ExecuteAction(templateAction);
+    }
+
     ////////////////////////////
     /// player buttons
     /// 

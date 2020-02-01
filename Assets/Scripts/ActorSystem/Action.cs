@@ -123,7 +123,8 @@ public class Action {
         public const int CREATE = 2;
         public const int PRESSURE_ZERO = 3;
         public const int ALL_PRESSURE_ZERO = 4;
-        public static readonly string[] ACTION_TYPE_STRINGS = { "PRESSURE_CHANGE", "REMOVE", "CREATE", "PRESSURE_ZERO", "ALL_PRESSURE_ZERO" };
+        public const int SET_TEMPLATE = 5;
+        public static readonly string[] ACTION_TYPE_STRINGS = { "PRESSURE_CHANGE", "REMOVE", "CREATE", "PRESSURE_ZERO", "ALL_PRESSURE_ZERO", "SET_TEMPLATE" };
     }
 
     public static class ZoneTypes {
