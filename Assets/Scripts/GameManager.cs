@@ -14,12 +14,13 @@ public class GameManager : MonoBehaviour, IsBoardDirector, IsBoardActor {
     public GameObject unitTile;
     public float turnDelay = 1.5f;
     private bool stepping = false;
+    public Vector2 spawnCenter = Vector2.zero;
 
     private int manualSteps = 0;
     private LinkedList<int> RequestedManualSteps = new LinkedList<int>();
     public static bool Paused { get; set; } = false;
 
-    private LinkedList<Vector2> SpawnSites = new LinkedList<Vector2>();
+    private LinkedList<Vector2> SpawnSites = Templates.Blinker();//new LinkedList<Vector2>();
 
     public void RequestManualSteps(int value) {
         RequestedManualSteps.AddLast(value);
@@ -73,14 +74,13 @@ public class GameManager : MonoBehaviour, IsBoardDirector, IsBoardActor {
         boardScript.ResetBoardState();
     }
 
+    public void SetSpawnCenter(Vector2 center) => spawnCenter = center;
 
-    public void ApplySpawnSiteTemplate(LinkedList<Vector2> template, Vector2? origin=null) {
+    public void ApplySpawnSiteTemplate(LinkedList<Vector2> template) {
         // probably remove this;
         SpawnSites.Clear();
-        Debug.Log("in applyspawnsites");
-        Vector2 originSite = origin == null ? new Vector2(5, 5) : (Vector2)origin;
         foreach(Vector2 site in template) {
-            SpawnSites.AddFirst(site + originSite);
+            SpawnSites.AddFirst(site + spawnCenter);
         }
         boardScript.SetSpawnSites(SpawnSites);
         boardScript.ResetBoardState();
@@ -131,11 +131,13 @@ public class GameManager : MonoBehaviour, IsBoardDirector, IsBoardActor {
         //SpawnSites.AddFirst(new Vector2(3, 5));
         //SpawnSites.AddFirst(new Vector2(5, 5));
 
-        SpawnSites.AddFirst(new Vector2(0, 1));
-        SpawnSites.AddFirst(new Vector2(1, 1));
-        SpawnSites.AddFirst(new Vector2(1, 0));
-        SpawnSites.AddFirst(new Vector2(0, 2));
-        SpawnSites.AddFirst(new Vector2(2, 2));
+
+        //SpawnSites.AddFirst(new Vector2(0, 1));
+        //SpawnSites.AddFirst(new Vector2(1, 1));
+        //SpawnSites.AddFirst(new Vector2(1, 0));
+        //SpawnSites.AddFirst(new Vector2(0, 2));
+        //SpawnSites.AddFirst(new Vector2(2, 2));
+        
         //SpawnSites.AddFirst(new Vector2(4, 4));
         //SpawnSites.AddFirst(new Vector2(3, 5));
 
@@ -143,6 +145,9 @@ public class GameManager : MonoBehaviour, IsBoardDirector, IsBoardActor {
 
         doingSetup = true;
         processingTurn = false;
+        Vector2 boardSize = boardScript.GetBoardSize();
+        Vector2 center = new Vector2((int)(boardSize.x / 2), (int)(boardSize.y / 2));
+        SetSpawnCenter(center);
         boardScript.SetSpawnSites(SpawnSites);
         boardScript.SetupScene(0);
     }
@@ -419,7 +424,6 @@ public class GameManager : MonoBehaviour, IsBoardDirector, IsBoardActor {
                 boardScript.GetPressureZones().ForEach(z => z.GetComponent<PressureZone>().ZeroPressure());
                 break;
             case ActionTypes.SET_TEMPLATE:
-                Debug.Log("set template manager switch");
                 ApplySpawnSiteTemplate(Templates.GetTemplate((int)action.Payload));
                 break;
             default:
@@ -447,12 +451,37 @@ public class GameManager : MonoBehaviour, IsBoardDirector, IsBoardActor {
         mainCamera.GetComponent<Camera>().backgroundColor = TwoBitColor.GenerateTwoBitColor(TwoBitColor.LIGHTEST);
     }
 
+    public float ConvertBoardToCameraSize(Vector2 board) {
+        return board.y / 2;
+    }
+
+    public float RequiredCameraSize(Vector2 board) {
+        return ConvertBoardToCameraSize(board) + 1;
+    }
+
+    public Vector3 RepositionCamera(float size, float aspect) {
+        float height = size * 2;
+        return new Vector3(height * aspect, size, -10);
+    }
+
     // Update is called once per frame
     void Update() {
         if (manualSteps == 0 && RequestedManualSteps.Count > 0) {
             manualSteps = RequestedManualSteps.First.Value;
             RequestedManualSteps.RemoveFirst();
         }
+
+        float size = RequiredCameraSize(boardScript.GetBoardSize());
+        if (Camera.main.orthographicSize != size) {
+            Camera.main.orthographicSize = size;
+            Vector3 reposition = new Vector3(size * Camera.main.aspect, size - 2, -10);
+            Camera.main.transform.position = reposition;
+         
+       
+        }
+
+       
+        // only start coroutine once, probably should be changed
         if (processingTurn) {
             return;
         }

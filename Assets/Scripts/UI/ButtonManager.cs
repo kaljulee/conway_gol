@@ -22,6 +22,7 @@ public class ButtonManager : MonoBehaviour
     public static GameObject templateMenu;
     public static MainMenu templateMenuScript;
 
+    private void PrintPosition(Vector2 position) => Debug.Log("x" + position.x + "y" + position.y);
     private void Awake()
     {
         if (instance == null)
@@ -57,6 +58,21 @@ public class ButtonManager : MonoBehaviour
         CloseAllMenus();
     }
 
+
+
+    private void Update() {
+        //Touch input = Input.GetTouch(0);
+        //if (input.phase == TouchPhase.Began) {
+        //    //OnGearButtonPress();
+        //    Debug.Log("touch location " + input.position);
+        //}
+
+        bool mouseDown = Input.GetMouseButton(0);
+        if (mouseDown) {
+            PrintPosition(Input.mousePosition);
+        }
+
+    }
     public bool SomeMenuIsOpen() {
         foreach(Menu menu in menus) {
             if (menu.IsOpen()) {

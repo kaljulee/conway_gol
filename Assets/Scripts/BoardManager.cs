@@ -41,6 +41,10 @@ public class BoardManager : MonoBehaviour
 
     public List<GameObject> GetPressureZones() => pressureZones;
 
+    public Vector2 GetBoardSize() {
+        return new Vector2(columns, rows);
+    }
+
     public void ResetBoardState()
     {
         ClearPressureZones();
