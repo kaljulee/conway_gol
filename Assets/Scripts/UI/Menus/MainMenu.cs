@@ -3,35 +3,14 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class MainMenu : Menu
-{
-    //private Image image;
-    //public bool ToggleActive()
-    //{
-    //    bool newActiveState = !gameObject.activeSelf;
-    //    gameObject.SetActive(newActiveState);
-    //    return newActiveState;
-    //}
+public class MainMenu : Menu {
 
-    //new private void Awake()
-    //{
-    //    base.Awake();
-    //    //    image = GetComponent<Image>();
-    //    //    string fourColorShade = TwoBitColor.LIGHT;
-    //    //    Color color = TwoBitColor.GenerateTwoBitColor(fourColorShade);
-    //    //    color.a = 0.2f;
-    //    //    image.color = color;
-    //}
+    new void Awake() {
+        base.Awake();
+        //rectTransform.sizeDelta = new Vector2(208, 296);
 
-// Start is called before the first frame update
-//void Start()
-//    {
-        
-//    }
+        //rectTransform.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, 296);
+        //rectTransform.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, 208);
+    }
 
-//    // Update is called once per frame
-//    void Update()
-//    {
-        
-//    }
 }
