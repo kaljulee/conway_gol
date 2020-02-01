@@ -16,6 +16,8 @@ TagManager:
   - MainMenu
   - CreateRandomMenu
   - Slider
+  - MainMenuSlider
+  - TemplateMenu
   layers:
   - Default
   - TransparentFX

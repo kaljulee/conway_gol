@@ -73,6 +73,20 @@ public class GameManager : MonoBehaviour, IsBoardDirector, IsBoardActor {
         boardScript.ResetBoardState();
     }
 
+
+    public void ApplySpawnSiteTemplate(LinkedList<Vector2> template, Vector2? origin=null) {
+        // probably remove this;
+        SpawnSites.Clear();
+        Debug.Log("in applyspawnsites");
+        Vector2 originSite = origin == null ? new Vector2(5, 5) : (Vector2)origin;
+        foreach(Vector2 site in template) {
+            SpawnSites.AddFirst(site + originSite);
+        }
+        boardScript.SetSpawnSites(SpawnSites);
+        boardScript.ResetBoardState();
+
+    }
+
     private void CreateRandomSpawnSites(float frequency) {
         SpawnSites.Clear();
         foreach (Vector3 position in boardScript.GetGridPositions()) {
@@ -93,31 +107,35 @@ public class GameManager : MonoBehaviour, IsBoardDirector, IsBoardActor {
 
     void InitGame() {
         SpawnSites.Clear();
-        // toad
-        //SpawnSites.AddFirst(new Vector2(2, 3));
-        //SpawnSites.AddFirst(new Vector2(3, 3));
+        //// toad
+        ////SpawnSites.AddFirst(new Vector2(2, 3));
+        ////SpawnSites.AddFirst(new Vector2(3, 3));
+        ////SpawnSites.AddFirst(new Vector2(4, 3));
+
+        //// blinker
+        ////SpawnSites.AddFirst(new Vector2(3, 4));
+        ////SpawnSites.AddFirst(new Vector2(4, 4));
+        ////SpawnSites.AddFirst(new Vector2(5, 4));
+
+        //// glider
+        ////SpawnSites.AddFirst(new Vector2(3, 4));
+        ////SpawnSites.AddFirst(new Vector2(4, 4));
+        ////SpawnSites.AddFirst(new Vector2(3, 3));
+        ////SpawnSites.AddFirst(new Vector2(4, 5));
+        ////SpawnSites.AddFirst(new Vector2(2, 5));
+
+        //// reverse glider
+        //SpawnSites.AddFirst(new Vector2(3, 4));
+        //SpawnSites.AddFirst(new Vector2(4, 4));
         //SpawnSites.AddFirst(new Vector2(4, 3));
+        //SpawnSites.AddFirst(new Vector2(3, 5));
+        //SpawnSites.AddFirst(new Vector2(5, 5));
 
-        // blinker
-        //SpawnSites.AddFirst(new Vector2(3, 4));
-        //SpawnSites.AddFirst(new Vector2(4, 4));
-        //SpawnSites.AddFirst(new Vector2(5, 4));
-
-        // glider
-        //SpawnSites.AddFirst(new Vector2(3, 4));
-        //SpawnSites.AddFirst(new Vector2(4, 4));
-        //SpawnSites.AddFirst(new Vector2(3, 3));
-        //SpawnSites.AddFirst(new Vector2(4, 5));
-        //SpawnSites.AddFirst(new Vector2(2, 5));
-
-        // reverse glider
-        SpawnSites.AddFirst(new Vector2(3, 4));
-        SpawnSites.AddFirst(new Vector2(4, 4));
-        SpawnSites.AddFirst(new Vector2(4, 3));
-        SpawnSites.AddFirst(new Vector2(3, 5));
-        SpawnSites.AddFirst(new Vector2(5, 5));
-
-
+        SpawnSites.AddFirst(new Vector2(0, 1));
+        SpawnSites.AddFirst(new Vector2(1, 1));
+        SpawnSites.AddFirst(new Vector2(1, 0));
+        SpawnSites.AddFirst(new Vector2(0, 2));
+        SpawnSites.AddFirst(new Vector2(2, 2));
         //SpawnSites.AddFirst(new Vector2(4, 4));
         //SpawnSites.AddFirst(new Vector2(3, 5));
 
@@ -399,6 +417,10 @@ public class GameManager : MonoBehaviour, IsBoardDirector, IsBoardActor {
                 break;
             case ActionTypes.ALL_PRESSURE_ZERO:
                 boardScript.GetPressureZones().ForEach(z => z.GetComponent<PressureZone>().ZeroPressure());
+                break;
+            case ActionTypes.SET_TEMPLATE:
+                Debug.Log("set template manager switch");
+                ApplySpawnSiteTemplate(Templates.GetTemplate((int)action.Payload));
                 break;
             default:
                 break;

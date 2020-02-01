@@ -35,10 +35,20 @@ public class ActionController : MonoBehaviour {
         history.First.Value.AddFirst(action.ConvertToAddress());
     }
 
+    public bool IsHistoricalAction(Action action) {
+        return action.ActionType == Action.ActionTypes.CREATE || action.ActionType == Action.ActionTypes.REMOVE;
+    }
+
+    public bool IsHistoryClearingAction(Action action) {
+        return action.ActionType == Action.ActionTypes.SET_TEMPLATE;
+    }
     public void ExecuteAction(Action action) {
-        bool historicalAction = action.ActionType == Action.ActionTypes.CREATE || action.ActionType == Action.ActionTypes.REMOVE;
+        bool historicalAction = IsHistoricalAction(action);
         if (historicalAction && !rewinding) {
             PushToHistory(action);
+        }
+        if (IsHistoryClearingAction(action) && history.Count > 0) {
+            history.Clear();
         }
         GameManager.instance.ExecuteBoardAction(action);
     }
