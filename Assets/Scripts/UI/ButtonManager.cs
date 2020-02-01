@@ -19,6 +19,9 @@ public class ButtonManager : MonoBehaviour
     public static MainMenuSlider sliderScript;
     public static LinkedList<Menu> menus = new LinkedList<Menu>();
 
+    public static GameObject templateMenu;
+    public static MainMenu templateMenuScript;
+
     private void Awake()
     {
         if (instance == null)
@@ -42,12 +45,15 @@ public class ButtonManager : MonoBehaviour
         createRandomMenu = GameObject.FindGameObjectWithTag("CreateRandomMenu");
         createRandomScript = createRandomMenu.GetComponent<MainMenu>();
 
+        templateMenu = GameObject.FindGameObjectWithTag("TemplateMenu");
+        templateMenuScript = templateMenu.GetComponent<MainMenu>();
 
         slider = GameObject.FindGameObjectWithTag("Slider");
         sliderScript = slider.GetComponent<MainMenuSlider>();
 
         menus.AddLast(mainMenuScript);
         menus.AddLast(createRandomScript);
+        menus.AddLast(templateMenuScript);
         CloseAllMenus();
     }
 
@@ -124,7 +130,8 @@ public class ButtonManager : MonoBehaviour
     }
     public void OnTemplatesPress()
     {
-
+        mainMenu.SetActive(false);
+        templateMenu.SetActive(true);
     }
 
     ////////////////////////////
