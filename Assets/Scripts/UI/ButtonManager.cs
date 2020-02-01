@@ -88,8 +88,9 @@ public class ButtonManager : MonoBehaviour
 
     }
 
-    public void OnExitButtonPress()
+    public void OnExitButtonPress(GameObject menu)
     {
+        menu.SetActive(false);
         Debug.Log("exit button pressed!");
     }
 
@@ -109,10 +110,12 @@ public class ButtonManager : MonoBehaviour
         mainMenu.SetActive(false);
         createRandomMenu.SetActive(true);
         GameManager.instance.ApplyRandomSpawnSites(sliderScript.GetValue());
+        ActionController.instance.ClearHistory();
     }
 
     public void OnReRollRandomPress() {
         GameManager.instance.ApplyRandomSpawnSites(sliderScript.GetValue());
+        ActionController.instance.ClearHistory();
     }
 
     public void OnRunRandomPress() {
