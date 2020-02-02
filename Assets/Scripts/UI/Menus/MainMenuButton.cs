@@ -8,7 +8,7 @@ public class MainMenuButton : MonoBehaviour
 
     private Image image;
     private Text text;
-
+    private float value = 0f;
     void Awake()
     {
         image = transform.GetChild(0).GetComponent<Image>();

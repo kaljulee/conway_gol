@@ -75,7 +75,8 @@ public class ButtonManager : MonoBehaviour
         //    //OnGearButtonPress();
         //    Debug.Log("touch location " + input.position);
         //}
-
+        Debug.Log("should show");
+        Debug.Log(Input.acceleration.magnitude);
         bool mouseDown = Input.GetMouseButton(0);
         if (mouseDown) {
             Vector2 position = Camera.main.ScreenToViewportPoint(Input.mousePosition);
@@ -87,8 +88,21 @@ public class ButtonManager : MonoBehaviour
                 SpawnOnPoint(position, defaultDrawTemplate);
             }
         }
+        if (Input.acceleration.sqrMagnitude > 2) { OnShake(Input.acceleration.sqrMagnitude); }
+
 
     }
+
+    public void OnShake(float sqrMag) {
+        ShakeOnPoint(sqrMag);
+    }
+
+    public void ShakeOnPoint(float sqrMag) {
+        LinkedList<Vector2> zones = GameManager.instance.CreateRandomSpawnSites(sqrMag / 100); ;
+        GameManager.instance.SetSpawnCenter(Vector2.zero);
+        GameManager.instance.RequestShakeZones(zones);
+    }
+
     public bool SomeMenuIsOpen() {
         foreach(Menu menu in menus) {
             if (menu.IsOpen()) {
