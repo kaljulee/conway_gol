@@ -22,7 +22,8 @@ public class ButtonManager : MonoBehaviour
     public static GameObject templateMenu;
     public static MainMenu templateMenuScript;
 
-    private void PrintPosition(Vector2 position) => Debug.Log("x" + position.x + "y" + position.y);
+    public LinkedList<Vector2> defaultDrawTemplate = Templates.Point();
+
     private void Awake()
     {
         if (instance == null)
@@ -58,7 +59,15 @@ public class ButtonManager : MonoBehaviour
         CloseAllMenus();
     }
 
-
+    public void SpawnOnPoint(Vector2 point, LinkedList<Vector2> spawn) {
+     
+        LinkedList<Vector2> zones = defaultDrawTemplate;
+        if (spawn != null) {
+            zones = spawn;
+        }
+        GameManager.instance.SetSpawnCenter(point);
+        GameManager.instance.RequestDrawZones(zones);
+    }
 
     private void Update() {
         //Touch input = Input.GetTouch(0);
@@ -69,7 +78,14 @@ public class ButtonManager : MonoBehaviour
 
         bool mouseDown = Input.GetMouseButton(0);
         if (mouseDown) {
-            PrintPosition(Input.mousePosition);
+            Vector2 position = Camera.main.ScreenToViewportPoint(Input.mousePosition);
+
+            position.y = Mathf.Round(position.y * Camera.main.orthographicSize * 2);
+            position.x = Mathf.Round(position.x * Camera.main.aspect *Camera.main.orthographicSize * 2);
+       
+            if (!SomeMenuIsOpen()) {
+                SpawnOnPoint(position, defaultDrawTemplate);
+            }
         }
 
     }
@@ -196,7 +212,6 @@ public class ButtonManager : MonoBehaviour
     }
 
     public void OnDrawButtonPress() {
-        Debug.Log("buttonmanager knows button pressed");
         GameManager.instance.ToggleDrawMode();
     }
 }

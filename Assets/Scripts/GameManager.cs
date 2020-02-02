@@ -16,6 +16,7 @@ public class GameManager : MonoBehaviour, IsBoardDirector, IsBoardActor {
     private bool stepping = false;
     public Vector2 spawnCenter = Vector2.zero;
     public bool drawMode = false;
+    private bool firstTimeCameraLoad = true;
 
     private int manualSteps = 0;
     private LinkedList<int> RequestedManualSteps = new LinkedList<int>();
@@ -27,7 +28,7 @@ public class GameManager : MonoBehaviour, IsBoardDirector, IsBoardActor {
         RequestedManualSteps.AddLast(value);
     }
 
-    IEnumerator ContinuousManualSteps(int steps, float initialWait=1.1f) {
+    IEnumerator ContinuousManualSteps(int steps, float initialWait = 1.1f) {
         float wait = initialWait;
         while (stepping) {
             if (wait > 0.15) {
@@ -41,7 +42,7 @@ public class GameManager : MonoBehaviour, IsBoardDirector, IsBoardActor {
 
     public void StartStepping(int steps) {
         stepping = true;
-            StartCoroutine(ContinuousManualSteps(steps));
+        StartCoroutine(ContinuousManualSteps(steps));
     }
 
     public void StopStepping() {
@@ -66,6 +67,7 @@ public class GameManager : MonoBehaviour, IsBoardDirector, IsBoardActor {
     private LinkedList<Action> removeActionsQueue = new LinkedList<Action>();
     private LinkedList<Action> changeActionsQueue = new LinkedList<Action>();
     private LinkedList<Action> zeroActionsQueue = new LinkedList<Action>();
+    private LinkedList<Vector2> drawZones = new LinkedList<Vector2>();
 
     //////////////////////////
     /// handle spawnsites
@@ -80,12 +82,31 @@ public class GameManager : MonoBehaviour, IsBoardDirector, IsBoardActor {
     public void ApplySpawnSiteTemplate(LinkedList<Vector2> template) {
         // probably remove this;
         SpawnSites.Clear();
-        foreach(Vector2 site in template) {
+        foreach (Vector2 site in template) {
             SpawnSites.AddFirst(site + spawnCenter);
         }
         boardScript.SetSpawnSites(SpawnSites);
         boardScript.ResetBoardState();
 
+    }
+
+    public void RequestDrawZones(LinkedList<Vector2> zones) {
+        if (drawMode) {
+            foreach (Vector2 zone in zones) {
+                if (!drawZones.Contains(zone)) {
+                    drawZones.AddLast(zone);
+                }
+            }
+        }
+    }
+    public void ApplyDrawZones() {
+        foreach (Vector2 zone in drawZones) {
+            Action delete = CreateAddressAction(ActionTypes.REMOVE, 0, zone + spawnCenter);
+            Action create = CreateAddressAction(ActionTypes.CREATE, 3, zone + spawnCenter);
+            ActionController.instance.ExecuteAction(delete);
+            ActionController.instance.ExecuteAction(create);
+        }
+        drawZones.Clear();
     }
 
     private void CreateRandomSpawnSites(float frequency) {
@@ -103,7 +124,6 @@ public class GameManager : MonoBehaviour, IsBoardDirector, IsBoardActor {
     /// 
 
     public void ToggleDrawMode() {
-        Debug.Log("game manager told to toggle");
         drawMode = !drawMode;
     }
 
@@ -234,7 +254,7 @@ public class GameManager : MonoBehaviour, IsBoardDirector, IsBoardActor {
                 }
 
                 changeActionsQueue.AddLast(CreateAddressAction(ActionTypes.PRESSURE_CHANGE, pressureScript.ExertedPressure, adjustedVector));
-            }
+            } else { }
 
         }
     }
@@ -303,39 +323,6 @@ public class GameManager : MonoBehaviour, IsBoardDirector, IsBoardActor {
         foreach (GameObject zone in boardScript.GetPressureZones()) {
             ResolvePressureZone(zone);
         }
-    }
-
-
-    /////////////////////////
-    // run turn
-    IEnumerator CalculateTurn() {
-        for (int n = 0; n > -1; n++) {
-            int step = TakeManualStep();
-            if ((n != 0 && !Paused) || (step > 0)) {
-                ActionController.instance.BeginNewRound();
-                UpdatePressureZones();
-
-                IssueCreateActions();
-                IssuePressureChangeActions();
-
-                ResolvePressureZones();
-                IssueRemoveActions();
-                IssueCreateActions();
-                IssueZeroActions();
-
-                ActionController.instance.EndRound();
-
-            }
-            else if (step < 0) {
-                ActionController.instance.Rewind();
-                foreach (GameObject obj in boardScript.GetPressureZones()) {
-                    PressureZone zone = obj.GetComponent<PressureZone>();
-                }
-            }
-
-            yield return new WaitForSeconds(turnDelay);
-        }
-        //processingTurn = false;
     }
 
 
@@ -428,12 +415,51 @@ public class GameManager : MonoBehaviour, IsBoardDirector, IsBoardActor {
     }
 
     public float RequiredCameraSize(Vector2 board) {
-        return ConvertBoardToCameraSize(board) + 1;
+        return ConvertBoardToCameraSize(board);
     }
 
     public Vector3 RepositionCamera(float size, float aspect) {
         float height = size * 2;
-        return new Vector3(height * aspect, size, -10);
+        return new Vector3(height * aspect, height, -10);
+    }
+
+
+    /////////////////////////
+    // run turn
+    IEnumerator CalculateTurn() {
+        for (int n = 0; n > -1; n++) {
+            int step = TakeManualStep();
+            // apply drawn zones
+            if (drawMode && drawZones.Count > 0) {
+                ActionController.instance.BeginNewRound();
+                ApplyDrawZones();
+            }
+
+            if ((n != 0 && !Paused) || (step > 0)) {
+                ActionController.instance.BeginNewRound();
+                UpdatePressureZones();
+
+                IssueCreateActions();
+                IssuePressureChangeActions();
+
+                ResolvePressureZones();
+                IssueRemoveActions();
+                IssueCreateActions();
+                IssueZeroActions();
+
+                ActionController.instance.EndRound();
+
+            }
+            else if (step < 0) {
+                ActionController.instance.Rewind();
+                foreach (GameObject obj in boardScript.GetPressureZones()) {
+                    PressureZone zone = obj.GetComponent<PressureZone>();
+                }
+            }
+
+            yield return new WaitForSeconds(turnDelay);
+        }
+        //processingTurn = false;
     }
 
     // Update is called once per frame
@@ -443,16 +469,16 @@ public class GameManager : MonoBehaviour, IsBoardDirector, IsBoardActor {
             RequestedManualSteps.RemoveFirst();
         }
 
-        float size = RequiredCameraSize(boardScript.GetBoardSize());
+        float size = boardScript.GetBoardSize().y;
         if (Camera.main.orthographicSize != size) {
-            Camera.main.orthographicSize = size;
-            Vector3 reposition = new Vector3(size * Camera.main.aspect, size - 2, -10);
+            Camera.main.orthographicSize = size / 2;
+            Vector3 reposition = new Vector3((size / 2) * Camera.main.aspect, (size/2) , -10);
             Camera.main.transform.position = reposition;
-         
-       
+
+
         }
 
-       
+
         // only start coroutine once, probably should be changed
         if (processingTurn) {
             return;
