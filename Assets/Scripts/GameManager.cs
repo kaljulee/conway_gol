@@ -68,11 +68,13 @@ public class GameManager : MonoBehaviour, IsBoardDirector, IsBoardActor {
     private LinkedList<Action> changeActionsQueue = new LinkedList<Action>();
     private LinkedList<Action> zeroActionsQueue = new LinkedList<Action>();
     private LinkedList<Vector2> drawZones = new LinkedList<Vector2>();
+    private LinkedList<Vector2> shakeZones = new LinkedList<Vector2>();
 
     //////////////////////////
     /// handle spawnsites
     public void ApplyRandomSpawnSites(float frequency) {
-        CreateRandomSpawnSites(frequency);
+        SpawnSites = CreateRandomSpawnSites(frequency);
+        SetSpawnCenter(boardScript.BoardCenter());
         boardScript.SetSpawnSites(SpawnSites);
         boardScript.ResetBoardState();
     }
@@ -90,32 +92,54 @@ public class GameManager : MonoBehaviour, IsBoardDirector, IsBoardActor {
 
     }
 
-    public void RequestDrawZones(LinkedList<Vector2> zones) {
-        if (drawMode) {
-            foreach (Vector2 zone in zones) {
-                if (!drawZones.Contains(zone)) {
-                    drawZones.AddLast(zone);
-                }
+
+    private void RequestZones(LinkedList<Vector2> requestedZones, LinkedList<Vector2> pendingZones) {
+
+        foreach (Vector2 zone in requestedZones) {
+            if (!pendingZones.Contains(zone)) {
+                pendingZones.AddLast(zone);
             }
         }
+
     }
-    public void ApplyDrawZones() {
-        foreach (Vector2 zone in drawZones) {
+
+    public void RequestDrawZones(LinkedList<Vector2> zones) {
+        if (drawMode) {
+            RequestZones(zones, drawZones);
+        }
+    }
+
+    public void RequestShakeZones(LinkedList<Vector2> zones) {
+        RequestZones(zones, shakeZones);
+    }
+
+    private void ApplyZones(LinkedList<Vector2> zones) {
+        foreach (Vector2 zone in zones) {
             Action delete = CreateAddressAction(ActionTypes.REMOVE, 0, zone + spawnCenter);
             Action create = CreateAddressAction(ActionTypes.CREATE, 3, zone + spawnCenter);
             ActionController.instance.ExecuteAction(delete);
             ActionController.instance.ExecuteAction(create);
         }
-        drawZones.Clear();
+        zones.Clear();
     }
 
-    private void CreateRandomSpawnSites(float frequency) {
-        SpawnSites.Clear();
+    public void ApplyShakeZones() {
+        ApplyZones(shakeZones);
+    }
+
+    public void ApplyDrawZones() {
+        ApplyZones(drawZones);
+    }
+
+    public LinkedList<Vector2> CreateRandomSpawnSites(float frequency) {
+        //SpawnSites.Clear();
+        LinkedList<Vector2> returnValue = new LinkedList<Vector2>(); ;
         foreach (Vector3 position in boardScript.GetGridPositions()) {
             if (Random.Range(0f, 1f) < frequency) {
-                SpawnSites.AddFirst(position);
+                returnValue.AddFirst(position);
             }
         }
+        return returnValue;
     }
 
 
@@ -254,7 +278,8 @@ public class GameManager : MonoBehaviour, IsBoardDirector, IsBoardActor {
                 }
 
                 changeActionsQueue.AddLast(CreateAddressAction(ActionTypes.PRESSURE_CHANGE, pressureScript.ExertedPressure, adjustedVector));
-            } else { }
+            }
+            else { }
 
         }
     }
@@ -408,6 +433,7 @@ public class GameManager : MonoBehaviour, IsBoardDirector, IsBoardActor {
     void Start() {
         mainCamera = GameObject.FindGameObjectWithTag("MainCamera");
         mainCamera.GetComponent<Camera>().backgroundColor = TwoBitColor.GenerateTwoBitColor(TwoBitColor.LIGHTEST);
+        SetSpawnCenter(boardScript.BoardCenter());
     }
 
     public float ConvertBoardToCameraSize(Vector2 board) {
@@ -433,6 +459,11 @@ public class GameManager : MonoBehaviour, IsBoardDirector, IsBoardActor {
             if (drawMode && drawZones.Count > 0) {
                 ActionController.instance.BeginNewRound();
                 ApplyDrawZones();
+            }
+
+            if (shakeZones.Count > 0) {
+                ActionController.instance.BeginNewRound();
+                ApplyShakeZones();
             }
 
             if ((n != 0 && !Paused) || (step > 0)) {
@@ -472,7 +503,7 @@ public class GameManager : MonoBehaviour, IsBoardDirector, IsBoardActor {
         float size = boardScript.GetBoardSize().y;
         if (Camera.main.orthographicSize != size) {
             Camera.main.orthographicSize = size / 2;
-            Vector3 reposition = new Vector3((size / 2) * Camera.main.aspect, (size/2) , -10);
+            Vector3 reposition = new Vector3((size / 2) * Camera.main.aspect, (size / 2), -10);
             Camera.main.transform.position = reposition;
 
 

@@ -61,6 +61,10 @@ public class BoardManager : MonoBehaviour
         }
     }
 
+    public Vector2 BoardCenter() {
+        return new Vector2(Mathf.Round(columns / 2), Mathf.Round(rows / 2));
+    }
+
     public List<Vector3> GetGridPositions()
     {
         return gridPositions;
@@ -154,7 +158,6 @@ public class BoardManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-
     }
 
     // Update is called once per frame
