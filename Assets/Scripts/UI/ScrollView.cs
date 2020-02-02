@@ -18,12 +18,10 @@ public class ScrollView : MonoBehaviour
         viewBackground = GetComponentsInChildren<Image>()[0];
         viewBackground.color = TwoBitColor.GenerateTwoBitColor(TwoBitColor.LIGHT);
 
-        Debug.Log("scrollbar vertical has images count: " + images.Length);
-        //images[0].color = Color.white;
+        
         images[0].color = TwoBitColor.GenerateTwoBitColor(TwoBitColor.LIGHT);
         images[1].color = TwoBitColor.GenerateTwoBitColor(TwoBitColor.DARK);
-        //images[2].color = TwoBitColor.GenerateTwoBitColor(TwoBitColor.LIGHT);
-        //images[3].color = TwoBitColor.GenerateTwoBitColor(TwoBitColor.DARK);
+  
     }
 
     // Update is called once per frame

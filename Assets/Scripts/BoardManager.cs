@@ -88,9 +88,23 @@ public class BoardManager : MonoBehaviour
         Destroy(zone);
     }
 
-    public bool PositionIsOnBoard(Vector2 position)
-    {
-        return rows >= position.x - 1 && position.x >= -1 && columns >= position.y && position.y >= -1;
+    public bool PositionIsOnBoard(Vector2 position) {
+        if (columns < position.x - 1) {
+            return false;
+        }
+        if (0 > position.x + 1) {
+            
+            return false;
+        }
+        if (rows < position.y - 1) {
+            
+            return false;
+        }
+        if (0 > position.y + 1) {
+           
+            return false;
+        }
+        return true;
     }
 
     public void AddPressureZone(GameObject zone)

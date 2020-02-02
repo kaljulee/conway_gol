@@ -19,7 +19,6 @@ public abstract class Menu : MonoBehaviour
     }
 
     virtual public void Close() {
-        Debug.Log("trying to close menus");
         gameObject.SetActive(false);
     }
 

@@ -10,7 +10,6 @@ public class DrawModeButton : RoundIconButton {
     }
 
     void UpdateColor() {
-        Debug.Log("button detects drawmmode difference");
         bool managerDrawMode = GameManager.instance
     .drawMode;
         CurrentDrawMode = managerDrawMode;

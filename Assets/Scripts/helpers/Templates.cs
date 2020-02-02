@@ -54,7 +54,11 @@ public static class Templates
         public const int SQUARE = 2;
     }
 
-
+    public static LinkedList<Vector2> Point() {
+        LinkedList<Vector2> sites = new LinkedList<Vector2>();
+        sites.AddFirst(new Vector2(0, 0));
+        return sites;
+    }
     public static LinkedList<Vector2> Square() {
         LinkedList<Vector2> sites = new LinkedList<Vector2>();
         sites.AddFirst(new Vector2(0, 0));
