@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 public class ButtonManager : MonoBehaviour
 {
@@ -77,19 +78,21 @@ public class ButtonManager : MonoBehaviour
         //    //OnGearButtonPress();
         //    Debug.Log("touch location " + input.position);
         //}
-        bool mouseDown = Input.GetMouseButton(0);
-        if (mouseDown) {
-            Vector2 position = Camera.main.ScreenToViewportPoint(Input.mousePosition);
+        if (!EventSystem.current.IsPointerOverGameObject()) {
 
-            position.y = Mathf.Round(position.y * Camera.main.orthographicSize * 2);
-            position.x = Mathf.Round(position.x * Camera.main.aspect *Camera.main.orthographicSize * 2);
-       
-            if (!SomeMenuIsOpen()) {
-                SpawnOnPoint(position, defaultDrawTemplate);
+            bool mouseDown = Input.GetMouseButton(0);
+            if (mouseDown) {
+                Vector2 position = Camera.main.ScreenToViewportPoint(Input.mousePosition);
+
+                position.y = Mathf.Round(position.y * Camera.main.orthographicSize * 2);
+                position.x = Mathf.Round(position.x * Camera.main.aspect * Camera.main.orthographicSize * 2);
+
+                if (!SomeMenuIsOpen()) {
+                    SpawnOnPoint(position, defaultDrawTemplate);
+                }
             }
+            if (Input.acceleration.sqrMagnitude > 2) { OnShake(Input.acceleration.sqrMagnitude); }
         }
-        if (Input.acceleration.sqrMagnitude > 2) { OnShake(Input.acceleration.sqrMagnitude); }
-
 
     }
 
