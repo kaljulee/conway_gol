@@ -24,6 +24,8 @@ public class ButtonManager : MonoBehaviour
 
     public LinkedList<Vector2> defaultDrawTemplate = Templates.Point();
 
+
+
     private void Awake()
     {
         if (instance == null)
@@ -75,8 +77,6 @@ public class ButtonManager : MonoBehaviour
         //    //OnGearButtonPress();
         //    Debug.Log("touch location " + input.position);
         //}
-        Debug.Log("should show");
-        Debug.Log(Input.acceleration.magnitude);
         bool mouseDown = Input.GetMouseButton(0);
         if (mouseDown) {
             Vector2 position = Camera.main.ScreenToViewportPoint(Input.mousePosition);
@@ -183,6 +183,7 @@ public class ButtonManager : MonoBehaviour
     public void OnTemplateSelectorPress(int template) {
         Action templateAction = Action.Factory.CreateAddressAction(Action.ActionTypes.SET_TEMPLATE, template, Vector2.zero);
         ActionController.instance.ExecuteAction(templateAction);
+        defaultDrawTemplate = Templates.GetTemplate(template);
     }
 
     ////////////////////////////

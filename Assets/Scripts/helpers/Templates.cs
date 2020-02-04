@@ -52,6 +52,7 @@ public static class Templates
         public const int BLINKER = 0;
             public const int GLIDER = 1;
         public const int SQUARE = 2;
+        public const int POINT = 3;
     }
 
     public static LinkedList<Vector2> Point() {

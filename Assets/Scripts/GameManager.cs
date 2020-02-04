@@ -84,6 +84,7 @@ public class GameManager : MonoBehaviour, IsBoardDirector, IsBoardActor {
     public void ApplySpawnSiteTemplate(LinkedList<Vector2> template) {
         // probably remove this;
         SpawnSites.Clear();
+        SetSpawnCenter(boardScript.BoardCenter());
         foreach (Vector2 site in template) {
             SpawnSites.AddFirst(site + spawnCenter);
         }
@@ -117,8 +118,10 @@ public class GameManager : MonoBehaviour, IsBoardDirector, IsBoardActor {
         foreach (Vector2 zone in zones) {
             Action delete = CreateAddressAction(ActionTypes.REMOVE, 0, zone + spawnCenter);
             Action create = CreateAddressAction(ActionTypes.CREATE, 3, zone + spawnCenter);
-            ActionController.instance.ExecuteAction(delete);
-            ActionController.instance.ExecuteAction(create);
+            //ActionController.instance.ExecuteAction(delete);
+            //ActionController.instance.ExecuteAction(create);
+            IssueAction(delete);
+            IssueAction(create);
         }
         zones.Clear();
     }
@@ -318,6 +321,7 @@ public class GameManager : MonoBehaviour, IsBoardDirector, IsBoardActor {
 
     void UpdatePressureZones() {
         List<GameObject> ExistingPressureZones = boardScript.GetPressureZones();
+
         for (int i = 0; i < ExistingPressureZones.Count; i++) {
             GameObject currentZone = ExistingPressureZones[i];
             PressureZone pressureScript = currentZone.GetComponent<PressureZone>();
@@ -408,7 +412,8 @@ public class GameManager : MonoBehaviour, IsBoardDirector, IsBoardActor {
                 boardScript.GetPressureZones().ForEach(z => z.GetComponent<PressureZone>().ZeroPressure());
                 break;
             case ActionTypes.SET_TEMPLATE:
-                ApplySpawnSiteTemplate(Templates.GetTemplate((int)action.Payload));
+                //ApplySpawnSiteTemplate(Templates.GetTemplate((int)action.Payload));
+
                 break;
             default:
                 break;
@@ -452,46 +457,80 @@ public class GameManager : MonoBehaviour, IsBoardDirector, IsBoardActor {
 
     /////////////////////////
     // run turn
+    private void TakeTurn() {
+        // is there a manual step forwards or backwards?
+        ActionController.instance.BeginNewRound();
+            int step = TakeManualStep();
+
+         
+    }
+
+    private void TurnForwardMechanism() {
+        ActionController.instance.BeginNewRound();
+        UpdatePressureZones();
+
+        IssueCreateActions();
+        IssuePressureChangeActions();
+
+        ResolvePressureZones();
+        IssueRemoveActions();
+        IssueCreateActions();
+        IssueZeroActions();
+
+        ActionController.instance.EndRound();
+    }
+
+    private void IncrementTime(int n, bool paused, int step) {
+        if ((n != 0 && !Paused) || (step > 0)) {
+            TurnForwardMechanism();
+
+        }
+        else if (step < 0) {
+            TurnRewindMechanism();
+        }
+    }
+
+    private void TurnRewindMechanism() {
+        ActionController.instance.Rewind();
+        foreach (GameObject obj in boardScript.GetPressureZones()) {
+            PressureZone zone = obj.GetComponent<PressureZone>();
+        }
+    }
+    /////////////////////////
+    // run turn
+
+    /////////////////////////
+    // run turn
     IEnumerator CalculateTurn() {
         for (int n = 0; n > -1; n++) {
+            // check for manual step
             int step = TakeManualStep();
-            // apply drawn zones
+
+
+            // execute forward or backward step in time
+            IncrementTime(n, Paused, step);
+
+            // apply non-calculated zones
+            // draw zones
             if (drawMode && drawZones.Count > 0) {
                 ActionController.instance.BeginNewRound();
                 ApplyDrawZones();
             }
-
+            // shake zones
             if (shakeZones.Count > 0) {
                 ActionController.instance.BeginNewRound();
                 ApplyShakeZones();
             }
 
-            if ((n != 0 && !Paused) || (step > 0)) {
-                ActionController.instance.BeginNewRound();
-                UpdatePressureZones();
+            // final zero
+            IssueAction(CreateAddressAction(ActionTypes.ALL_PRESSURE_ZERO, 0, Vector2.zero));
 
-                IssueCreateActions();
-                IssuePressureChangeActions();
-
-                ResolvePressureZones();
-                IssueRemoveActions();
-                IssueCreateActions();
-                IssueZeroActions();
-
-                ActionController.instance.EndRound();
-
-            }
-            else if (step < 0) {
-                ActionController.instance.Rewind();
-                foreach (GameObject obj in boardScript.GetPressureZones()) {
-                    PressureZone zone = obj.GetComponent<PressureZone>();
-                }
-            }
-
+            // end of turn
             yield return new WaitForSeconds(turnDelay);
         }
         //processingTurn = false;
     }
+
 
     // Update is called once per frame
     void Update() {
