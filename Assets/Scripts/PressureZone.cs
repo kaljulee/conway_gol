@@ -26,6 +26,10 @@ public class PressureZone : PlaceholderGameboyColored {
         return 0;
     }
 
+    public string toString() {
+        return "id: " + GetId() + " unit? " + (gameObject.GetComponent<PressureZone>().GetType() == typeof(Unit)) + " pressure: " + Pressure;
+    }
+
     // default pressure zones do nothing when they 'pop'
     // behavior can be applied later, but it doesn't seem
     // right to define these to go to Unit here
