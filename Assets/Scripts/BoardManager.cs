@@ -51,6 +51,11 @@ public class BoardManager : MonoBehaviour
         ClearPressureZones();
         InstantiateSpawnSites(SpawnSites);
     }
+    
+    public void ClearBoard() {
+        ClearPressureZones();
+    }
+
     private void ClearPressureZones()
     {
         while (pressureZones.Count > 0)

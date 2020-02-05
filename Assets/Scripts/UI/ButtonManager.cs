@@ -96,6 +96,9 @@ public class ButtonManager : MonoBehaviour
 
     }
 
+    public void OnClearPress() {
+        GameManager.instance.ClearBoard();
+    }
     public void OnShake(float sqrMag) {
         ShakeOnPoint(sqrMag);
     }
