@@ -43,8 +43,10 @@ public static class Templates
                 return Glider();
             case TEMPLATE_TYPES.SQUARE:
                 return Square();
+            case TEMPLATE_TYPES.POINT:
+                return Point();
             default:
-                return Square();
+                return Point();
         }
     }
 
