@@ -163,6 +163,10 @@ public class GameManager : MonoBehaviour, IsBoardDirector, IsBoardActor {
         drawMode = !drawMode;
     }
 
+    public void SetDrawMode(bool setting) {
+        drawMode = setting;
+    }
+
     public void ClearBoard() {
         ClearQueues();
         IssueAction(CreateAddressAction(ActionTypes.CLEAR_ALL, 0, Vector2.zero));

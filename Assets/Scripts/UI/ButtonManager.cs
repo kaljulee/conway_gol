@@ -198,6 +198,8 @@ public class ButtonManager : MonoBehaviour
         Action templateAction = Action.Factory.CreateAddressAction(Action.ActionTypes.SET_TEMPLATE, template, Vector2.zero);
         ActionController.instance.ExecuteAction(templateAction);
         defaultDrawTemplate = Templates.GetTemplate(template);
+        GameManager.instance.SetDrawMode(true);
+        CloseAllMenus();
     }
 
     ////////////////////////////
