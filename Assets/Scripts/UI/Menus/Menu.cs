@@ -30,14 +30,14 @@ public abstract class Menu : MonoBehaviour
     {
         return gameObject.activeSelf;
     }
-    protected void Awake()
-    {
+    protected void Awake() {
         image = GetComponent<Image>();
         rectTransform = GetComponent<RectTransform>();
-        string fourColorShade = TwoBitColor.LIGHT;
+        if (image) {   string fourColorShade = TwoBitColor.LIGHT;
         Color color = TwoBitColor.GenerateTwoBitColor(fourColorShade);
         color.a = 0.2f;
         image.color = color;
+    }
     }
 
     // Start is called before the first frame update
