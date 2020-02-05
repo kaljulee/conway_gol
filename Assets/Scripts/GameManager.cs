@@ -93,6 +93,15 @@ public class GameManager : MonoBehaviour, IsBoardDirector, IsBoardActor {
 
     }
 
+    private void ClearQueues() {
+        newPressureZoneAddresses.Clear();
+        createActionsQueue.Clear();
+        removeActionsQueue.Clear();
+        changeActionsQueue.Clear();
+        zeroActionsQueue.Clear();
+        drawZones.Clear();
+        shakeZones.Clear();
+    }
 
     private void RequestZones(LinkedList<Vector2> requestedZones, LinkedList<Vector2> pendingZones) {
 
@@ -152,6 +161,11 @@ public class GameManager : MonoBehaviour, IsBoardDirector, IsBoardActor {
 
     public void ToggleDrawMode() {
         drawMode = !drawMode;
+    }
+
+    public void ClearBoard() {
+        ClearQueues();
+        IssueAction(CreateAddressAction(ActionTypes.CLEAR_ALL, 0, Vector2.zero));
     }
 
     private GameObject GetZoneByAddress(Vector2 address) {
@@ -414,6 +428,9 @@ public class GameManager : MonoBehaviour, IsBoardDirector, IsBoardActor {
             case ActionTypes.SET_TEMPLATE:
                 //ApplySpawnSiteTemplate(Templates.GetTemplate((int)action.Payload));
 
+                break;
+            case ActionTypes.CLEAR_ALL:
+                boardScript.ClearBoard();
                 break;
             default:
                 break;

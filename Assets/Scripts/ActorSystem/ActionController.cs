@@ -36,11 +36,11 @@ public class ActionController : MonoBehaviour {
     }
 
     public bool IsHistoricalAction(Action action) {
-        return action.ActionType == Action.ActionTypes.CREATE || action.ActionType == Action.ActionTypes.REMOVE;
+        return action.ActionType == Action.ActionTypes.CREATE || action.ActionType == Action.ActionTypes.REMOVE || action.ActionType == Action.ActionTypes.CLEAR_ALL;
     }
 
     public bool IsHistoryClearingAction(Action action) {
-        return action.ActionType == Action.ActionTypes.SET_TEMPLATE;
+        return action.ActionType == Action.ActionTypes.SET_TEMPLATE || action.ActionType == Action.ActionTypes.CLEAR_ALL;
     }
     public void ExecuteAction(Action action) {
         bool historicalAction = IsHistoricalAction(action);
