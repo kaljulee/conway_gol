@@ -25,23 +25,22 @@ public class ButtonManager : MonoBehaviour
 
     public LinkedList<Vector2> defaultDrawTemplate = Templates.Point();
 
+    public static bool shakable { get; private set; }
 
 
-    private void Awake()
-    {
-        if (instance == null)
-        {
+    // gameobject functions
+    private void Awake() {
+        shakable = false;
+        if (instance == null) {
             instance = this;
         }
-        else if (instance != this)
-        {
+        else if (instance != this) {
             Destroy(gameObject);
         }
         DontDestroyOnLoad(gameObject);
     }
 
-    private void Start()
-    {
+    private void Start() {
         gameManager = GameObject.FindGameObjectWithTag("GameManager");
 
         mainMenu = GameObject.FindGameObjectWithTag("MainMenu");
@@ -61,17 +60,6 @@ public class ButtonManager : MonoBehaviour
         menus.AddLast(templateMenuScript);
         CloseAllMenus();
     }
-
-    public void SpawnOnPoint(Vector2 point, LinkedList<Vector2> spawn) {
-     
-        LinkedList<Vector2> zones = defaultDrawTemplate;
-        if (spawn != null) {
-            zones = spawn;
-        }
-        GameManager.instance.SetSpawnCenter(point);
-        GameManager.instance.RequestDrawZones(zones);
-    }
-
     private void Update() {
         //Touch input = Input.GetTouch(0);
         //if (input.phase == TouchPhase.Began) {
@@ -91,14 +79,26 @@ public class ButtonManager : MonoBehaviour
                     SpawnOnPoint(position, defaultDrawTemplate);
                 }
             }
-            if (Input.acceleration.sqrMagnitude > 2) { OnShake(Input.acceleration.sqrMagnitude); }
+            if (shakable && Input.acceleration.sqrMagnitude > 2) { OnShake(Input.acceleration.sqrMagnitude); }
         }
 
     }
 
-    public void OnClearPress() {
-        GameManager.instance.ClearBoard();
+    // utility functions
+    public void SpawnOnPoint(Vector2 point, LinkedList<Vector2> spawn) {
+
+        LinkedList<Vector2> zones = defaultDrawTemplate;
+        if (spawn != null) {
+            zones = spawn;
+        }
+        GameManager.instance.SetSpawnCenter(point);
+        GameManager.instance.RequestDrawZones(zones);
     }
+
+    public void SetShakable(bool newShakable) {
+        shakable = newShakable;
+    }
+
     public void OnShake(float sqrMag) {
         ShakeOnPoint(sqrMag);
     }
@@ -150,6 +150,14 @@ public class ButtonManager : MonoBehaviour
     {
         menu.SetActive(false);
         Debug.Log("exit button pressed!");
+    }
+
+    public void OnClearPress() {
+        GameManager.instance.ClearBoard();
+    }
+
+    public void OnShakeTogglePress() {
+        SetShakable(!shakable);
     }
 
 
