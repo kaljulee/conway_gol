@@ -7,6 +7,7 @@ public class Tooltip : Menu
 {
     public string tooltipText = "tppooltipppppp";
     private Text text;
+    public float tooltipWidth = 100;
     // Start is called before the first frame update
 
 
