@@ -11,18 +11,21 @@ public class Tooltip : Menu
     // Start is called before the first frame update
 
 
+    public void Show() {
+        if (transform.parent.gameObject.activeSelf) {
+            gameObject.SetActive(true);
+        }
+    }
+
+    public void Hide() {
+        gameObject.SetActive(false);
+    }
+
     void Start()
     {
         text = gameObject.GetComponentInChildren<Text>();
         rectTransform = GetComponent<RectTransform>();
-        Debug.Log("///////////");
-        Debug.Log("origininal text: " + text.text);
-        Debug.Log("supplied text: " + tooltipText);
         text.text = tooltipText;
-        Debug.Log("new text: " + text.text);
-        Color newColor = image.color;
-        newColor.a = 1;
-        image.color = newColor;
     }
 
     // Update is called once per frame

@@ -15,6 +15,7 @@ public class ButtonManager : MonoBehaviour
 
     public static GameObject gameManager;
     public static GameManager gameManagerScript;
+    public static int tooltipDelay = 3;
 
     public static GameObject slider;
     public static MainMenuSlider sliderScript;
@@ -22,6 +23,7 @@ public class ButtonManager : MonoBehaviour
 
     public static GameObject templateMenu;
     public static MainMenu templateMenuScript;
+    private static GameObject[] tooltips;
 
     public LinkedList<Vector2> defaultDrawTemplate = Templates.Point();
 
@@ -55,10 +57,13 @@ public class ButtonManager : MonoBehaviour
         slider = GameObject.FindGameObjectWithTag("Slider");
         sliderScript = slider.GetComponent<MainMenuSlider>();
 
+        tooltips = GameObject.FindGameObjectsWithTag("Tooltip");
+
         menus.AddLast(mainMenuScript);
         menus.AddLast(createRandomScript);
         menus.AddLast(templateMenuScript);
         CloseAllMenus();
+        StartCoroutine(StartTooltips());
     }
     private void Update() {
         //Touch input = Input.GetTouch(0);
@@ -84,7 +89,31 @@ public class ButtonManager : MonoBehaviour
 
     }
 
+    private void ShowTooltips() {
+        foreach(GameObject tooltip in tooltips) {
+            tooltip.GetComponent<Tooltip>().Show();
+        }
+    }
+
+    private void HideTooltips() { 
+           foreach(GameObject tooltip in tooltips) {
+            tooltip.GetComponent<Tooltip>().Hide();
+        }
+    }
+
     // utility functions
+    IEnumerator StartTooltips() {
+        Debug.Log("starttooltips");
+        ShowTooltips();
+        for (int i = 0; i < tooltipDelay; i++) {
+            Debug.Log("yielding wait");
+            yield return new WaitForSeconds(1);
+        }
+        Debug.Log("about to hide tooltips");
+        HideTooltips();
+        yield return null;
+    }
+
     public void SpawnOnPoint(Vector2 point, LinkedList<Vector2> spawn) {
 
         LinkedList<Vector2> zones = defaultDrawTemplate;
@@ -146,6 +175,11 @@ public class ButtonManager : MonoBehaviour
 
     }
 
+    public void OnHelpButtonPress() {
+        StartCoroutine(StartTooltips());
+    }
+
+
     public void OnExitButtonPress(GameObject menu)
     {
         menu.SetActive(false);
@@ -168,10 +202,6 @@ public class ButtonManager : MonoBehaviour
     public void OnResetButtonPress()
     {
         gameManagerScript.ResetGameState();
-    }
-
-    public void OnHelpButtonPress() {
-
     }
 
     public void OnCreateRandomPress()
