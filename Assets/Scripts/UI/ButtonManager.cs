@@ -170,6 +170,9 @@ public class ButtonManager : MonoBehaviour
         gameManagerScript.ResetGameState();
     }
 
+    public void OnHelpButtonPress() {
+
+    }
 
     public void OnCreateRandomPress()
     {

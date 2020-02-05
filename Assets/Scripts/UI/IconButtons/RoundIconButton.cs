@@ -11,16 +11,31 @@ public class RoundIconButton : MonoBehaviour
     protected RectTransform rectTransform;
     protected float width = 30f;
     protected float height = 30f;
+    public float size = 30f;
 
     //protected static Vector2 SetCustomSize(float w, float h)
     //{
     //    width = w;
     //    height = h;
     //}
+
+
+
+        private void SetWidthAndHeight () {
+        height = size;
+        width = size;
+    }
+
+    public void SetSize(float newSize) {
+        size = newSize;
+        SetWidthAndHeight();
+    }
+
     protected void Awake()
     {
         image = GetComponent<Image>();
         rectTransform = GetComponent<RectTransform>();
+        SetWidthAndHeight();
         rectTransform.sizeDelta = new Vector2(width, height);
         
         if (fourColorShade == null)
