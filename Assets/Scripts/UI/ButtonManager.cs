@@ -66,13 +66,23 @@ public class ButtonManager : MonoBehaviour
         CloseAllMenus();
         //StartCoroutine(StartTooltips());
     }
+
+    private bool IsPointerOverUIObject() {
+        PointerEventData eventDataCurrentPosition = new PointerEventData(EventSystem.current);
+        eventDataCurrentPosition.position = new Vector2(Input.mousePosition.x, Input.mousePosition.y);
+        List<RaycastResult> results = new List<RaycastResult>();
+        EventSystem.current.RaycastAll(eventDataCurrentPosition, results);
+        Debug.Log("raycasting with result count of " + results.Count);
+        return results.Count > 0;
+    }
+
     private void Update() {
-        //Touch input = Input.GetTouch(0);
+        Touch input = Input.GetTouch(0);
         //if (input.phase == TouchPhase.Began) {
         //    //OnGearButtonPress();
         //    Debug.Log("touch location " + input.position);
         //}
-        if (!EventSystem.current.IsPointerOverGameObject()) {
+        if (!IsPointerOverUIObject()) {
 
             bool mouseDown = Input.GetMouseButton(0);
             if (mouseDown) {
@@ -93,7 +103,6 @@ public class ButtonManager : MonoBehaviour
     private void ShowTooltips() {
         foreach(GameObject tooltip in tooltips) {
             tooltip.GetComponent<Tooltip>().Show();
-            Debug.Log("tooltip ok " + tooltip.GetComponent<Tooltip>().tooltipText);
         }
     }
 
@@ -107,13 +116,10 @@ public class ButtonManager : MonoBehaviour
 
     // utility functions
     IEnumerator StartTooltips() {
-        Debug.Log("starttooltips");
         ShowTooltips();
         for (int i = 0; i < tooltipDelay; i++) {
-            Debug.Log("yielding wait");
             yield return new WaitForSeconds(1);
         }
-        Debug.Log("about to hide tooltips");
         HideTooltips();
         yield return null;
     }

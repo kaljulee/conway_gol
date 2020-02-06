@@ -14,7 +14,6 @@ public class Tooltip : Menu
     public void Show() {
         if (transform.parent.gameObject.activeSelf) {
             gameObject.SetActive(true);
-            Debug.Log("trying to fadein coroutine in " + text.text + " is active? " + gameObject.activeSelf);
             
             StartCoroutine(FadeIn());
         }
@@ -22,9 +21,7 @@ public class Tooltip : Menu
 
     IEnumerator FadeIn() {
         Color newColor = text.color;
-        Debug.Log("fade in start with a of " + newColor.a);
         while (newColor.a < 1) {
-            Debug.Log("fade in step");
             newColor.a += 0.1f;
             text.color = newColor;
             yield return new WaitForSeconds(0.01f);
@@ -43,8 +40,6 @@ public class Tooltip : Menu
     }
     public void Hide() {
         if (gameObject.activeSelf) {
-            Debug.Log("trying to fadeout coroutine in " + text.text + " is active? " + gameObject.activeSelf);
-
             StartCoroutine(FadeOut());
         }
     }
