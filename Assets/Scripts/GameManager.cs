@@ -460,6 +460,8 @@ public class GameManager : MonoBehaviour, IsBoardDirector, IsBoardActor {
         mainCamera = GameObject.FindGameObjectWithTag("MainCamera");
         mainCamera.GetComponent<Camera>().backgroundColor = TwoBitColor.GenerateTwoBitColor(TwoBitColor.LIGHTEST);
         SetSpawnCenter(boardScript.BoardCenter());
+        Screen.sleepTimeout = SleepTimeout.NeverSleep;
+
     }
 
     public float ConvertBoardToCameraSize(Vector2 board) {
