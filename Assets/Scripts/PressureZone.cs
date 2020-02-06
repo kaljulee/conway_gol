@@ -34,7 +34,6 @@ public class PressureZone : PlaceholderGameboyColored {
     // behavior can be applied later, but it doesn't seem
     // right to define these to go to Unit here
     public virtual GameObject SpawnOnOverPressure() {
-        //Debug.Break();
         if (Pressure <= Unit.MaxPressure) {
             return unitTile;
         }
