@@ -31,7 +31,9 @@ public abstract class Menu : MonoBehaviour
         Tooltip[] tooltips = gameObject.GetComponentsInChildren<Tooltip>();
         //Debug.Log("menu opening, tooltip count is " )
         foreach (Tooltip tooltip in tooltips) {
-            tooltip.Hide();
+            //tooltip.Hide();
+            tooltip.gameObject.SetActive(false);
+
         }
     }
 

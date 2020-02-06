@@ -49,14 +49,15 @@ public class Tooltip : Menu
         }
     }
 
-    void Start()
+    new void Awake()
     {
+        base.Awake();
         text = gameObject.GetComponentInChildren<Text>();
         rectTransform = GetComponent<RectTransform>();
         text.text = tooltipText;
-        //if (!transform.parent.gameObject.activeSelf) {
-        //gameObject.SetActive(false);
-        //}
+        if (!transform.parent.gameObject.activeSelf) {
+            gameObject.SetActive(false);
+        }
     }
 
     // Update is called once per frame
