@@ -62,8 +62,9 @@ public class ButtonManager : MonoBehaviour
         menus.AddLast(mainMenuScript);
         menus.AddLast(createRandomScript);
         menus.AddLast(templateMenuScript);
+        HideTooltips();
         CloseAllMenus();
-        StartCoroutine(StartTooltips());
+        //StartCoroutine(StartTooltips());
     }
     private void Update() {
         //Touch input = Input.GetTouch(0);
@@ -92,12 +93,15 @@ public class ButtonManager : MonoBehaviour
     private void ShowTooltips() {
         foreach(GameObject tooltip in tooltips) {
             tooltip.GetComponent<Tooltip>().Show();
+            Debug.Log("tooltip ok " + tooltip.GetComponent<Tooltip>().tooltipText);
         }
     }
 
     private void HideTooltips() { 
            foreach(GameObject tooltip in tooltips) {
-            tooltip.GetComponent<Tooltip>().Hide();
+            if (tooltip.activeSelf) {
+                tooltip.GetComponent<Tooltip>().Hide();
+            }
         }
     }
 

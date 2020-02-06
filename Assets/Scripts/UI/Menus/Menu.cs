@@ -19,11 +19,20 @@ public abstract class Menu : MonoBehaviour
     }
 
     virtual public void Close() {
+        Tooltip[] tooltips = gameObject.GetComponentsInChildren<Tooltip>();
+        foreach (Tooltip tooltip in tooltips) {
+            tooltip.gameObject.SetActive(false);
+        }
         gameObject.SetActive(false);
     }
 
     virtual public void Open() {
         gameObject.SetActive(true);
+        Tooltip[] tooltips = gameObject.GetComponentsInChildren<Tooltip>();
+        //Debug.Log("menu opening, tooltip count is " )
+        foreach (Tooltip tooltip in tooltips) {
+            tooltip.Hide();
+        }
     }
 
     public bool IsOpen()
