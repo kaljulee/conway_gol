@@ -22,7 +22,6 @@ public class Player : Menu
     // Update is called once per frame
     void Update()
     {
-        playButton.SetActive(GameManager.Paused);
-        pauseButton.SetActive(!GameManager.Paused);
+        //playButton.SetActive(GameManager.Paused);
     }
 }

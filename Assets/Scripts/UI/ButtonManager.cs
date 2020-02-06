@@ -244,12 +244,16 @@ public class ButtonManager : MonoBehaviour
     /// 
     public void OnPlayPress()
     {
-        GameManager.SetUnPaused();
+        if (GameManager.Paused) {
+            GameManager.SetUnPaused();
+        } else {
+            GameManager.SetPaused();
+        }
     }
 
-    public void OnPausePress() {
-        GameManager.SetPaused();
-    }
+    //public void OnPausePress() {
+    //    GameManager.SetPaused();
+    //}
 
     private void SafetyPause() {
         if (!GameManager.Paused) {
