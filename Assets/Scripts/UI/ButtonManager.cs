@@ -77,7 +77,7 @@ public class ButtonManager : MonoBehaviour
     }
 
     private void Update() {
-        Touch input = Input.GetTouch(0);
+        //Touch input = Input.GetTouch(0);
         //if (input.phase == TouchPhase.Began) {
         //    //OnGearButtonPress();
         //    Debug.Log("touch location " + input.position);
@@ -95,8 +95,9 @@ public class ButtonManager : MonoBehaviour
                     SpawnOnPoint(position, defaultDrawTemplate);
                 }
             }
-            if (shakable && Input.acceleration.sqrMagnitude > 2) { OnShake(Input.acceleration.sqrMagnitude); }
         }
+        if (shakable && Input.acceleration.sqrMagnitude > 2) { OnShake(Input.acceleration.sqrMagnitude); }
+
 
     }
 
