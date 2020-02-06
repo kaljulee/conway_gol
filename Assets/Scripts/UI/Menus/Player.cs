@@ -5,7 +5,6 @@ using UnityEngine;
 public class Player : Menu
 {
     private GameObject playButton;
-    private GameObject pauseButton;
     // Start is called before the first frame update
 
     new void Awake() {
@@ -15,14 +14,12 @@ public class Player : Menu
 
     void Start()
     {
-        playButton = transform.GetChild(0).gameObject;
-        pauseButton = transform.GetChild(3).gameObject;
+        //playButton = transform.GetChild(0).gameObject;
     }
 
     // Update is called once per frame
     void Update()
     {
-        playButton.SetActive(GameManager.Paused);
-        pauseButton.SetActive(!GameManager.Paused);
+        //playButton.SetActive(GameManager.Paused);
     }
 }
