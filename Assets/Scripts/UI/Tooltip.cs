@@ -14,11 +14,31 @@ public class Tooltip : Menu
     public void Show() {
         if (transform.parent.gameObject.activeSelf) {
             gameObject.SetActive(true);
+            StartCoroutine(FadeIn());
         }
     }
 
-    public void Hide() {
+    IEnumerator FadeIn() {
+        Color newColor = text.color;
+        while (newColor.a < 1) {
+            newColor.a += 0.1f;
+            text.color = newColor;
+            yield return new WaitForSeconds(0.01f);
+        }
+    }
+
+    IEnumerator FadeOut() {
+        Color newColor = text.color;
+        while (newColor.a > 0) {
+            newColor.a -= 0.1f;
+            text.color = newColor;
+            yield return new WaitForSeconds(0.15f);
+        }
         gameObject.SetActive(false);
+        yield return null;
+    }
+    public void Hide() {
+        StartCoroutine(FadeOut());
     }
 
     void Start()
