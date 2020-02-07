@@ -27,6 +27,7 @@ public class BoardManager : MonoBehaviour {
     public bool drawMode = false;
     public GameObject[] floorTiles;
     public GameObject unitTile;
+    public GameObject brickTile;
     public LinkedList<Vector2> SpawnSites;
     public GameObject pressureZoneTile;
 
@@ -35,6 +36,7 @@ public class BoardManager : MonoBehaviour {
 
     private List<Vector3> gridPositions = new List<Vector3>();
     private List<GameObject> pressureZones = new List<GameObject>();
+    private List<GameObject> bricks = new List<GameObject>();
 
     public List<GameObject> GetPressureZones() => pressureZones;
 
@@ -133,6 +135,16 @@ public class BoardManager : MonoBehaviour {
     }
     void BoardSetup() {
         boardHolder = new GameObject("Board").transform;
+        int x = (int)(GetBoardSize().x / 2);
+        int y = (int)(GetBoardSize().y / 2);
+        GameObject brickInstance = Instantiate(brickTile, new Vector3(x, y), Quaternion.identity) as GameObject;
+        bricks.Add(brickInstance);
+        brickInstance = Instantiate(brickTile, new Vector3(x, y - 1), Quaternion.identity) as GameObject;
+        bricks.Add(brickInstance);
+        brickInstance = Instantiate(brickTile, new Vector3(x, y - 2), Quaternion.identity) as GameObject;
+        bricks.Add(brickInstance);
+        brickInstance = Instantiate(brickTile, new Vector3(x, y - 3), Quaternion.identity) as GameObject;
+        bricks.Add(brickInstance);
         InstantiateSpawnSites(SpawnSites);
     }
 
