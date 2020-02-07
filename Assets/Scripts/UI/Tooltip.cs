@@ -3,8 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class Tooltip : Menu
-{
+public class Tooltip : Menu {
     public string tooltipText = "tppooltipppppp";
     private Text text;
     public float tooltipWidth = 100;
@@ -14,7 +13,7 @@ public class Tooltip : Menu
     public void Show() {
         if (transform.parent.gameObject.activeSelf) {
             gameObject.SetActive(true);
-            
+
             StartCoroutine(FadeIn());
         }
     }
@@ -44,8 +43,7 @@ public class Tooltip : Menu
         }
     }
 
-    new void Awake()
-    {
+    new void Awake() {
         base.Awake();
         text = gameObject.GetComponentInChildren<Text>();
         rectTransform = GetComponent<RectTransform>();
@@ -56,8 +54,7 @@ public class Tooltip : Menu
     }
 
     // Update is called once per frame
-    void Update()
-    {
-        
+    void Update() {
+
     }
 }

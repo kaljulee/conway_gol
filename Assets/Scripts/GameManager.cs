@@ -483,9 +483,9 @@ public class GameManager : MonoBehaviour, IsBoardDirector, IsBoardActor {
     private void TakeTurn() {
         // is there a manual step forwards or backwards?
         ActionController.instance.BeginNewRound();
-            int step = TakeManualStep();
+        int step = TakeManualStep();
 
-         
+
     }
 
     private void TurnForwardMechanism() {
