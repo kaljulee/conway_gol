@@ -4,15 +4,13 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public abstract class Menu : MonoBehaviour
-{
+public abstract class Menu : MonoBehaviour {
 
     protected Image image;
     protected RectTransform rectTransform;
 
 
-    virtual public bool ToggleActive()
-    {
+    virtual public bool ToggleActive() {
         bool newActiveState = !gameObject.activeSelf;
         gameObject.SetActive(newActiveState);
         return newActiveState;
@@ -35,29 +33,27 @@ public abstract class Menu : MonoBehaviour
         }
     }
 
-    public bool IsOpen()
-    {
+    public bool IsOpen() {
         return gameObject.activeSelf;
     }
     protected void Awake() {
         image = GetComponent<Image>();
         rectTransform = GetComponent<RectTransform>();
-        if (image) {   string fourColorShade = TwoBitColor.LIGHT;
-        Color color = TwoBitColor.GenerateTwoBitColor(fourColorShade);
-        color.a = 0.2f;
-        image.color = color;
-    }
+        if (image) {
+            string fourColorShade = TwoBitColor.LIGHT;
+            Color color = TwoBitColor.GenerateTwoBitColor(fourColorShade);
+            color.a = 0.2f;
+            image.color = color;
+        }
     }
 
     // Start is called before the first frame update
-    void Start()
-    {
+    void Start() {
 
     }
 
     // Update is called once per frame
-    void Update()
-    {
-        
+    void Update() {
+
     }
 }

@@ -3,8 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
-public class ButtonManager : MonoBehaviour
-{
+public class ButtonManager : MonoBehaviour {
     public static ButtonManager instance = null;
 
     public static GameObject mainMenu;
@@ -64,7 +63,7 @@ public class ButtonManager : MonoBehaviour
         menus.AddLast(templateMenuScript);
         HideTooltips();
         CloseAllMenus();
-        //StartCoroutine(StartTooltips());
+        StartCoroutine(StartTooltips());
     }
 
     private bool IsPointerOverUIObject() {
@@ -102,13 +101,13 @@ public class ButtonManager : MonoBehaviour
     }
 
     private void ShowTooltips() {
-        foreach(GameObject tooltip in tooltips) {
+        foreach (GameObject tooltip in tooltips) {
             tooltip.GetComponent<Tooltip>().Show();
         }
     }
 
-    private void HideTooltips() { 
-           foreach(GameObject tooltip in tooltips) {
+    private void HideTooltips() {
+        foreach (GameObject tooltip in tooltips) {
             if (tooltip.activeSelf) {
                 tooltip.GetComponent<Tooltip>().Hide();
             }
@@ -150,7 +149,7 @@ public class ButtonManager : MonoBehaviour
     }
 
     public bool SomeMenuIsOpen() {
-        foreach(Menu menu in menus) {
+        foreach (Menu menu in menus) {
             if (menu.IsOpen()) {
                 return true;
             }
@@ -159,7 +158,7 @@ public class ButtonManager : MonoBehaviour
     }
 
     public void CloseAllMenus() {
-        foreach(MainMenu menu in menus) {
+        foreach (MainMenu menu in menus) {
             menu.Close();
         }
     }
@@ -167,20 +166,19 @@ public class ButtonManager : MonoBehaviour
     ////////////////////////////
     /// major utility buttons
     /// 
-    public void OnGearButtonPress()
-    {
+    public void OnGearButtonPress() {
 
         if (SomeMenuIsOpen()) {
             CloseAllMenus();
-        } else {
+        }
+        else {
             mainMenuScript.Open();
         }
 
-        if (mainMenuScript.IsOpen())
-        {
+        if (mainMenuScript.IsOpen()) {
             GameManager.SetPaused();
-        } else
-        {
+        }
+        else {
             GameManager.SetUnPaused();
         }
 
@@ -191,8 +189,7 @@ public class ButtonManager : MonoBehaviour
     }
 
 
-    public void OnExitButtonPress(GameObject menu)
-    {
+    public void OnExitButtonPress(GameObject menu) {
         menu.SetActive(false);
         Debug.Log("exit button pressed!");
     }
@@ -210,13 +207,11 @@ public class ButtonManager : MonoBehaviour
     /// main menu buttons
     /// 
 
-    public void OnResetButtonPress()
-    {
+    public void OnResetButtonPress() {
         gameManagerScript.ResetGameState();
     }
 
-    public void OnCreateRandomPress()
-    {
+    public void OnCreateRandomPress() {
         mainMenu.SetActive(false);
         createRandomMenu.SetActive(true);
         GameManager.instance.ApplyRandomSpawnSites(sliderScript.GetValue());
@@ -232,8 +227,7 @@ public class ButtonManager : MonoBehaviour
         CloseAllMenus();
         GameManager.SetUnPaused();
     }
-    public void OnTemplatesPress()
-    {
+    public void OnTemplatesPress() {
         mainMenu.SetActive(false);
         templateMenu.SetActive(true);
     }
@@ -249,26 +243,21 @@ public class ButtonManager : MonoBehaviour
     ////////////////////////////
     /// player buttons
     /// 
-    public void OnPlayPress()
-    {
+    public void OnPlayPress() {
         if (GameManager.Paused) {
             GameManager.SetUnPaused();
-        } else {
+        }
+        else {
             GameManager.SetPaused();
         }
     }
-
-    //public void OnPausePress() {
-    //    GameManager.SetPaused();
-    //}
 
     private void SafetyPause() {
         if (!GameManager.Paused) {
             GameManager.SetPaused();
         }
     }
-    public void OnStopPress()
-    {
+    public void OnStopPress() {
         GameManager.SetPaused();
     }
 

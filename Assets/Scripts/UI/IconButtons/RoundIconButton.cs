@@ -3,8 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class RoundIconButton : MonoBehaviour
-{
+public class RoundIconButton : MonoBehaviour {
 
     protected Image image;
     protected string fourColorShade;
@@ -21,7 +20,7 @@ public class RoundIconButton : MonoBehaviour
 
 
 
-        private void SetWidthAndHeight () {
+    private void SetWidthAndHeight() {
         height = size;
         width = size;
     }
@@ -31,28 +30,24 @@ public class RoundIconButton : MonoBehaviour
         SetWidthAndHeight();
     }
 
-    protected void Awake()
-    {
+    protected void Awake() {
         image = GetComponent<Image>();
         rectTransform = GetComponent<RectTransform>();
         SetWidthAndHeight();
         rectTransform.sizeDelta = new Vector2(width, height);
-        
-        if (fourColorShade == null)
-        {
+
+        if (fourColorShade == null) {
             fourColorShade = TwoBitColor.LIGHTEST;
         }
         image.color = TwoBitColor.GenerateTwoBitColor(fourColorShade);
     }
     // Start is called before the first frame update
-    void Start()
-    {
-        
+    void Start() {
+
     }
 
     // Update is called once per frame
-    void Update()
-    {
-        
+    void Update() {
+
     }
 }
