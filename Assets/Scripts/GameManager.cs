@@ -220,8 +220,8 @@ public class GameManager : MonoBehaviour, IsBoardDirector, IsBoardActor {
     protected void AddPressureZone(GameObject zone) {
         boardScript.AddPressureZone(zone);
         PressureZone pressureScript = zone.GetComponent<PressureZone>();
-        // if zone is not on the board
-        if (!boardScript.PositionIsOnBoard(zone.transform.position)) {
+        // if zone is not on the board or on a brick
+        if (!boardScript.PositionIsOnBoard(zone.transform.position) || boardScript.PositionIsBrick(zone.transform.position)) {
             IssueAction(CreateDirectAction(ActionTypes.REMOVE, ZoneTypes.GetZoneType(pressureScript), zone));
         }
     }

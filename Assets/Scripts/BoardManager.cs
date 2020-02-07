@@ -86,6 +86,15 @@ public class BoardManager : MonoBehaviour {
         Destroy(zone);
     }
 
+    public bool PositionIsBrick(Vector2 position) {
+        foreach(GameObject brick in bricks) {
+            if (position == (Vector2)brick.transform.position) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     public bool PositionIsOnBoard(Vector2 position) {
         if (columns < position.x - 1) {
             return false;
