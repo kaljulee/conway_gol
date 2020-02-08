@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
-
+using static Action;
 public class ButtonManager : MonoBehaviour {
     public static ButtonManager instance = null;
 
@@ -24,7 +24,12 @@ public class ButtonManager : MonoBehaviour {
     public static MainMenu templateMenuScript;
     private static GameObject[] tooltips;
     private DrawPanel drawPanelScript;
+    public int drawTool = ZoneTypes.UNIT;
     public LinkedList<Vector2> defaultDrawTemplate = Templates.Point();
+    public LinkedList<Vector2> brickDrawTemplate = Templates.Point();
+
+    private bool buttonReleased = false;
+    private float holdTime = 0f;
 
     public static bool shakable { get; private set; }
 
@@ -72,7 +77,6 @@ public class ButtonManager : MonoBehaviour {
         eventDataCurrentPosition.position = new Vector2(Input.mousePosition.x, Input.mousePosition.y);
         List<RaycastResult> results = new List<RaycastResult>();
         EventSystem.current.RaycastAll(eventDataCurrentPosition, results);
-        Debug.Log("raycasting with result count of " + results.Count);
         return results.Count > 0;
     }
 
@@ -90,9 +94,10 @@ public class ButtonManager : MonoBehaviour {
 
                 position.y = Mathf.Round(position.y * Camera.main.orthographicSize * 2);
                 position.x = Mathf.Round(position.x * Camera.main.aspect * Camera.main.orthographicSize * 2);
-
                 if (!SomeMenuIsOpen()) {
-                    SpawnOnPoint(position, defaultDrawTemplate);
+                    if (drawTool == ZoneTypes.UNIT) {
+                        SpawnOnPoint(position, defaultDrawTemplate);
+                    }
                 }
             }
         }
@@ -123,6 +128,15 @@ public class ButtonManager : MonoBehaviour {
         }
         HideTooltips();
         yield return null;
+    }
+
+    public void BrickOnPoint(Vector2 point, LinkedList<Vector2> spawn) {
+        LinkedList<Vector2> zones = brickDrawTemplate;
+        if (spawn != null) {
+            zones = spawn;
+        }
+        GameManager.instance.SetSpawnCenter(point);
+        GameManager.instance.RequestDrawZones(zones);
     }
 
     public void SpawnOnPoint(Vector2 point, LinkedList<Vector2> spawn) {
@@ -281,17 +295,55 @@ public class ButtonManager : MonoBehaviour {
         GameManager.instance.StopStepping();
     }
 
-    public void OnDrawButtonPress() {
-        GameManager.instance.ToggleDrawMode();
-        drawPanelScript.ToggleOpen();
+    IEnumerator ButtonHoldTimer(System.Func<float, bool> releaseSchedule) {
+        holdTime = Time.time;
+        bool actionTaken = false;
+
+        while (!actionTaken) {
+            actionTaken = releaseSchedule(holdTime);
+            yield return null;
+        }
+        yield return null;
+    }
+
+    public void OnDrawButtonHold() {
+        buttonReleased = false;
+        holdTime = Time.time;
+        StartCoroutine(ButtonHoldTimer((float time) => {
+            float elapsedTime = Time.time - time;
+            if (elapsedTime > 0.5f) {
+                drawPanelScript.ToggleOpen();
+                return true;
+            }
+            if (buttonReleased) {
+                if (drawPanelScript.isOpen) {
+                    drawPanelScript.CollapsePanel();
+                } else {
+                    GameManager.instance.ToggleDrawMode();
+
+                }
+                return true;
+            }
+            return false;
+        }));
+    }
+
+    public void OnDrawButtonRelease() {
+        buttonReleased = true;
     }
 
     public void OnDrawUnitPress() {
 
     }
 
+    /// <summary>
+    /// //////////////////////////////////////////////////////////////////////////////
+    /// </summary>
+    // this needs to be involved in a hold-to-open with draw menu and better defined draw button options
     public void OnDrawBrickPress() {
-
+        drawTool = ZoneTypes.BRICK;
+        GameManager.instance.ToggleDrawMode();
+        //OnDrawButtonPress();
     }
 
     public void OnDrawErasePress() {

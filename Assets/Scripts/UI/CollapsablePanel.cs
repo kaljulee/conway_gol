@@ -20,7 +20,6 @@ public class CollapsablePanel : MonoBehaviour
         HideChildButtons();
         rectTransform.sizeDelta = new Vector2(30, rectTransform.sizeDelta.y);
         isOpen = false;
-        Debug.Log("draw panel should have hid");
     }
 
     private void HideChildButtons() {
@@ -74,10 +73,16 @@ public class CollapsablePanel : MonoBehaviour
     }
 
     public void ExpandPanel() {
+        if (!isOpen) {
+            isOpen = true;
+        }
         StartCoroutine(Expander());
     }
 
     public void CollapsePanel() {
+        if (isOpen) {
+            isOpen = false;
+        }
         StartCoroutine(Collapser());
     }
 

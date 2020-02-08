@@ -12,6 +12,7 @@ public class GameManager : MonoBehaviour, IsBoardDirector, IsBoardActor {
     public BoardManager boardScript;
     public GameObject pressureZoneTile;
     public GameObject unitTile;
+    public GameObject brickTile;
     public float turnDelay = 1.5f;
     private bool stepping = false;
     public Vector2 spawnCenter = Vector2.zero;
@@ -231,9 +232,15 @@ public class GameManager : MonoBehaviour, IsBoardDirector, IsBoardActor {
         if (payload > PressureZone.MaxPressure) {
             // spawn nothing if overpressured for unit as well
             if (payload > Unit.MaxPressure) {
-                return;
+                if (payload == int.MaxValue) {
+                    instance = Instantiate(brickTile, new Vector2(), Quaternion.identity) as GameObject;
+                } else {
+                    return;
+                }
+            } else {
+                instance = Instantiate(unitTile, new Vector2(), Quaternion.identity) as GameObject;
+
             }
-            instance = Instantiate(unitTile, new Vector2(), Quaternion.identity) as GameObject;
         }
         else {
             instance = Instantiate(pressureZoneTile, new Vector2(), Quaternion.identity) as GameObject;
