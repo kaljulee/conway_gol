@@ -30,6 +30,14 @@ public class RoundIconButton : MonoBehaviour {
         SetWidthAndHeight();
     }
 
+    public virtual void Show() {
+        gameObject.SetActive(true);
+    }
+
+    public virtual void Hide() {
+        gameObject.SetActive(false);
+    }
+
     protected void Awake() {
         image = GetComponent<Image>();
         rectTransform = GetComponent<RectTransform>();

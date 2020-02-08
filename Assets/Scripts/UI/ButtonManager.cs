@@ -23,7 +23,7 @@ public class ButtonManager : MonoBehaviour {
     public static GameObject templateMenu;
     public static MainMenu templateMenuScript;
     private static GameObject[] tooltips;
-
+    private DrawPanel drawPanelScript;
     public LinkedList<Vector2> defaultDrawTemplate = Templates.Point();
 
     public static bool shakable { get; private set; }
@@ -46,6 +46,7 @@ public class ButtonManager : MonoBehaviour {
 
         mainMenu = GameObject.FindGameObjectWithTag("MainMenu");
         mainMenuScript = mainMenu.GetComponent<MainMenu>();
+        drawPanelScript = GameObject.FindGameObjectWithTag("DrawPanel").GetComponent<DrawPanel>();
 
         createRandomMenu = GameObject.FindGameObjectWithTag("CreateRandomMenu");
         createRandomScript = createRandomMenu.GetComponent<MainMenu>();
@@ -202,17 +203,7 @@ public class ButtonManager : MonoBehaviour {
         SetShakable(!shakable);
     }
 
-    public void OnDrawUnitPress() {
 
-    }
-
-    public void OnDrawBrickPress() {
-
-    }
-
-    public void OnDrawErasePress() {
-
-    }
 
     ////////////////////////////
     /// main menu buttons
@@ -292,5 +283,18 @@ public class ButtonManager : MonoBehaviour {
 
     public void OnDrawButtonPress() {
         GameManager.instance.ToggleDrawMode();
+        drawPanelScript.ToggleOpen();
+    }
+
+    public void OnDrawUnitPress() {
+
+    }
+
+    public void OnDrawBrickPress() {
+
+    }
+
+    public void OnDrawErasePress() {
+
     }
 }
