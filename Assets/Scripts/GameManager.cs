@@ -70,6 +70,7 @@ public class GameManager : MonoBehaviour, IsBoardDirector, IsBoardActor {
     private LinkedList<Action> zeroActionsQueue = new LinkedList<Action>();
     private LinkedList<Vector2> drawZones = new LinkedList<Vector2>();
     private LinkedList<Vector2> shakeZones = new LinkedList<Vector2>();
+    private LinkedList<Vector2> brickZones = new LinkedList<Vector2>();
 
     //////////////////////////
     /// handle spawnsites
@@ -120,14 +121,20 @@ public class GameManager : MonoBehaviour, IsBoardDirector, IsBoardActor {
         }
     }
 
+    public void RequestBrickZones (LinkedList<Vector2> zones) {
+        if (drawMode) {
+            RequestZones(zones, brickZones);
+        }
+    }
+
     public void RequestShakeZones(LinkedList<Vector2> zones) {
         RequestZones(zones, shakeZones);
     }
 
-    private void ApplyZones(LinkedList<Vector2> zones) {
+    private void ApplyZones(LinkedList<Vector2> zones, int pressure) {
         foreach (Vector2 zone in zones) {
             Action delete = CreateAddressAction(ActionTypes.REMOVE, 0, zone + spawnCenter);
-            Action create = CreateAddressAction(ActionTypes.CREATE, 3, zone + spawnCenter);
+            Action create = CreateAddressAction(ActionTypes.CREATE, pressure, zone + spawnCenter);
             //ActionController.instance.ExecuteAction(delete);
             //ActionController.instance.ExecuteAction(create);
             IssueAction(delete);
@@ -137,11 +144,15 @@ public class GameManager : MonoBehaviour, IsBoardDirector, IsBoardActor {
     }
 
     public void ApplyShakeZones() {
-        ApplyZones(shakeZones);
+        ApplyZones(shakeZones, Unit.MaxPressure);
     }
 
     public void ApplyDrawZones() {
-        ApplyZones(drawZones);
+        ApplyZones(drawZones, Unit.MaxPressure);
+    }
+
+    public void ApplyBrickZones() {
+        ApplyZones(brickZones, int.MaxValue);
     }
 
     public LinkedList<Vector2> CreateRandomSpawnSites(float frequency) {
@@ -229,9 +240,12 @@ public class GameManager : MonoBehaviour, IsBoardDirector, IsBoardActor {
 
     protected void InstantiatePressureZone(Vector2 address, float payload) {
         GameObject instance;
+        Debug.Log("in InstantiatePressureZone with pressure " + payload);
         if (payload > PressureZone.MaxPressure) {
+            Debug.Log("   more than pressurezone max");
             // spawn nothing if overpressured for unit as well
             if (payload > Unit.MaxPressure) {
+                Debug.Log("        more than unit max");
                 if (payload == int.MaxValue) {
                     instance = Instantiate(brickTile, new Vector2(), Quaternion.identity) as GameObject;
                 } else {
@@ -545,6 +559,11 @@ public class GameManager : MonoBehaviour, IsBoardDirector, IsBoardActor {
             if (drawMode && drawZones.Count > 0) {
                 ActionController.instance.BeginNewRound();
                 ApplyDrawZones();
+            }
+            if (drawMode && brickZones.Count > 0) {
+                Debug.Log("applying brick zones");
+                ActionController.instance.BeginNewRound();
+                ApplyBrickZones();
             }
             // shake zones
             if (shakeZones.Count > 0) {

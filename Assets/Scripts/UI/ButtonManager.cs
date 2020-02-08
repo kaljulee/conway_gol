@@ -95,8 +95,11 @@ public class ButtonManager : MonoBehaviour {
                 position.y = Mathf.Round(position.y * Camera.main.orthographicSize * 2);
                 position.x = Mathf.Round(position.x * Camera.main.aspect * Camera.main.orthographicSize * 2);
                 if (!SomeMenuIsOpen()) {
+                    Debug.Log("drawtool is " + ZoneTypes.ZONE_TYPE_STRINGS[drawTool]);
                     if (drawTool == ZoneTypes.UNIT) {
                         SpawnOnPoint(position, defaultDrawTemplate);
+                    } else if (drawTool == ZoneTypes.BRICK) {
+                        BrickOnPoint(position, brickDrawTemplate);
                     }
                 }
             }
@@ -131,12 +134,13 @@ public class ButtonManager : MonoBehaviour {
     }
 
     public void BrickOnPoint(Vector2 point, LinkedList<Vector2> spawn) {
+        Debug.Log("BrickOnPoint");
         LinkedList<Vector2> zones = brickDrawTemplate;
         if (spawn != null) {
             zones = spawn;
         }
         GameManager.instance.SetSpawnCenter(point);
-        GameManager.instance.RequestDrawZones(zones);
+        GameManager.instance.RequestBrickZones(zones);
     }
 
     public void SpawnOnPoint(Vector2 point, LinkedList<Vector2> spawn) {
@@ -332,8 +336,17 @@ public class ButtonManager : MonoBehaviour {
         buttonReleased = true;
     }
 
-    public void OnDrawUnitPress() {
 
+    private void DrawButtonPress(int zoneType) {
+        Debug.Log("in generic drawbutton press");
+        drawTool = zoneType;
+        Debug.Log("drawtool is now " + ZoneTypes.ZONE_TYPE_STRINGS[drawTool]);
+        GameManager.instance.SetDrawMode(true);
+        drawPanelScript.CollapsePanel();
+    }
+
+    public void OnDrawUnitPress() {
+        DrawButtonPress(ZoneTypes.UNIT);
     }
 
     /// <summary>
@@ -341,12 +354,10 @@ public class ButtonManager : MonoBehaviour {
     /// </summary>
     // this needs to be involved in a hold-to-open with draw menu and better defined draw button options
     public void OnDrawBrickPress() {
-        drawTool = ZoneTypes.BRICK;
-        GameManager.instance.ToggleDrawMode();
-        //OnDrawButtonPress();
+        DrawButtonPress(ZoneTypes.BRICK);
     }
 
     public void OnDrawErasePress() {
-
+        Debug.Log("not implemented yet");
     }
 }

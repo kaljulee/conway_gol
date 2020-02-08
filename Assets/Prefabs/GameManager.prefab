@@ -50,6 +50,8 @@ MonoBehaviour:
     type: 3}
   unitTile: {fileID: 8253295328657836045, guid: 890e417ae9a591a48aa2e3ff253fcc14,
     type: 3}
+  brickTile: {fileID: 4241897276059578195, guid: 80cff847cf724164b8435011d5cd0d6f,
+    type: 3}
   turnDelay: 0.15
   spawnCenter: {x: 0, y: 0}
   drawMode: 0

@@ -13,6 +13,10 @@ public class Brick : PressureZone
         return null;
     }
 
+    public override void ZeroPressure() {
+        
+    }
+
     // Start is called before the first frame update
     new void Awake()
     {

@@ -114,11 +114,17 @@ public class BoardManager : MonoBehaviour {
         return true;
     }
 
+    private bool IsTrackedZone(PressureZone zone) {
+        return (zone.GetType() != typeof(Brick));
+    }
+
     public void AddPressureZone(GameObject zone) {
 
         // finish adding zone
         zone.transform.SetParent(boardHolder);
-        pressureZones.Add(zone);
+        if (IsTrackedZone(zone.GetComponent<PressureZone>())) {
+            pressureZones.Add(zone);
+        }
     }
 
     public int GridPositionsLength() {
