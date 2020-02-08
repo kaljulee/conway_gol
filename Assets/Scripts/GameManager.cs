@@ -240,12 +240,9 @@ public class GameManager : MonoBehaviour, IsBoardDirector, IsBoardActor {
 
     protected void InstantiatePressureZone(Vector2 address, float payload) {
         GameObject instance;
-        Debug.Log("in InstantiatePressureZone with pressure " + payload);
         if (payload > PressureZone.MaxPressure) {
-            Debug.Log("   more than pressurezone max");
             // spawn nothing if overpressured for unit as well
             if (payload > Unit.MaxPressure) {
-                Debug.Log("        more than unit max");
                 if (payload == int.MaxValue) {
                     instance = Instantiate(brickTile, new Vector2(), Quaternion.identity) as GameObject;
                 } else {
@@ -561,7 +558,6 @@ public class GameManager : MonoBehaviour, IsBoardDirector, IsBoardActor {
                 ApplyDrawZones();
             }
             if (drawMode && brickZones.Count > 0) {
-                Debug.Log("applying brick zones");
                 ActionController.instance.BeginNewRound();
                 ApplyBrickZones();
             }
