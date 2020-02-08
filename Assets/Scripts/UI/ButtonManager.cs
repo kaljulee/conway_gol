@@ -174,9 +174,12 @@ public class ButtonManager : MonoBehaviour {
         if (SomeMenuIsOpen()) {
             return true;
         }
+        Debug.Log("checking if drawer is open");
         if (SomePanelIsOpen()) {
+            Debug.Log("a drawer is open");
             return true;
         }
+        Debug.Log("a drawer is not open");
         return false;
     }
 
