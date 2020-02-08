@@ -30,6 +30,14 @@ public class RoundIconButton : MonoBehaviour {
         SetWidthAndHeight();
     }
 
+    public virtual void Show() {
+        gameObject.SetActive(true);
+    }
+
+    public virtual void Hide() {
+        gameObject.SetActive(false);
+    }
+
     protected void Awake() {
         image = GetComponent<Image>();
         rectTransform = GetComponent<RectTransform>();
@@ -37,7 +45,7 @@ public class RoundIconButton : MonoBehaviour {
         rectTransform.sizeDelta = new Vector2(width, height);
 
         if (fourColorShade == null) {
-            fourColorShade = TwoBitColor.LIGHTEST;
+            fourColorShade = TwoBitColor.DARK;
         }
         image.color = TwoBitColor.GenerateTwoBitColor(fourColorShade);
     }

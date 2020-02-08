@@ -23,7 +23,7 @@ public class Action {
 
     public static Action PileOn(Action action, float value) {
         if (action.Target) {
-            return Action.Factory.CreateDirectAction(action.ActionType, action.Payload + value, action.Target);
+            return Factory.CreateDirectAction(action.ActionType, action.Payload + value, action.Target);
         }
         return Factory.CreateAddressAction(action.ActionType, action.Payload + value, (Vector2)action.Address);
     }
@@ -131,13 +131,16 @@ public class Action {
     public static class ZoneTypes {
         public static readonly int UNIT = 0;
         public static readonly int PRESSURE_ZONE = 1;
-        public static readonly string[] ZONE_TYPE_STRINGS = { "UNIT", "PRESSURE_ZONE" };
+        public static readonly int BRICK = 2;
+        public static readonly string[] ZONE_TYPE_STRINGS = { "UNIT", "PRESSURE_ZONE", "BRICK" };
 
         public static int GetZoneType(PressureZone zone) {
             if (zone is Unit) {
                 return UNIT;
             }
-
+            if (zone is Brick) {
+                return BRICK;
+            }
             return PRESSURE_ZONE;
         }
     }

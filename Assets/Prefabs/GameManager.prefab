@@ -50,6 +50,8 @@ MonoBehaviour:
     type: 3}
   unitTile: {fileID: 8253295328657836045, guid: 890e417ae9a591a48aa2e3ff253fcc14,
     type: 3}
+  brickTile: {fileID: 4241897276059578195, guid: 80cff847cf724164b8435011d5cd0d6f,
+    type: 3}
   turnDelay: 0.15
   spawnCenter: {x: 0, y: 0}
   drawMode: 0
@@ -71,6 +73,8 @@ MonoBehaviour:
   floorTiles:
   - {fileID: 991046252526209770, guid: 458ba682a69783d468c37bbbded55ac8, type: 3}
   unitTile: {fileID: 8253295328657836045, guid: 890e417ae9a591a48aa2e3ff253fcc14,
+    type: 3}
+  brickTile: {fileID: 4241897276059578195, guid: 80cff847cf724164b8435011d5cd0d6f,
     type: 3}
   pressureZoneTile: {fileID: 4519458563766980877, guid: 73b60857568b71e47a4aa2cb9d0b4c73,
     type: 3}

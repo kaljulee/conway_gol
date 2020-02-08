@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
-
+using static Action;
 public class ButtonManager : MonoBehaviour {
     public static ButtonManager instance = null;
 
@@ -19,12 +19,19 @@ public class ButtonManager : MonoBehaviour {
     public static GameObject slider;
     public static MainMenuSlider sliderScript;
     public static LinkedList<Menu> menus = new LinkedList<Menu>();
+    public static LinkedList<CollapsablePanel> panels = new LinkedList<CollapsablePanel>();
+
 
     public static GameObject templateMenu;
     public static MainMenu templateMenuScript;
     private static GameObject[] tooltips;
-
+    private DrawPanel drawPanelScript;
+    public int drawTool = ZoneTypes.UNIT;
     public LinkedList<Vector2> defaultDrawTemplate = Templates.Point();
+    public LinkedList<Vector2> brickDrawTemplate = Templates.Point();
+
+    private bool buttonReleased = false;
+    private float holdTime = 0f;
 
     public static bool shakable { get; private set; }
 
@@ -46,6 +53,7 @@ public class ButtonManager : MonoBehaviour {
 
         mainMenu = GameObject.FindGameObjectWithTag("MainMenu");
         mainMenuScript = mainMenu.GetComponent<MainMenu>();
+        drawPanelScript = GameObject.FindGameObjectWithTag("DrawPanel").GetComponent<DrawPanel>();
 
         createRandomMenu = GameObject.FindGameObjectWithTag("CreateRandomMenu");
         createRandomScript = createRandomMenu.GetComponent<MainMenu>();
@@ -61,6 +69,8 @@ public class ButtonManager : MonoBehaviour {
         menus.AddLast(mainMenuScript);
         menus.AddLast(createRandomScript);
         menus.AddLast(templateMenuScript);
+
+        panels.AddLast(drawPanelScript);
         HideTooltips();
         CloseAllMenus();
         StartCoroutine(StartTooltips());
@@ -71,7 +81,6 @@ public class ButtonManager : MonoBehaviour {
         eventDataCurrentPosition.position = new Vector2(Input.mousePosition.x, Input.mousePosition.y);
         List<RaycastResult> results = new List<RaycastResult>();
         EventSystem.current.RaycastAll(eventDataCurrentPosition, results);
-        Debug.Log("raycasting with result count of " + results.Count);
         return results.Count > 0;
     }
 
@@ -89,9 +98,14 @@ public class ButtonManager : MonoBehaviour {
 
                 position.y = Mathf.Round(position.y * Camera.main.orthographicSize * 2);
                 position.x = Mathf.Round(position.x * Camera.main.aspect * Camera.main.orthographicSize * 2);
-
-                if (!SomeMenuIsOpen()) {
-                    SpawnOnPoint(position, defaultDrawTemplate);
+                if (!SomeUIIsOpen()) {
+                    Debug.Log("drawtool is " + ZoneTypes.ZONE_TYPE_STRINGS[drawTool]);
+                    if (drawTool == ZoneTypes.UNIT) {
+                        SpawnOnPoint(position, defaultDrawTemplate);
+                    }
+                    else if (drawTool == ZoneTypes.BRICK) {
+                        BrickOnPoint(position, brickDrawTemplate);
+                    }
                 }
             }
         }
@@ -124,6 +138,16 @@ public class ButtonManager : MonoBehaviour {
         yield return null;
     }
 
+    public void BrickOnPoint(Vector2 point, LinkedList<Vector2> spawn) {
+        Debug.Log("BrickOnPoint");
+        LinkedList<Vector2> zones = brickDrawTemplate;
+        if (spawn != null) {
+            zones = spawn;
+        }
+        GameManager.instance.SetSpawnCenter(point);
+        GameManager.instance.RequestBrickZones(zones);
+    }
+
     public void SpawnOnPoint(Vector2 point, LinkedList<Vector2> spawn) {
 
         LinkedList<Vector2> zones = defaultDrawTemplate;
@@ -146,6 +170,30 @@ public class ButtonManager : MonoBehaviour {
         LinkedList<Vector2> zones = GameManager.instance.CreateRandomSpawnSites(sqrMag / 100); ;
         GameManager.instance.SetSpawnCenter(Vector2.zero);
         GameManager.instance.RequestShakeZones(zones);
+    }
+
+    public bool SomeUIIsOpen() {
+        if (SomeMenuIsOpen()) {
+            Debug.Log("menu determmined to be open, no panel check");
+            return true;
+        }
+        Debug.Log("about to do panel check");
+        if (SomePanelIsOpen()) {
+            return true;
+        }
+        return false;
+    }
+
+    public bool SomePanelIsOpen() {
+        foreach (CollapsablePanel panel in panels) {
+            Debug.Log("checking a panel");
+            if (panel.isOpen) {
+                Debug.Log("open");
+                return true;
+            }
+        }
+        Debug.Log("closed");
+        return false;
     }
 
     public bool SomeMenuIsOpen() {
@@ -201,6 +249,7 @@ public class ButtonManager : MonoBehaviour {
     public void OnShakeTogglePress() {
         SetShakable(!shakable);
     }
+
 
 
     ////////////////////////////
@@ -279,7 +328,66 @@ public class ButtonManager : MonoBehaviour {
         GameManager.instance.StopStepping();
     }
 
-    public void OnDrawButtonPress() {
-        GameManager.instance.ToggleDrawMode();
+    IEnumerator ButtonHoldTimer(System.Func<float, bool> releaseSchedule) {
+        holdTime = Time.time;
+        bool actionTaken = false;
+
+        while (!actionTaken) {
+            actionTaken = releaseSchedule(holdTime);
+            yield return null;
+        }
+        yield return null;
+    }
+
+    public void OnDrawButtonHold() {
+        buttonReleased = false;
+        holdTime = Time.time;
+        StartCoroutine(ButtonHoldTimer((float time) => {
+            float elapsedTime = Time.time - time;
+            if (elapsedTime > 0.5f) {
+                drawPanelScript.ToggleOpen();
+                return true;
+            }
+            if (buttonReleased) {
+                if (drawPanelScript.isOpen) {
+                    drawPanelScript.CollapsePanel();
+                }
+                else {
+                    GameManager.instance.ToggleDrawMode();
+
+                }
+                return true;
+            }
+            return false;
+        }));
+    }
+
+    public void OnDrawButtonRelease() {
+        buttonReleased = true;
+    }
+
+
+    private void DrawButtonPress(int zoneType) {
+        Debug.Log("in generic drawbutton press");
+        drawTool = zoneType;
+        Debug.Log("drawtool is now " + ZoneTypes.ZONE_TYPE_STRINGS[drawTool]);
+        GameManager.instance.SetDrawMode(true);
+        drawPanelScript.CollapsePanel();
+    }
+
+    public void OnDrawUnitPress() {
+        DrawButtonPress(ZoneTypes.UNIT);
+    }
+
+    /// <summary>
+    /// //////////////////////////////////////////////////////////////////////////////
+    /// </summary>
+    // this needs to be involved in a hold-to-open with draw menu and better defined draw button options
+    public void OnDrawBrickPress() {
+        DrawButtonPress(ZoneTypes.BRICK);
+    }
+
+    public void OnDrawErasePress() {
+        Debug.Log("not implemented yet");
     }
 }

@@ -19,7 +19,7 @@ public class PressureZone : PlaceholderGameboyColored {
 
     public int GetId() => id;
 
-    public void ZeroPressure() { Pressure = 0; }
+    public  virtual void ZeroPressure() { Pressure = 0; }
     public virtual int CheckPressure() {
         if (Pressure < MinPressure) return -1;
         if (Pressure > MaxPressure) return 1;

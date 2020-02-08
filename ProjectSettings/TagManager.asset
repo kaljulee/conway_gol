@@ -19,6 +19,7 @@ TagManager:
   - MainMenuSlider
   - TemplateMenu
   - Tooltip
+  - DrawPanel
   layers:
   - Default
   - TransparentFX
