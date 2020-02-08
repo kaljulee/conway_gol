@@ -4195,8 +4195,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7ef3971d206be2343bd5fef4545d72b6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  expansionTime: 0.2
-  contractionTime: 0.2
+  expansionTime: 0.0005
+  contractionTime: 0.00001
+  expandedWidth: 120
+  collapsedWidth: 30
+  isOpen: 0
 --- !u!1 &2032865505
 GameObject:
   m_ObjectHideFlags: 0

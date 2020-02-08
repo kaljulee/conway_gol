@@ -6,8 +6,10 @@ public class CollapsablePanel : MonoBehaviour
 {
     RectTransform rectTransform;
     RoundIconButton[] iconButtons;
-    public float expansionTime = 0.2f;
-    public float contractionTime = 0.2f;
+    public float expansionTime = 0.01f;
+    public float contractionTime = 0.005f;
+    public float expandedWidth = 120f;
+    public float collapsedWidth = 30f;
     public bool isOpen;
     // Start is called before the first frame update
     void Start()
@@ -42,14 +44,31 @@ public class CollapsablePanel : MonoBehaviour
         }
     }
 
+    private void IncrementWidth(float increment) {
+        float newWidth = rectTransform.sizeDelta.x + increment;
+        if (newWidth > expandedWidth) {
+            newWidth =  expandedWidth;
+        }
+        if (newWidth < collapsedWidth) {
+            newWidth =  collapsedWidth;
+        }
+        rectTransform.sizeDelta = new Vector2(newWidth, rectTransform.sizeDelta.y);
+    }
+
     IEnumerator Expander() {
         ShowChildButtons();
-        rectTransform.sizeDelta = new Vector2(120, rectTransform.sizeDelta.y);
+        while(rectTransform.sizeDelta.x < expandedWidth) {
+            IncrementWidth(5f);
+            yield return new WaitForSeconds(expansionTime);
+        }
         yield return null;
     }
 
     IEnumerator Collapser() {
-        rectTransform.sizeDelta = new Vector2(30, rectTransform.sizeDelta.y);
+        while (rectTransform.sizeDelta.x > collapsedWidth) {
+            IncrementWidth(-10f);
+            yield return new WaitForSeconds(contractionTime);
+        }
         HideChildButtons();
         yield return null;
     }
