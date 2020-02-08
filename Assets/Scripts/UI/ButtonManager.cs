@@ -99,7 +99,6 @@ public class ButtonManager : MonoBehaviour {
                 position.y = Mathf.Round(position.y * Camera.main.orthographicSize * 2);
                 position.x = Mathf.Round(position.x * Camera.main.aspect * Camera.main.orthographicSize * 2);
                 if (!SomeUIIsOpen()) {
-                    Debug.Log("drawtool is " + ZoneTypes.ZONE_TYPE_STRINGS[drawTool]);
                     if (drawTool == ZoneTypes.UNIT) {
                         SpawnOnPoint(position, defaultDrawTemplate);
                     }
@@ -139,7 +138,6 @@ public class ButtonManager : MonoBehaviour {
     }
 
     public void BrickOnPoint(Vector2 point, LinkedList<Vector2> spawn) {
-        Debug.Log("BrickOnPoint");
         LinkedList<Vector2> zones = brickDrawTemplate;
         if (spawn != null) {
             zones = spawn;
@@ -174,10 +172,8 @@ public class ButtonManager : MonoBehaviour {
 
     public bool SomeUIIsOpen() {
         if (SomeMenuIsOpen()) {
-            Debug.Log("menu determmined to be open, no panel check");
             return true;
         }
-        Debug.Log("about to do panel check");
         if (SomePanelIsOpen()) {
             return true;
         }
@@ -186,13 +182,10 @@ public class ButtonManager : MonoBehaviour {
 
     public bool SomePanelIsOpen() {
         foreach (CollapsablePanel panel in panels) {
-            Debug.Log("checking a panel");
             if (panel.isOpen) {
-                Debug.Log("open");
                 return true;
             }
         }
-        Debug.Log("closed");
         return false;
     }
 
@@ -368,9 +361,7 @@ public class ButtonManager : MonoBehaviour {
 
 
     private void DrawButtonPress(int zoneType) {
-        Debug.Log("in generic drawbutton press");
         drawTool = zoneType;
-        Debug.Log("drawtool is now " + ZoneTypes.ZONE_TYPE_STRINGS[drawTool]);
         GameManager.instance.SetDrawMode(true);
         drawPanelScript.CollapsePanel();
     }
