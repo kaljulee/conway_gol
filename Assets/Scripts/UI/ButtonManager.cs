@@ -202,6 +202,17 @@ public class ButtonManager : MonoBehaviour {
         SetShakable(!shakable);
     }
 
+    public void OnDrawUnitPress() {
+
+    }
+
+    public void OnDrawBrickPress() {
+
+    }
+
+    public void OnDrawErasePress() {
+
+    }
 
     ////////////////////////////
     /// main menu buttons

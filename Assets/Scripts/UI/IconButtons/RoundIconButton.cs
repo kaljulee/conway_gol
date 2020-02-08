@@ -37,7 +37,7 @@ public class RoundIconButton : MonoBehaviour {
         rectTransform.sizeDelta = new Vector2(width, height);
 
         if (fourColorShade == null) {
-            fourColorShade = TwoBitColor.LIGHTEST;
+            fourColorShade = TwoBitColor.DARK;
         }
         image.color = TwoBitColor.GenerateTwoBitColor(fourColorShade);
     }
