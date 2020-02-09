@@ -138,25 +138,24 @@ public class GameManager : MonoBehaviour, IsBoardDirector, IsBoardActor {
 
     private void ApplyZones(LinkedList<Vector2> zones, int pressure) {
         foreach (Vector2 zone in zones) {
-            Action delete = CreateAddressAction(ActionTypes.REMOVE, 0, zone + spawnCenter);
-            Action create = CreateAddressAction(ActionTypes.CREATE, pressure, zone + spawnCenter);
-            //ActionController.instance.ExecuteAction(delete);
-            //ActionController.instance.ExecuteAction(create);
+            if (!boardScript.PositionIsBrick(zone + spawnCenter)) {
+                Action delete = CreateAddressAction(ActionTypes.REMOVE, 0, zone + spawnCenter);
+                Action create = CreateAddressAction(ActionTypes.CREATE, pressure, zone + spawnCenter);
 
-            //Debug.Log("applying delete");
-            //IssueAction(delete);
-            Debug.Log("applying create");
-            IssueAction(create);
+                IssueAction(delete);
+                IssueAction(create);
+            }
+
         }
         zones.Clear();
     }
 
     private void EraseZones(LinkedList<Vector2> zones) {
-        //foreach (Vector2 zone in zones) {
-        //    Action delete = CreateAddressAction(ActionTypes.REMOVE, 0, zone + spawnCenter);
-        //    IssueAction(delete);
-        //}
-        //zones.Clear();
+        foreach (Vector2 zone in zones) {
+            Action delete = CreateAddressAction(ActionTypes.REMOVE, 0, zone + spawnCenter);
+            IssueAction(delete);
+        }
+        zones.Clear();
     }
 
     public void ApplyEraseZones() {
@@ -245,13 +244,11 @@ public class GameManager : MonoBehaviour, IsBoardDirector, IsBoardActor {
     /// check for reversible action calls
 
     protected void RemovePressureZone(GameObject zone) {
-        Debug.Log("remove pressure zone called");
         boardScript.RemovePressureZone(zone);
         Destroy(zone);
     }
 
     protected void RemoveBrickZone(GameObject zone) {
-        Debug.Log("remove brick zone called");
         boardScript.RemoveBrickZone(zone);
         Destroy(zone);
     }
@@ -261,7 +258,6 @@ public class GameManager : MonoBehaviour, IsBoardDirector, IsBoardActor {
         PressureZone pressureScript = zone.GetComponent<PressureZone>();
         // if zone is not on the board or on a brick
         if (!boardScript.PositionIsOnBoard(zone.transform.position) || (boardScript.PositionIsBrick(zone.transform.position) && pressureScript.GetType() != typeof(Brick))) {
-            Debug.Log("DELETING because it is a brick and the type is not a brick, type is " + pressureScript.GetType());
             IssueAction(CreateDirectAction(ActionTypes.REMOVE, ZoneTypes.GetZoneType(pressureScript), zone));
         }
     }
@@ -308,7 +304,6 @@ public class GameManager : MonoBehaviour, IsBoardDirector, IsBoardActor {
         }
         if (pressureResult != 0) {
             Vector2 position = zone.transform.position;
-            Debug.Log("GOT A BAD PRESSURE RESULT, going to delete");
             removeActionsQueue.AddLast(CreateDirectAction(ActionTypes.REMOVE, ZoneTypes.GetZoneType(pressureScript), zone));
             if (replacement != null) {
                 // create on replacement
@@ -443,10 +438,16 @@ public class GameManager : MonoBehaviour, IsBoardDirector, IsBoardActor {
         switch (action.ActionType) {
             case ActionTypes.CREATE:
                 if (action.Target) {
-                    AddPressureZone(action.Target);
+                    if (boardScript.PositionIsBrick(action.Target.transform.position)) {
+                        IssueAction(CreateDirectAction(ActionTypes.REMOVE, 0, action.Target));
+                    } else {
+                        AddPressureZone(action.Target);
+                    }
                 }
                 else {
-                    InstantiatePressureZone((Vector2)action.Address, action.Payload);
+                    if (!boardScript.PositionIsBrick((Vector2)action.Address)) {
+                        InstantiatePressureZone((Vector2)action.Address, action.Payload);
+                    }
                 }
                 break;
             case ActionTypes.PRESSURE_CHANGE:
@@ -466,7 +467,6 @@ public class GameManager : MonoBehaviour, IsBoardDirector, IsBoardActor {
                 }
                 break;
             case ActionTypes.REMOVE:
-                Debug.Log("remove action executed by gamemanager");
                 if (action.Target) {
                     RemovePressureZone(action.Target);
                 }
