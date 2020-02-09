@@ -459,7 +459,6 @@ public class GameManager : MonoBehaviour, IsBoardDirector, IsBoardActor {
                 }
                 break;
             case ActionTypes.REMOVE:
-                Debug.Log("remove action executed by gamemanager");
                 if (action.Target) {
                     RemovePressureZone(action.Target);
                 }
