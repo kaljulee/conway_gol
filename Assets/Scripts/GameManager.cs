@@ -71,6 +71,7 @@ public class GameManager : MonoBehaviour, IsBoardDirector, IsBoardActor {
     private LinkedList<Vector2> drawZones = new LinkedList<Vector2>();
     private LinkedList<Vector2> shakeZones = new LinkedList<Vector2>();
     private LinkedList<Vector2> brickZones = new LinkedList<Vector2>();
+    private LinkedList<Vector2> eraseZones = new LinkedList<Vector2>();
 
     //////////////////////////
     /// handle spawnsites
@@ -131,6 +132,10 @@ public class GameManager : MonoBehaviour, IsBoardDirector, IsBoardActor {
         RequestZones(zones, shakeZones);
     }
 
+    public void RequestEraseZones(LinkedList<Vector2> zones) {
+        RequestZones(zones, eraseZones);
+    }
+
     private void ApplyZones(LinkedList<Vector2> zones, int pressure) {
         foreach (Vector2 zone in zones) {
             Action delete = CreateAddressAction(ActionTypes.REMOVE, 0, zone + spawnCenter);
@@ -141,6 +146,18 @@ public class GameManager : MonoBehaviour, IsBoardDirector, IsBoardActor {
             IssueAction(create);
         }
         zones.Clear();
+    }
+
+    private void EraseZones(LinkedList<Vector2> zones) {
+        foreach (Vector2 zone in zones) {
+            Action delete = CreateAddressAction(ActionTypes.REMOVE, 0, zone + spawnCenter);
+            IssueAction(delete);
+        }
+        zones.Clear();
+    }
+
+    public void ApplyEraseZones() {
+        EraseZones(eraseZones);
     }
 
     public void ApplyShakeZones() {
@@ -226,6 +243,11 @@ public class GameManager : MonoBehaviour, IsBoardDirector, IsBoardActor {
 
     protected void RemovePressureZone(GameObject zone) {
         boardScript.RemovePressureZone(zone);
+        Destroy(zone);
+    }
+
+    protected void RemoveBrickZone(GameObject zone) {
+        boardScript.RemoveBrickZone(zone);
         Destroy(zone);
     }
 
@@ -441,7 +463,17 @@ public class GameManager : MonoBehaviour, IsBoardDirector, IsBoardActor {
                     RemovePressureZone(action.Target);
                 }
                 else {
-                    RemovePressureZone(boardScript.GetPressureZones().Find(zone => zone.transform.position == action.Address));
+                    // here
+                    GameObject zoneToDelete = boardScript.GetPressureZones().Find(zone => zone.transform.position == action.Address);
+                    if (zoneToDelete) {
+                        RemovePressureZone(zoneToDelete);
+                    }
+                    else {
+                        zoneToDelete = boardScript.GetBricks().Find(zone => zone.transform.position == action.Address);
+                        if (zoneToDelete) {
+                            RemoveBrickZone(zoneToDelete);
+                        }
+                    }
                 }
                 break;
             case ActionTypes.ALL_PRESSURE_ZERO:
@@ -557,6 +589,7 @@ public class GameManager : MonoBehaviour, IsBoardDirector, IsBoardActor {
                 ActionController.instance.BeginNewRound();
                 ApplyDrawZones();
             }
+            // brick zones
             if (drawMode && brickZones.Count > 0) {
                 ActionController.instance.BeginNewRound();
                 ApplyBrickZones();
@@ -565,6 +598,11 @@ public class GameManager : MonoBehaviour, IsBoardDirector, IsBoardActor {
             if (shakeZones.Count > 0) {
                 ActionController.instance.BeginNewRound();
                 ApplyShakeZones();
+            }
+            // erase zones
+            if (eraseZones.Count > 0) {
+                ActionController.instance.BeginNewRound();
+                ApplyEraseZones();
             }
 
             // final zero

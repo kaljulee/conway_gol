@@ -132,7 +132,8 @@ public class Action {
         public static readonly int UNIT = 0;
         public static readonly int PRESSURE_ZONE = 1;
         public static readonly int BRICK = 2;
-        public static readonly string[] ZONE_TYPE_STRINGS = { "UNIT", "PRESSURE_ZONE", "BRICK" };
+        public static readonly int ERASE = 3;
+        public static readonly string[] ZONE_TYPE_STRINGS = { "UNIT", "PRESSURE_ZONE", "BRICK", "ERASE" };
 
         public static int GetZoneType(PressureZone zone) {
             if (zone is Unit) {

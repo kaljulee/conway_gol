@@ -29,6 +29,7 @@ public class ButtonManager : MonoBehaviour {
     public int drawTool = ZoneTypes.UNIT;
     public LinkedList<Vector2> defaultDrawTemplate = Templates.Point();
     public LinkedList<Vector2> brickDrawTemplate = Templates.Point();
+    public LinkedList<Vector2> eraseTemplate = Templates.Point();
 
     private bool buttonReleased = false;
     private float holdTime = 0f;
@@ -104,6 +105,8 @@ public class ButtonManager : MonoBehaviour {
                     }
                     else if (drawTool == ZoneTypes.BRICK) {
                         BrickOnPoint(position, brickDrawTemplate);
+                    } else if (drawTool == ZoneTypes.ERASE) {
+                        EraseOnPoint(position, eraseTemplate);
                     }
                 }
             }
@@ -156,6 +159,15 @@ public class ButtonManager : MonoBehaviour {
         GameManager.instance.RequestDrawZones(zones);
     }
 
+    public void EraseOnPoint(Vector2 point, LinkedList<Vector2> spawn) {
+        LinkedList<Vector2> zones = eraseTemplate;
+        if (spawn != null) {
+            zones = spawn;
+        }
+        GameManager.instance.SetSpawnCenter(point);
+        GameManager.instance.RequestEraseZones(zones);
+    }
+
     public void SetShakable(bool newShakable) {
         shakable = newShakable;
     }
@@ -174,12 +186,9 @@ public class ButtonManager : MonoBehaviour {
         if (SomeMenuIsOpen()) {
             return true;
         }
-        Debug.Log("checking if drawer is open");
         if (SomePanelIsOpen()) {
-            Debug.Log("a drawer is open");
             return true;
         }
-        Debug.Log("a drawer is not open");
         return false;
     }
 
@@ -382,6 +391,6 @@ public class ButtonManager : MonoBehaviour {
     }
 
     public void OnDrawErasePress() {
-        Debug.Log("not implemented yet");
+        DrawButtonPress(ZoneTypes.ERASE);
     }
 }
