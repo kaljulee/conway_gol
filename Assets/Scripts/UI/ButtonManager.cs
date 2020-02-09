@@ -30,6 +30,8 @@ public class ButtonManager : MonoBehaviour {
     public LinkedList<Vector2> defaultDrawTemplate = Templates.Point();
     public LinkedList<Vector2> brickDrawTemplate = Templates.Point();
     public LinkedList<Vector2> eraseTemplate = Templates.Point();
+    public bool selectorActive { get; private set; }
+
 
     private bool buttonReleased = false;
     private float holdTime = 0f;
@@ -371,6 +373,9 @@ public class ButtonManager : MonoBehaviour {
         buttonReleased = true;
     }
 
+    public void OnSelectorBUttonPress() {
+        selectorActive = !selectorActive;
+    }
 
     private void DrawButtonPress(int zoneType) {
         drawTool = zoneType;
