@@ -20,6 +20,7 @@ TagManager:
   - TemplateMenu
   - Tooltip
   - DrawPanel
+  - Selector
   layers:
   - Default
   - TransparentFX

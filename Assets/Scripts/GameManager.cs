@@ -390,7 +390,6 @@ public class GameManager : MonoBehaviour, IsBoardDirector, IsBoardActor {
                 // must check neighbors
                 Dictionary<string, GameObject> neighbors = pressureScript.CheckNeighbors();
 
-                //PrintNeighborDebug(pressureScript);
                 SchedulePressureNeighbors(neighbors, currentZone);
             }
             else {
