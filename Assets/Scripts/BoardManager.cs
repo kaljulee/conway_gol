@@ -40,6 +40,8 @@ public class BoardManager : MonoBehaviour {
 
     public List<GameObject> GetPressureZones() => pressureZones;
 
+    public List<GameObject> GetBricks() => bricks;
+
     public Vector2 GetBoardSize() {
         return new Vector2(columns, rows);
     }
@@ -83,6 +85,11 @@ public class BoardManager : MonoBehaviour {
 
     public void RemovePressureZone(GameObject zone) {
         pressureZones.Remove(zone);
+        Destroy(zone);
+    }
+
+    public void RemoveBrickZone(GameObject zone) {
+        bricks.Remove(zone);
         Destroy(zone);
     }
 

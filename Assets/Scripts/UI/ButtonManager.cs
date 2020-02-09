@@ -29,6 +29,7 @@ public class ButtonManager : MonoBehaviour {
     public int drawTool = ZoneTypes.UNIT;
     public LinkedList<Vector2> defaultDrawTemplate = Templates.Point();
     public LinkedList<Vector2> brickDrawTemplate = Templates.Point();
+    public LinkedList<Vector2> eraseTemplate = Templates.Point();
 
     private bool buttonReleased = false;
     private float holdTime = 0f;
@@ -99,12 +100,13 @@ public class ButtonManager : MonoBehaviour {
                 position.y = Mathf.Round(position.y * Camera.main.orthographicSize * 2);
                 position.x = Mathf.Round(position.x * Camera.main.aspect * Camera.main.orthographicSize * 2);
                 if (!SomeUIIsOpen()) {
-                    Debug.Log("drawtool is " + ZoneTypes.ZONE_TYPE_STRINGS[drawTool]);
                     if (drawTool == ZoneTypes.UNIT) {
                         SpawnOnPoint(position, defaultDrawTemplate);
                     }
                     else if (drawTool == ZoneTypes.BRICK) {
                         BrickOnPoint(position, brickDrawTemplate);
+                    } else if (drawTool == ZoneTypes.ERASE) {
+                        EraseOnPoint(position, eraseTemplate);
                     }
                 }
             }
@@ -139,7 +141,6 @@ public class ButtonManager : MonoBehaviour {
     }
 
     public void BrickOnPoint(Vector2 point, LinkedList<Vector2> spawn) {
-        Debug.Log("BrickOnPoint");
         LinkedList<Vector2> zones = brickDrawTemplate;
         if (spawn != null) {
             zones = spawn;
@@ -158,6 +159,15 @@ public class ButtonManager : MonoBehaviour {
         GameManager.instance.RequestDrawZones(zones);
     }
 
+    public void EraseOnPoint(Vector2 point, LinkedList<Vector2> spawn) {
+        LinkedList<Vector2> zones = eraseTemplate;
+        if (spawn != null) {
+            zones = spawn;
+        }
+        GameManager.instance.SetSpawnCenter(point);
+        GameManager.instance.RequestEraseZones(zones);
+    }
+
     public void SetShakable(bool newShakable) {
         shakable = newShakable;
     }
@@ -174,10 +184,8 @@ public class ButtonManager : MonoBehaviour {
 
     public bool SomeUIIsOpen() {
         if (SomeMenuIsOpen()) {
-            Debug.Log("menu determmined to be open, no panel check");
             return true;
         }
-        Debug.Log("about to do panel check");
         if (SomePanelIsOpen()) {
             return true;
         }
@@ -186,13 +194,10 @@ public class ButtonManager : MonoBehaviour {
 
     public bool SomePanelIsOpen() {
         foreach (CollapsablePanel panel in panels) {
-            Debug.Log("checking a panel");
             if (panel.isOpen) {
-                Debug.Log("open");
                 return true;
             }
         }
-        Debug.Log("closed");
         return false;
     }
 
@@ -368,9 +373,7 @@ public class ButtonManager : MonoBehaviour {
 
 
     private void DrawButtonPress(int zoneType) {
-        Debug.Log("in generic drawbutton press");
         drawTool = zoneType;
-        Debug.Log("drawtool is now " + ZoneTypes.ZONE_TYPE_STRINGS[drawTool]);
         GameManager.instance.SetDrawMode(true);
         drawPanelScript.CollapsePanel();
     }
@@ -388,6 +391,6 @@ public class ButtonManager : MonoBehaviour {
     }
 
     public void OnDrawErasePress() {
-        Debug.Log("not implemented yet");
+        DrawButtonPress(ZoneTypes.ERASE);
     }
 }
