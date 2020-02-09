@@ -17,6 +17,10 @@ public class Brick : PressureZone
         
     }
 
+    public override int CheckPressure() {
+        return 0;
+    }
+
     // Start is called before the first frame update
     new void Awake()
     {

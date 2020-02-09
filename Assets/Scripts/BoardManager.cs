@@ -56,6 +56,7 @@ public class BoardManager : MonoBehaviour {
     }
 
     private void ClearPressureZones() {
+        Debug.Log("Clear pressurezones");
         while (pressureZones.Count > 0) {
             GameObject zone = pressureZones[0];
             pressureZones.RemoveAt(0);
@@ -84,11 +85,13 @@ public class BoardManager : MonoBehaviour {
     }
 
     public void RemovePressureZone(GameObject zone) {
+        Debug.Log("boardmanager removepressurezone with " + zone.GetComponent<PressureZone>().GetType());
         pressureZones.Remove(zone);
         Destroy(zone);
     }
 
     public void RemoveBrickZone(GameObject zone) {
+        Debug.Log("board manager removebrickzone");
         bricks.Remove(zone);
         Destroy(zone);
     }
@@ -122,7 +125,7 @@ public class BoardManager : MonoBehaviour {
     }
 
     private bool IsTrackedZone(PressureZone zone) {
-        return (zone.GetType() != typeof(Brick));
+        return true;// (zone.GetType() != typeof(Brick));
     }
 
     public void AddPressureZone(GameObject zone) {
@@ -131,6 +134,10 @@ public class BoardManager : MonoBehaviour {
         zone.transform.SetParent(boardHolder);
         if (IsTrackedZone(zone.GetComponent<PressureZone>())) {
             pressureZones.Add(zone);
+            Debug.Log("added pzone");
+        } else {
+            Debug.Log("added brick");
+            bricks.Add(zone);
         }
     }
 
