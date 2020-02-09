@@ -21,6 +21,7 @@ TagManager:
   - Tooltip
   - DrawPanel
   - Selector
+  - SelectorControls
   layers:
   - Default
   - TransparentFX

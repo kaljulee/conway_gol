@@ -21,6 +21,8 @@ public class ButtonManager : MonoBehaviour {
     public static LinkedList<Menu> menus = new LinkedList<Menu>();
     public static LinkedList<CollapsablePanel> panels = new LinkedList<CollapsablePanel>();
 
+    public static GameObject selectorControls;
+    public static SelectorMenuControls selectorControlsScript;
 
     public static GameObject templateMenu;
     public static MainMenu templateMenuScript;
@@ -69,9 +71,13 @@ public class ButtonManager : MonoBehaviour {
 
         tooltips = GameObject.FindGameObjectsWithTag("Tooltip");
 
+        selectorControls = GameObject.FindGameObjectWithTag("SelectorControls");
+        selectorControlsScript = selectorControls.GetComponent<SelectorMenuControls>();
+
         menus.AddLast(mainMenuScript);
         menus.AddLast(createRandomScript);
         menus.AddLast(templateMenuScript);
+        menus.AddLast(selectorControlsScript);
 
         panels.AddLast(drawPanelScript);
         HideTooltips();
@@ -213,7 +219,7 @@ public class ButtonManager : MonoBehaviour {
     }
 
     public void CloseAllMenus() {
-        foreach (MainMenu menu in menus) {
+        foreach (Menu menu in menus) {
             menu.Close();
         }
     }
@@ -373,8 +379,13 @@ public class ButtonManager : MonoBehaviour {
         buttonReleased = true;
     }
 
-    public void OnSelectorBUttonPress() {
+    public void OnSelectorButtonPress() {
         selectorActive = !selectorActive;
+        if (selectorActive) {
+            selectorControlsScript.Open();
+        } else {
+            selectorControlsScript.Close();
+        }
     }
 
     private void DrawButtonPress(int zoneType) {

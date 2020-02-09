@@ -2033,9 +2033,10 @@ GameObject:
   - component: {fileID: 919801185}
   - component: {fileID: 919801187}
   - component: {fileID: 919801186}
+  - component: {fileID: 919801188}
   m_Layer: 5
   m_Name: SelectorControls
-  m_TagString: Untagged
+  m_TagString: SelectorControls
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -2097,6 +2098,18 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 919801184}
   m_CullTransparentMesh: 0
+--- !u!114 &919801188
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 919801184}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b8fddd3c95c6ef748866c984caaf6b50, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &930032945
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -2290,7 +2303,17 @@ PrefabInstance:
         type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
-      objectReference: {fileID: 1719460359}
+      objectReference: {fileID: 1737325436}
+    - target: {fileID: 765256872505692133, guid: 4f40047514a9a954790c7bb47475e037,
+        type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: OnSelectorButtonPress
+      objectReference: {fileID: 0}
+    - target: {fileID: 765256872505692133, guid: 4f40047514a9a954790c7bb47475e037,
+        type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
+      value: UnityEngine.Object, UnityEngine
+      objectReference: {fileID: 0}
     - target: {fileID: 1351006851614161071, guid: 4f40047514a9a954790c7bb47475e037,
         type: 3}
       propertyPath: m_Sprite
