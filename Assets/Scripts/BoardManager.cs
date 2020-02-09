@@ -122,7 +122,7 @@ public class BoardManager : MonoBehaviour {
     }
 
     private bool IsTrackedZone(PressureZone zone) {
-        return (zone.GetType() != typeof(Brick));
+        return true;// (zone.GetType() != typeof(Brick));
     }
 
     public void AddPressureZone(GameObject zone) {
@@ -131,6 +131,8 @@ public class BoardManager : MonoBehaviour {
         zone.transform.SetParent(boardHolder);
         if (IsTrackedZone(zone.GetComponent<PressureZone>())) {
             pressureZones.Add(zone);
+        } else {
+            bricks.Add(zone);
         }
     }
 
