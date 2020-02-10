@@ -383,6 +383,14 @@ public class ButtonManager : MonoBehaviour {
         buttonReleased = true;
     }
 
+    private void moveSelector(Vector3 direction) {
+        selector.transform.position = selector.transform.position + direction;
+    }
+
+    public void OnDPadButtonPress(Vector3 direction) {
+        moveSelector(direction);
+    }
+
     public void OnSelectorButtonPress() {
         selectorActive = !selectorActive;
         if (selectorActive) {
