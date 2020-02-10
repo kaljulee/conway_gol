@@ -5106,6 +5106,36 @@ PrefabInstance:
       propertyPath: m_Name
       value: SelectorCloseButton
       objectReference: {fileID: 0}
+    - target: {fileID: 765256872505692133, guid: 4f40047514a9a954790c7bb47475e037,
+        type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 765256872505692133, guid: 4f40047514a9a954790c7bb47475e037,
+        type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Mode
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 765256872505692133, guid: 4f40047514a9a954790c7bb47475e037,
+        type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_CallState
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 765256872505692133, guid: 4f40047514a9a954790c7bb47475e037,
+        type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 1737325436}
+    - target: {fileID: 765256872505692133, guid: 4f40047514a9a954790c7bb47475e037,
+        type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: OnSelectorButtonPress
+      objectReference: {fileID: 0}
+    - target: {fileID: 765256872505692133, guid: 4f40047514a9a954790c7bb47475e037,
+        type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
+      value: UnityEngine.Object, UnityEngine
+      objectReference: {fileID: 0}
     - target: {fileID: 1351006851614161071, guid: 4f40047514a9a954790c7bb47475e037,
         type: 3}
       propertyPath: m_Sprite
