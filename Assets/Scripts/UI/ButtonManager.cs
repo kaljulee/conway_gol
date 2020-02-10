@@ -97,12 +97,27 @@ public class ButtonManager : MonoBehaviour {
         return results.Count > 0;
     }
 
+
+    private void DrawEventOnPoint(Vector2 position, bool enforcePoint=false) {
+        
+        if (drawTool == ZoneTypes.UNIT) {
+            SpawnOnPoint(position, enforcePoint ? Templates.Point() : defaultDrawTemplate);
+        }
+        else if (drawTool == ZoneTypes.BRICK) {
+            BrickOnPoint(position, enforcePoint ? Templates.Point() : brickDrawTemplate);
+        }
+        else if (drawTool == ZoneTypes.ERASE) {
+            EraseOnPoint(position, enforcePoint ? Templates.Point() : eraseTemplate);
+        }
+    }
+
     private void Update() {
         //Touch input = Input.GetTouch(0);
         //if (input.phase == TouchPhase.Began) {
         //    //OnGearButtonPress();
         //    Debug.Log("touch location " + input.position);
         //}
+
         if (!IsPointerOverUIObject()) {
 
             bool mouseDown = Input.GetMouseButton(0);
@@ -112,14 +127,7 @@ public class ButtonManager : MonoBehaviour {
                 position.y = Mathf.Round(position.y * Camera.main.orthographicSize * 2);
                 position.x = Mathf.Round(position.x * Camera.main.aspect * Camera.main.orthographicSize * 2);
                 if (!SomeUIIsOpen()) {
-                    if (drawTool == ZoneTypes.UNIT) {
-                        SpawnOnPoint(position, defaultDrawTemplate);
-                    }
-                    else if (drawTool == ZoneTypes.BRICK) {
-                        BrickOnPoint(position, brickDrawTemplate);
-                    } else if (drawTool == ZoneTypes.ERASE) {
-                        EraseOnPoint(position, eraseTemplate);
-                    }
+                    DrawEventOnPoint(position);
                 }
             }
         }
@@ -391,10 +399,15 @@ public class ButtonManager : MonoBehaviour {
         moveSelector(direction);
     }
 
+    public void OnSeclectorDrawButtonPress() {
+        DrawEventOnPoint(selector.transform.position, true);
+    }
+
     public void OnSelectorButtonPress() {
         selectorActive = !selectorActive;
         if (selectorActive) {
             selectorControlsScript.Open();
+            GameManager.instance.SetDrawMode(true);
             Vector3 center = GameManager.instance.spawnCenter;
             selector.transform.position = new Vector3(center.x, center.y, selector.transform.position.z);
             selector.SetActive(true);
