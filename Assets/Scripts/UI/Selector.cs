@@ -10,6 +10,7 @@ public class Selector : PlaceholderGameboyColored {
     IEnumerator AlternateShades() {
         LinkedListNode<string> node = shades.First;
         while (true) {
+            Debug.Log("alternating shade");
             ColorPlaceholder(node.Value);
             if (node.Next == null) {
                 node = shades.First;
@@ -20,6 +21,9 @@ public class Selector : PlaceholderGameboyColored {
         }
     }
 
+    private void OnEnable() {
+        StartCoroutine(AlternateShades());
+    }
 
     new void Awake() {
         shades.AddLast(firstShade);

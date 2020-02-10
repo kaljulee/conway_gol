@@ -7,6 +7,7 @@ public class ButtonManager : MonoBehaviour {
     public static ButtonManager instance = null;
 
     public static GameObject mainMenu;
+    public static GameObject selector;
     public static MainMenu mainMenuScript;
 
     public static GameObject createRandomMenu;
@@ -74,6 +75,8 @@ public class ButtonManager : MonoBehaviour {
         selectorControls = GameObject.FindGameObjectWithTag("SelectorControls");
         selectorControlsScript = selectorControls.GetComponent<SelectorMenuControls>();
 
+        selector = GameObject.FindGameObjectWithTag("Selector");
+
         menus.AddLast(mainMenuScript);
         menus.AddLast(createRandomScript);
         menus.AddLast(templateMenuScript);
@@ -82,6 +85,7 @@ public class ButtonManager : MonoBehaviour {
         panels.AddLast(drawPanelScript);
         HideTooltips();
         CloseAllMenus();
+        selector.SetActive(false);
         StartCoroutine(StartTooltips());
     }
 
@@ -383,7 +387,11 @@ public class ButtonManager : MonoBehaviour {
         selectorActive = !selectorActive;
         if (selectorActive) {
             selectorControlsScript.Open();
+            Vector3 center = GameManager.instance.spawnCenter;
+            selector.transform.position = new Vector3(center.x, center.y, selector.transform.position.z);
+            selector.SetActive(true);
         } else {
+            selector.SetActive(false);
             selectorControlsScript.Close();
         }
     }
