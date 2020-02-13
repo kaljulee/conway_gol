@@ -28,6 +28,7 @@ public class SelectorDrawButton : ControllerActionButton
             int actualDrawTool = ButtonManager.instance.drawTool;
 
             if (actualDrawTool != localDrawTool) {
+                Debug.Log("values are different, updating sprite, local: " + localDrawTool + " actual: " + actualDrawTool);
                 UpdateButtonSprite(actualDrawTool);
             }
             yield return new WaitForSeconds(0.1f);
@@ -41,6 +42,10 @@ public class SelectorDrawButton : ControllerActionButton
         UpdateButtonSprite(toolInt);
         StartCoroutine(CheckDrawTool());
 
+    }
+
+    private void OnEnable() {
+        StartCoroutine(CheckDrawTool());
     }
 
     // Update is called once per frame

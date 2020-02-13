@@ -32,7 +32,7 @@ TagManager:
   - 
   - 
   - Blocking Layer
-  - 
+  - Selector Layer
   - 
   - 
   - 
@@ -64,4 +64,10 @@ TagManager:
     locked: 0
   - name: Blocking Layer
     uniqueID: 3388119739
+    locked: 0
+  - name: Selector Layer
+    uniqueID: 2306322751
+    locked: 0
+  - name: New Layer
+    uniqueID: 1350947277
     locked: 0
