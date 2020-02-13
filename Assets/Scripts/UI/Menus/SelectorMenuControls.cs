@@ -4,7 +4,10 @@ using UnityEngine;
 
 public class SelectorMenuControls : Menu
 {
+
+    public bool selectorActive = false;
     public override void Close() {
+        selectorActive = false;
         base.Close();
     }
     // Start is called before the first frame update
