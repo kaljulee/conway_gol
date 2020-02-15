@@ -31,10 +31,9 @@ public class ButtonManager : MonoBehaviour {
     private DrawPanel drawPanelScript;
     public int drawTool = ZoneTypes.UNIT;
     public LinkedList<Vector2> defaultDrawTemplate = Templates.Point();
+    public LinkedList<Vector2> unitsDrawTemplate = Templates.Point();
     public LinkedList<Vector2> brickDrawTemplate = Templates.Point();
     public LinkedList<Vector2> eraseTemplate = Templates.Point();
-    public bool selectorActive { get; private set; }
-
 
     private bool buttonReleased = false;
     private float holdTime = 0f;
@@ -99,7 +98,7 @@ public class ButtonManager : MonoBehaviour {
 
 
     private void DrawEventOnPoint(Vector2 position, bool enforcePoint=false) {
-        
+        Debug.Log("draweventonpoint");
         if (drawTool == ZoneTypes.UNIT) {
             SpawnOnPoint(position, enforcePoint ? Templates.Point() : defaultDrawTemplate);
         }
@@ -107,7 +106,14 @@ public class ButtonManager : MonoBehaviour {
             BrickOnPoint(position, enforcePoint ? Templates.Point() : brickDrawTemplate);
         }
         else if (drawTool == ZoneTypes.ERASE) {
+            Debug.Log("erase");
+            Debug.Log(position);
+            Debug.Log(enforcePoint);
+         
             EraseOnPoint(position, enforcePoint ? Templates.Point() : eraseTemplate);
+        } else {
+            GameManager.instance.SetDrawMode(false);
+            Debug.Log("no zone recognized drawmode set to false: " + drawTool);
         }
     }
 
@@ -185,6 +191,7 @@ public class ButtonManager : MonoBehaviour {
             zones = spawn;
         }
         GameManager.instance.SetSpawnCenter(point);
+        Debug.Log("requesting erase zones from buttonmanager eraseonpoint ");
         GameManager.instance.RequestEraseZones(zones);
     }
 
@@ -309,7 +316,7 @@ public class ButtonManager : MonoBehaviour {
     public void OnTemplateSelectorPress(int template) {
         Action templateAction = Action.Factory.CreateAddressAction(Action.ActionTypes.SET_TEMPLATE, template, Vector2.zero);
         ActionController.instance.ExecuteAction(templateAction);
-        defaultDrawTemplate = Templates.GetTemplate(template);
+        unitsDrawTemplate = Templates.GetTemplate(template);
         GameManager.instance.SetDrawMode(true);
         CloseAllMenus();
     }
@@ -379,7 +386,9 @@ public class ButtonManager : MonoBehaviour {
                 }
                 else {
                     GameManager.instance.ToggleDrawMode();
-
+                    if (!GameManager.instance.drawMode) {
+                        selectorControlsScript.Close();
+                    }
                 }
                 return true;
             }
@@ -400,12 +409,14 @@ public class ButtonManager : MonoBehaviour {
     }
 
     public void OnSeclectorDrawButtonPress() {
-        DrawEventOnPoint(selector.transform.position, true);
+        Debug.Log("selector draw button pressed, using " + (Vector2)(selector.transform.position));
+        Vector2 position = new Vector2(selector.transform.position.x,  selector.transform.position.y);
+        DrawEventOnPoint(position, true);
     }
 
     public void OnSelectorButtonPress() {
-        selectorActive = !selectorActive;
-        if (selectorActive) {
+        selectorControlsScript.selectorActive = !selectorControlsScript.selectorActive;
+        if (selectorControlsScript.selectorActive) {
             selectorControlsScript.Open();
             GameManager.instance.SetDrawMode(true);
             Vector3 center = GameManager.instance.spawnCenter;

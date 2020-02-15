@@ -5,6 +5,7 @@ using Random = UnityEngine.Random;
 using System;
 using static Action;
 using static Action.Factory;
+using static Utils;
 public class GameManager : MonoBehaviour, IsBoardDirector, IsBoardActor {
 
     public static GameManager instance = null;
@@ -16,7 +17,7 @@ public class GameManager : MonoBehaviour, IsBoardDirector, IsBoardActor {
     public float turnDelay = 1.5f;
     private bool stepping = false;
     public Vector2 spawnCenter = Vector2.zero;
-    public bool drawMode = false;
+    public bool drawMode { get; private set; }
     private bool firstTimeCameraLoad = true;
 
     private int manualSteps = 0;
@@ -151,7 +152,10 @@ public class GameManager : MonoBehaviour, IsBoardDirector, IsBoardActor {
     }
 
     private void EraseZones(LinkedList<Vector2> zones) {
+        Debug.Log("in gamemanager, will now erase all zoned for erase: " + zones.Count);
         foreach (Vector2 zone in zones) {
+            Debug.Log("    Issuing action to erasing zone: " + zone);
+            Debug.Log("spawn center is " + spawnCenter);
             Action delete = CreateAddressAction(ActionTypes.REMOVE, 0, zone + spawnCenter);
             IssueAction(delete);
         }
@@ -465,20 +469,53 @@ public class GameManager : MonoBehaviour, IsBoardDirector, IsBoardActor {
                     GetZoneByAddress((Vector2)action.Address).GetComponent<PressureZone>().ZeroPressure();
                 }
                 break;
+
+
+                ///////////
+                ///////////
+                ///// need to convert to vector3 or 2 , as the equivalence is being broken and causing searches to fail
+                ///
+                //////// convert vector comparisons to int comparisons for consistency
+
             case ActionTypes.REMOVE:
+                Debug.Log("gamemanager recieved a remove action");
                 if (action.Target) {
+                    Debug.Log("actual, not address");
                     RemovePressureZone(action.Target);
                 }
                 else {
+                    Debug.Log("address, not actual");
                     // here
-                    GameObject zoneToDelete = boardScript.GetPressureZones().Find(zone => zone.transform.position == action.Address);
-                    if (zoneToDelete) {
+                    //Vector3 addressAsV3 = new Vector3(action.Address.Value.x, action.Address.Value.y, 0);
+                    GameObject zoneToDelete = boardScript.GetPressureZones().Find(zone => VectorCheck(zone.transform.position, (Vector2)action.Address));
+                    Debug.Log("////LOOKING FOR " + action.Address);
+                    Debug.Log("inside PRESSUER ZONES");
+                    foreach (GameObject zone in boardScript.GetPressureZones()) {
+                        Debug.Log("   " + zone.transform.position);
+                        if (zone.transform.position == action.Address) {
+                            Debug.Log("matching address found!  should have deleted");
+                        }
+                        else { Debug.Log(zone.transform.position + " is different than " + action.Address + " by " + (action.Address - zone.transform.position)); }
+                    }
+                    Debug.Log("///////////");
+                    if (zoneToDelete != null) {
+                        Debug.Log("found it in pressurezones");
                         RemovePressureZone(zoneToDelete);
                     }
                     else {
-                        zoneToDelete = boardScript.GetBricks().Find(zone => zone.transform.position == action.Address);
-                        if (zoneToDelete) {
+                        Debug.Log("not in pressurezones, looking in bricks");
+                        zoneToDelete = boardScript.GetBricks().Find(zone => VectorCheck(zone.transform.position, (Vector2)action.Address));
+                        Debug.Log("////LOOKING FOR " + action.Address);
+                        Debug.Log("inside BRICKS");
+                        foreach (GameObject zone in boardScript.GetBricks()) {
+                            Debug.Log("   " + zone.transform.position);
+                        }
+                        Debug.Log("///////////");
+                        if (zoneToDelete != null) {
+                            Debug.Log("found in bricks, removing");
                             RemoveBrickZone(zoneToDelete);
+                        } else {
+                            Debug.Log("zone to delete is null? " + (zoneToDelete == null));
                         }
                     }
                 }
@@ -608,6 +645,7 @@ public class GameManager : MonoBehaviour, IsBoardDirector, IsBoardActor {
             }
             // erase zones
             if (eraseZones.Count > 0) {
+                Debug.Log("found erase zone, going to apply");
                 ActionController.instance.BeginNewRound();
                 ApplyEraseZones();
             }
