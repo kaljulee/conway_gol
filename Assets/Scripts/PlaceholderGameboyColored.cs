@@ -15,7 +15,7 @@ public abstract class PlaceholderGameboyColored : MonoBehaviour
             ColorPlaceholder(colorShade);
         }
     }
-    private void ColorPlaceholder(string fourColorShade)
+    protected void ColorPlaceholder(string fourColorShade)
     {
         //SpriteRenderer spriteRenderer = GetComponent<SpriteRenderer>();
 

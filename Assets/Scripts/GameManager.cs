@@ -5,6 +5,7 @@ using Random = UnityEngine.Random;
 using System;
 using static Action;
 using static Action.Factory;
+using static Utils;
 public class GameManager : MonoBehaviour, IsBoardDirector, IsBoardActor {
 
     public static GameManager instance = null;
@@ -16,7 +17,7 @@ public class GameManager : MonoBehaviour, IsBoardDirector, IsBoardActor {
     public float turnDelay = 1.5f;
     private bool stepping = false;
     public Vector2 spawnCenter = Vector2.zero;
-    public bool drawMode = false;
+    public bool drawMode { get; private set; }
     private bool firstTimeCameraLoad = true;
 
     private int manualSteps = 0;
@@ -390,7 +391,6 @@ public class GameManager : MonoBehaviour, IsBoardDirector, IsBoardActor {
                 // must check neighbors
                 Dictionary<string, GameObject> neighbors = pressureScript.CheckNeighbors();
 
-                //PrintNeighborDebug(pressureScript);
                 SchedulePressureNeighbors(neighbors, currentZone);
             }
             else {
@@ -466,20 +466,30 @@ public class GameManager : MonoBehaviour, IsBoardDirector, IsBoardActor {
                     GetZoneByAddress((Vector2)action.Address).GetComponent<PressureZone>().ZeroPressure();
                 }
                 break;
+
+
+                ///////////
+                ///////////
+                ///// need to convert to vector3 or 2 , as the equivalence is being broken and causing searches to fail
+                ///
+                //////// convert vector comparisons to int comparisons for consistency
+
             case ActionTypes.REMOVE:
                 if (action.Target) {
                     RemovePressureZone(action.Target);
                 }
                 else {
-                    // here
-                    GameObject zoneToDelete = boardScript.GetPressureZones().Find(zone => zone.transform.position == action.Address);
-                    if (zoneToDelete) {
+                    GameObject zoneToDelete = boardScript.GetPressureZones().Find(zone => VectorCheck(zone.transform.position, (Vector2)action.Address));
+                    foreach (GameObject zone in boardScript.GetPressureZones()) {
+                    }
+                    if (zoneToDelete != null) {
                         RemovePressureZone(zoneToDelete);
                     }
                     else {
-                        zoneToDelete = boardScript.GetBricks().Find(zone => zone.transform.position == action.Address);
-                        if (zoneToDelete) {
+                        zoneToDelete = boardScript.GetBricks().Find(zone => VectorCheck(zone.transform.position, (Vector2)action.Address));
+                        if (zoneToDelete != null) {
                             RemoveBrickZone(zoneToDelete);
+                        } else {
                         }
                     }
                 }

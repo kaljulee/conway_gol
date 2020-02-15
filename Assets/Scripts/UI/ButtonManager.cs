@@ -7,6 +7,7 @@ public class ButtonManager : MonoBehaviour {
     public static ButtonManager instance = null;
 
     public static GameObject mainMenu;
+    public static GameObject selector;
     public static MainMenu mainMenuScript;
 
     public static GameObject createRandomMenu;
@@ -21,6 +22,8 @@ public class ButtonManager : MonoBehaviour {
     public static LinkedList<Menu> menus = new LinkedList<Menu>();
     public static LinkedList<CollapsablePanel> panels = new LinkedList<CollapsablePanel>();
 
+    public static GameObject selectorControls;
+    public static SelectorMenuControls selectorControlsScript;
 
     public static GameObject templateMenu;
     public static MainMenu templateMenuScript;
@@ -28,6 +31,7 @@ public class ButtonManager : MonoBehaviour {
     private DrawPanel drawPanelScript;
     public int drawTool = ZoneTypes.UNIT;
     public LinkedList<Vector2> defaultDrawTemplate = Templates.Point();
+    public LinkedList<Vector2> unitsDrawTemplate = Templates.Point();
     public LinkedList<Vector2> brickDrawTemplate = Templates.Point();
     public LinkedList<Vector2> eraseTemplate = Templates.Point();
 
@@ -67,13 +71,20 @@ public class ButtonManager : MonoBehaviour {
 
         tooltips = GameObject.FindGameObjectsWithTag("Tooltip");
 
+        selectorControls = GameObject.FindGameObjectWithTag("SelectorControls");
+        selectorControlsScript = selectorControls.GetComponent<SelectorMenuControls>();
+
+        selector = GameObject.FindGameObjectWithTag("Selector");
+
         menus.AddLast(mainMenuScript);
         menus.AddLast(createRandomScript);
         menus.AddLast(templateMenuScript);
+        menus.AddLast(selectorControlsScript);
 
         panels.AddLast(drawPanelScript);
         HideTooltips();
         CloseAllMenus();
+        selector.SetActive(false);
         StartCoroutine(StartTooltips());
     }
 
@@ -85,12 +96,29 @@ public class ButtonManager : MonoBehaviour {
         return results.Count > 0;
     }
 
+
+    private void DrawEventOnPoint(Vector2 position, bool enforcePoint=false) {
+        if (drawTool == ZoneTypes.UNIT) {
+            SpawnOnPoint(position, enforcePoint ? Templates.Point() : defaultDrawTemplate);
+        }
+        else if (drawTool == ZoneTypes.BRICK) {
+            BrickOnPoint(position, enforcePoint ? Templates.Point() : brickDrawTemplate);
+        }
+        else if (drawTool == ZoneTypes.ERASE) {
+         
+            EraseOnPoint(position, enforcePoint ? Templates.Point() : eraseTemplate);
+        } else {
+            GameManager.instance.SetDrawMode(false);
+        }
+    }
+
     private void Update() {
         //Touch input = Input.GetTouch(0);
         //if (input.phase == TouchPhase.Began) {
         //    //OnGearButtonPress();
         //    Debug.Log("touch location " + input.position);
         //}
+
         if (!IsPointerOverUIObject()) {
 
             bool mouseDown = Input.GetMouseButton(0);
@@ -100,14 +128,7 @@ public class ButtonManager : MonoBehaviour {
                 position.y = Mathf.Round(position.y * Camera.main.orthographicSize * 2);
                 position.x = Mathf.Round(position.x * Camera.main.aspect * Camera.main.orthographicSize * 2);
                 if (!SomeUIIsOpen()) {
-                    if (drawTool == ZoneTypes.UNIT) {
-                        SpawnOnPoint(position, defaultDrawTemplate);
-                    }
-                    else if (drawTool == ZoneTypes.BRICK) {
-                        BrickOnPoint(position, brickDrawTemplate);
-                    } else if (drawTool == ZoneTypes.ERASE) {
-                        EraseOnPoint(position, eraseTemplate);
-                    }
+                    DrawEventOnPoint(position);
                 }
             }
         }
@@ -211,7 +232,7 @@ public class ButtonManager : MonoBehaviour {
     }
 
     public void CloseAllMenus() {
-        foreach (MainMenu menu in menus) {
+        foreach (Menu menu in menus) {
             menu.Close();
         }
     }
@@ -289,7 +310,7 @@ public class ButtonManager : MonoBehaviour {
     public void OnTemplateSelectorPress(int template) {
         Action templateAction = Action.Factory.CreateAddressAction(Action.ActionTypes.SET_TEMPLATE, template, Vector2.zero);
         ActionController.instance.ExecuteAction(templateAction);
-        defaultDrawTemplate = Templates.GetTemplate(template);
+        unitsDrawTemplate = Templates.GetTemplate(template);
         GameManager.instance.SetDrawMode(true);
         CloseAllMenus();
     }
@@ -359,7 +380,9 @@ public class ButtonManager : MonoBehaviour {
                 }
                 else {
                     GameManager.instance.ToggleDrawMode();
-
+                    if (!GameManager.instance.drawMode) {
+                        selectorControlsScript.Close();
+                    }
                 }
                 return true;
             }
@@ -371,6 +394,32 @@ public class ButtonManager : MonoBehaviour {
         buttonReleased = true;
     }
 
+    private void moveSelector(Vector3 direction) {
+        selector.transform.position = selector.transform.position + direction;
+    }
+
+    public void OnDPadButtonPress(Vector3 direction) {
+        moveSelector(direction);
+    }
+
+    public void OnSeclectorDrawButtonPress() {
+        Vector2 position = new Vector2(selector.transform.position.x,  selector.transform.position.y);
+        DrawEventOnPoint(position, true);
+    }
+
+    public void OnSelectorButtonPress() {
+        selectorControlsScript.selectorActive = !selectorControlsScript.selectorActive;
+        if (selectorControlsScript.selectorActive) {
+            selectorControlsScript.Open();
+            GameManager.instance.SetDrawMode(true);
+            Vector3 center = GameManager.instance.spawnCenter;
+            selector.transform.position = new Vector3(center.x, center.y, selector.transform.position.z);
+            selector.SetActive(true);
+        } else {
+            selector.SetActive(false);
+            selectorControlsScript.Close();
+        }
+    }
 
     private void DrawButtonPress(int zoneType) {
         drawTool = zoneType;
