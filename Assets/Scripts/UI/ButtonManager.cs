@@ -98,7 +98,6 @@ public class ButtonManager : MonoBehaviour {
 
 
     private void DrawEventOnPoint(Vector2 position, bool enforcePoint=false) {
-        Debug.Log("draweventonpoint");
         if (drawTool == ZoneTypes.UNIT) {
             SpawnOnPoint(position, enforcePoint ? Templates.Point() : defaultDrawTemplate);
         }
@@ -106,14 +105,10 @@ public class ButtonManager : MonoBehaviour {
             BrickOnPoint(position, enforcePoint ? Templates.Point() : brickDrawTemplate);
         }
         else if (drawTool == ZoneTypes.ERASE) {
-            Debug.Log("erase");
-            Debug.Log(position);
-            Debug.Log(enforcePoint);
          
             EraseOnPoint(position, enforcePoint ? Templates.Point() : eraseTemplate);
         } else {
             GameManager.instance.SetDrawMode(false);
-            Debug.Log("no zone recognized drawmode set to false: " + drawTool);
         }
     }
 
@@ -191,7 +186,6 @@ public class ButtonManager : MonoBehaviour {
             zones = spawn;
         }
         GameManager.instance.SetSpawnCenter(point);
-        Debug.Log("requesting erase zones from buttonmanager eraseonpoint ");
         GameManager.instance.RequestEraseZones(zones);
     }
 
@@ -409,7 +403,6 @@ public class ButtonManager : MonoBehaviour {
     }
 
     public void OnSeclectorDrawButtonPress() {
-        Debug.Log("selector draw button pressed, using " + (Vector2)(selector.transform.position));
         Vector2 position = new Vector2(selector.transform.position.x,  selector.transform.position.y);
         DrawEventOnPoint(position, true);
     }

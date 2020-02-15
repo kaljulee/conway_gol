@@ -84,7 +84,6 @@ public class BoardManager : MonoBehaviour {
     }
 
     public void RemovePressureZone(GameObject zone) {
-        Debug.Log("removepressurezone called, removes from pressureZones");
         pressureZones.Remove(zone);
         Destroy(zone);
     }

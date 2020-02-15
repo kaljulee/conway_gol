@@ -28,7 +28,6 @@ public class SelectorDrawButton : ControllerActionButton
             int actualDrawTool = ButtonManager.instance.drawTool;
 
             if (actualDrawTool != localDrawTool) {
-                Debug.Log("values are different, updating sprite, local: " + localDrawTool + " actual: " + actualDrawTool);
                 UpdateButtonSprite(actualDrawTool);
             }
             yield return new WaitForSeconds(0.1f);
