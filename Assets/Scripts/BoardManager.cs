@@ -158,6 +158,8 @@ public class BoardManager : MonoBehaviour {
         }
     }
     void BoardSetup() {
+        columns = (int)Mathf.Floor(Screen.width / 20);
+        rows = (int)Mathf.Floor(Screen.height / 20);
         boardHolder = new GameObject("Board").transform;
         InstantiateSpawnSites(SpawnSites);
     }
@@ -168,6 +170,7 @@ public class BoardManager : MonoBehaviour {
 
     // Start is called before the first frame update
     void Start() {
+
     }
 
     // Update is called once per frame

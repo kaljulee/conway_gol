@@ -54,7 +54,6 @@ MonoBehaviour:
     type: 3}
   turnDelay: 0.15
   spawnCenter: {x: 0, y: 0}
-  drawMode: 0
 --- !u!114 &1412336138789898878
 MonoBehaviour:
   m_ObjectHideFlags: 0

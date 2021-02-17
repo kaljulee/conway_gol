@@ -177,7 +177,7 @@ public class GameManager : MonoBehaviour, IsBoardDirector, IsBoardActor {
 
     public LinkedList<Vector2> CreateRandomSpawnSites(float frequency) {
         //SpawnSites.Clear();
-        LinkedList<Vector2> returnValue = new LinkedList<Vector2>(); ;
+        LinkedList<Vector2> returnValue = new LinkedList<Vector2>(); 
         foreach (Vector3 position in boardScript.GetGridPositions()) {
             if (Random.Range(0f, 1f) < frequency) {
                 returnValue.AddFirst(position);
