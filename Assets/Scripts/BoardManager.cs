@@ -22,6 +22,7 @@ public class BoardManager : MonoBehaviour {
         }
     }
 
+    private float squaresPerInch = 6.0f;
     public int columns = 8;
     public int rows = 8;
     public bool drawMode = false;
@@ -158,8 +159,10 @@ public class BoardManager : MonoBehaviour {
         }
     }
     void BoardSetup() {
-        columns = (int)Mathf.Floor(Screen.width / 20);
-        rows = (int)Mathf.Floor(Screen.height / 20);
+        float heightInInches = Screen.height / Screen.dpi;
+        float widthInInches = Screen.width / Screen.dpi;
+        columns = (int)Mathf.Floor(widthInInches * squaresPerInch);
+        rows = (int)Mathf.Floor(heightInInches * squaresPerInch);
         boardHolder = new GameObject("Board").transform;
         InstantiateSpawnSites(SpawnSites);
     }
