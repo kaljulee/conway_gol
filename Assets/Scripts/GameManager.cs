@@ -22,7 +22,7 @@ public class GameManager : MonoBehaviour, IsBoardDirector, IsBoardActor {
 
     private int manualSteps = 0;
     private LinkedList<int> RequestedManualSteps = new LinkedList<int>();
-    public static bool Paused { get; set; } = false;
+    public static bool Paused { get; set; } = true;
 
     private LinkedList<Vector2> SpawnSites = Templates.Blinker();//new LinkedList<Vector2>();
 
