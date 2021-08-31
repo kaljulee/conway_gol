@@ -1,5 +1,9 @@
 # conway_gol
 
+available on the Google Play Store at https://play.google.com/store/apps/details?id=com.NiceTrain.golPaint
+
+&nbsp;
+
 From my original documentation: 
 
 >Inspired by Conway’s Game of Life and Donald Hoffman’s computer simulations exploring the nature of perception, this is an as-of-yet poorly defined evolution simulator.  User interactions will modify the evolutionary conditions and create interesting results.
